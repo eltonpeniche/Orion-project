@@ -1,0 +1,84 @@
+{% load static %}
+{% include 'orion/partials/head.html' %}
+    <body>
+    <style>
+        .hidden{
+            display:none;
+        }
+        button {
+            padding: 0.4rem;
+        }
+    </style>    
+        <h1>Hello World</h1>
+        
+        <div class="div">
+
+            <form method="post">
+                {% csrf_token %}
+                
+                {{ ordemForm.management_form }}
+                {{ ordemForm.as_p }} 
+                
+                
+                {{ cargaHorariaForm.media }}
+                {{ cargaHorariaForm.management_form }}
+                
+                <div id="ch-form-list">
+
+                    
+                    {% for form  in cargaHorariaForm %}
+                    <div class="repetir">
+                        {{ form.as_p }}
+                    
+                    </div>
+                    {% endfor %}
+                  
+                </div>
+                
+                <div id="empty-form" class ="hidden" > {{ cargaHorariaForm.empty_form }}  </div>
+                <button id="add-more" type="button">Adicionar mais</button>
+                <button  type="submit">Salvar</button>
+            </form>
+            
+        </div>
+
+
+        
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            
+            
+            const addMoreBtn = document.getElementById("add-more")
+            const totalNewForms = document.getElementById("id_carga_horaria-TOTAL_FORMS")
+            
+            
+            addMoreBtn.addEventListener('click', add_new_form)
+            
+            function add_new_form(event){
+                if(event){
+                    event.preventDefault()   
+                }
+                const currentCargaHorariaForms = document.getElementsByClassName("repetir")
+                const currentFormCount = currentCargaHorariaForms.length //+  1
+                const formCopyTarget = document.getElementById("ch-form-list")
+                const copyEmptyFormEl = document.getElementById("empty-form").cloneNode(true)
+                copyEmptyFormEl.setAttribute('class', 'repetir' )
+                copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}` )
+                console.log(copyEmptyFormEl.id)
+                const regex = new RegExp('__prefix__', 'g' )
+                copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
+                totalNewForms.setAttribute('value', currentFormCount + 1)
+                formCopyTarget.append(copyEmptyFormEl)
+            }
+
+
+        </script>
+
+    </body>
+</html>

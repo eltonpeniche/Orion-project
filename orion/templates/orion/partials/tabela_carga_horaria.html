@@ -1,0 +1,50 @@
+<div class="table-responsive">
+
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col class="col-2">
+            <col class="col-2">
+            <col class="col-2">
+            <col class="col-1">
+            <col class="col-1">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Hora Inicio</th>
+                <th>Hora Termino</th>
+                <th>Status</th>
+                <th>ações</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% comment %} {{ formCargaHoraria.management_form }}
+            {{ formCargaHoraria.media }} {% endcomment %}
+        
+            {% if carga_horaria  %}
+                {% for fch in carga_horaria %}
+                
+                    <tr>
+                        
+                        <td>{{fch.data|date:"d/m/Y" }} </td>
+                        <td> {{ fch.hora_inicio }} </td>
+                        <td>{{ fch.hora_termino }}</td>
+                        <td>{{ fch.get_status_display }} </td>
+
+                        <td align="center"><a href="#" title="Editar"><i
+                            class="fa-solid fa-pen-to-square"></i> Editar </a></td>
+                    </tr>
+                    
+                {% endfor %}
+                
+            {% else %}    
+                
+                <tr>
+                    <td colspan="8">Sem registros</td>
+                </tr>
+            
+            {% endif %}
+        </tbody>
+    </table>
+</div>

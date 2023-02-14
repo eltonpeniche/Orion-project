@@ -1,0 +1,65 @@
+{% load static %}
+
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ titulo }}</h3>
+            </div>
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped">
+                    <colgroup>
+                        <col class="col-xs-3">
+                        <col class="col-xs-2">
+                        <col class="col-xs-2">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Chamado</th>
+                            <th>Cliente</th>
+                            <th>Equipamento</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% if ordens_servico  %}
+                            {% for ordem in ordens_servico %}
+                            
+                                <tr>
+                                    <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
+                                    <td>{{ordem.equipamento.empresa.nome}}</td>
+                                    <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento.equipamento}}</td>
+                                    <td> {{ ordem.get_tipo_chamado_display }} </td>
+                                    <td>{{ordem.criado_em|date:"d/m/Y"}}</td>
+                                    <td>{{ ordem.get_status_display }} - {{ ordem.get_status_chamado_display }}
+
+                                    </td>
+                                    <td align="center"><a href="{% url 'editar_chamado' ordem.id %}" title="Editar"><i
+                                        class="fa-solid fa-pen-to-square"></i></a></td>
+                                </tr>
+                                
+                            {% endfor %}
+                            
+                        {% else %}    
+                            
+                            <tr>
+                                <td colspan="8">Sem registros</td>
+                            </tr>
+                        
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

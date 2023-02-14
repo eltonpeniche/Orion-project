@@ -1,0 +1,235 @@
+{% extends "orion/base.html" %}
+
+{% block content %}
+{% load widget_tweaks %}
+
+<div id="conteudo">
+    <br>
+
+
+    <form id="form-chamado" action= "{% url 'editar_chamado' id %}" method="post">
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
+                    data-bs-target="#dados-tab-pane" type="button" role="tab" aria-controls="dados-tab-pane"
+                    aria-selected="true">Dados Chamado</button>
+            </li>
+            <li class="nav-item " role="presentation">
+                <button class="nav-link nav2" id="atendimento-tab" data-bs-toggle="tab"
+                    data-bs-target="#atendimento-tab-pane" type="button" role="tab" aria-controls="atendimento-tab-pane"
+                    aria-selected="false">Atendimento</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link nav2" id="assinatura-tab" data-bs-toggle="tab"
+                    data-bs-target="#assinatura-tab-pane" type="button" role="tab" aria-controls="assinatura-tab-pane"
+                    aria-selected="false">Assinatura</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link nav2" id="time-tab" data-bs-toggle="tab" data-bs-target="#time-tab-pane"
+                    type="button" role="tab" aria-controls="time-tab-pane" aria-selected="false">Tempos</button>
+            </li>
+        </ul>
+
+
+
+        <div class="tab-content" id="myTabContent">
+
+            <div class="tab-pane fade show active" id="dados-tab-pane" role="tabpanel" aria-labelledby="dados-tab"
+                tabindex="0">
+
+                <div class="card">
+                    <div class="card-dados-titulo">
+                        <h5 class="card-title dados-titulo">Dados Gerais</h5>
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ ordemForm.media.js }}
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.empresa.id_for_label}}">
+                                    {{ordemForm.empresa.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{ordemForm.empresa|add_class:'form-control form-select search-ordem'}}
+
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.equipamento.id_for_label}}">
+                                    {{ordemForm.equipamento.label}}</label>
+                            </div>
+                            <div class="col-6">
+                                {{ordemForm.equipamento|add_class:'form-control form-select'}}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.status.id_for_label}}">
+                                    {{ordemForm.status.label}}</label>
+                            </div>
+                            <div class="col-6">
+                                {{ordemForm.status|add_class:'form-control form-select'}}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.numero_chamado.id_for_label}}">
+                                    {{ordemForm.numero_chamado.label}}</label>
+                            </div>
+                            <div class="col-6">
+                                {{ordemForm.numero_chamado|add_class:'form-control'|attr:'readonly'}}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.tipo_chamado.id_for_label}}">
+                                    {{ordemForm.tipo_chamado.label}}</label>
+                            </div>
+                            <div class="col-6">
+                                {{ordemForm.tipo_chamado|add_class:'form-control form-select'}}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.descricao_chamado.id_for_label}}">
+                                    {{ordemForm.descricao_chamado.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{ordemForm.descricao_chamado|add_class:'form-control'}}
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="atendimento-tab-pane" role="tabpanel" aria-labelledby="atendimento-tab"
+                tabindex="0">
+
+                <div class="card">
+                    <div class="card-atendimento-titulo">
+                        <h5 class="card-title atendimento-titulo">Atendimento</h5>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.descricao_servico.id_for_label}}">
+                                    {{ordemForm.descricao_servico.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{ordemForm.descricao_servico|add_class:'form-control'}}
+
+                            </div>
+                        </div>
+
+                        {% include 'orion/partials/carga_horaria_modal.html' %}
+
+                        {% include 'orion/partials/tabela_carga_horaria.html' %}
+
+                        {% comment %} {% include 'orion/partials/lista_carga_horaria.html' %} {% endcomment %}
+                
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="assinatura-tab-pane" role="tabpanel" aria-labelledby="assinatura-tab"
+                tabindex="0">
+
+                <div class="card">
+                    <div class="card-atendimento-titulo">
+                        <h5 class="card-title atendimento-titulo">Assinatura</h5>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.contato.id_for_label}}">
+                                    {{ordemForm.contato.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{ordemForm.contato|add_class:'form-control form-select'}}
+
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ ordemForm.observacoes_do_cliente.id_for_label}}">
+                                    {{ordemForm.observacoes_do_cliente.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{ordemForm.observacoes_do_cliente|add_class:'form-control'}}
+
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+            <div class="tab-pane fade" id="time-tab-pane" role="tabpanel" aria-labelledby="time-tab" tabindex="0">
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+    </form>
+
+
+    <div class=" d-flex justify-content-center m-2">
+      
+        <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
+
+
+        <form action="{% url 'deletar_chamado' id  %}">
+            <button type="submit" class="btn btn-danger"> Apagar </button>
+        </form>
+
+    </div>
+
+
+</div>
+
+</div>
+{% endblock %}

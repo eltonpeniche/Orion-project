@@ -1,0 +1,80 @@
+{% extends "orion/base.html" %}
+
+{% block content %}
+{% load widget_tweaks %}
+
+<br>
+<div class="panel-heading">
+    <h3 class="panel-title">Novo Cliente</h3>
+</div>
+
+<div id="conteudo" class="container col-10">
+    <br>
+
+    <form action="" id="form-cliente" method="post">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+
+            <div class="form-group mt-3 mb-3 row ">
+                <div class="col-2 label-class">
+                    <label class="col-form-label" for="{{ field.id_for_label}}">
+                        {{field.label}}</label>
+                </div>
+                <div class="col-8">
+                    
+                    {{field|add_class:'form-control'}}
+                        
+
+                </div>
+            </div>
+        {% endfor %}
+        
+        {% for field in formContato.visible_fields %}
+            <div class="form-group mt-3 mb-3 row ">
+                <div class="col-2 label-class">
+                    <label class="col-form-label" for="{{ field.id_for_label}}">
+                        {{field.label}}</label>
+                </div>
+                <div class="col-8">
+                    
+                    {{field|add_class:'form-control'}}
+                        
+    
+                </div>
+            </div>
+    
+        {% endfor %}
+        
+        {% for field in formEndereco.visible_fields %}
+            <div class="form-group mt-3 mb-3 row ">
+                <div class="col-2 label-class">
+                    <label class="col-form-label" for="{{ field.id_for_label}}">
+                        {{field.label}}</label>
+                </div>
+                <div class="col-8">
+                    
+                    {{field|add_class:'form-control'}}
+                        
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </form>    
+    
+    <div class=" d-flex justify-content-end m-2">
+        <button type="submit" class="btn btn-primary" form="form-cliente"> Salvar </button>
+        
+        {% if id %}
+            <form action="{% url 'deletar_cliente' id  %}">
+                <button type="submit" class="btn btn-danger"> Apagar </button>
+            </form>
+        {% endif %}
+            
+    </div>
+
+
+
+</div>
+{% endblock %}
