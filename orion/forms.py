@@ -4,7 +4,7 @@ from django import forms
 from tempus_dominus.widgets import DatePicker, DateTimePicker, TimePicker
 
 from .models import (CargaHoraria, Contato, Empresa, Endereco, Equipamento,
-                     Ordem_Servico)
+                     Ordem_Servico, Usuario)
 
 
 class OrdemServicoForm(forms.ModelForm):
@@ -81,3 +81,43 @@ class CargaHorariaForm(forms.ModelForm):
         }
 
     
+#Formulario de autenticação de usuários
+class LoginForm(forms.Form):
+    login = forms.CharField(
+        label=False,
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Login', 'class':'form-control' }))
+    
+    senha = forms.CharField(
+        label=False,
+        max_length=100,
+        required=True,
+        widget = forms.PasswordInput(attrs={'placeholder':'Senha', 'class':'form-control'})
+    )
+
+
+class CadastroUsuarioForm(forms.Form):
+    login = forms.CharField( label= "Usuário",
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Digite o nome de usuário', 'class':'form-control' })
+        )
+    email = forms.CharField( label= "Email",
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Digite o email', 'class':'form-control' })
+        )
+
+    senha = forms.CharField( label="Senha",
+        max_length=100,
+        required=True,
+        widget = forms.PasswordInput(attrs={'placeholder':'Digite a senha', 'class':'form-control'}))
+
+    
+    confirmacao_senha = forms.CharField( label="Senha",
+        max_length=100,
+        required=True,
+        widget = forms.PasswordInput(attrs={'placeholder':'Confirme a senha', 'class':'form-control'}))
+        
+    #tipo_usuario

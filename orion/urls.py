@@ -20,5 +20,10 @@ urlpatterns = [
     path('cadastrar_clientes', views.cadastrar_clientes, name='cadastrar_clientes'),
     path('teste', views.teste, name='teste'),
     path('teste_create', views.teste_create, name='teste_create'),
-    
+    #autenticação  
+    path('tecnicos', views.tecnicos, name='tecnicos' ),
+    path('login', views.login, name='login' ),
+    path('logout', views.logout, name='logout' ),
+    path('cadastro_usuario', views.cadastro_usuario, name='cadastro_usuario' ),
 ]
+

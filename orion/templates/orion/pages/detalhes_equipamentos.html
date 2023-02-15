@@ -8,7 +8,7 @@
     <h3 class="panel-title">Novo Equipamento</h3>
 </div>
 
-<div id="conteudo" class="container col-10">
+<div class="container col-10">
     <br>
 
     <form action="" id="form-equipamento" method="post">
@@ -31,12 +31,12 @@
         {% endfor %}
     </form>    
     
-    <div class=" d-flex justify-content-end m-2">
-        <button type="submit" class="btn btn-primary" form="form-equipamento"> Salvar </button>
+    <div class=" d-flex justify-content-center m-2">
+        <button type="submit" class="btn btn-primary m-2" form="form-equipamento"> Salvar </button>
         
         {% if id %}
             <form action="{% url 'deletar_equipamento' id  %}">
-                <button type="submit" class="btn btn-danger"> Apagar </button>
+                <button type="submit" class="btn btn-danger m-2"> Apagar </button>
             </form>
         {% endif %}
             

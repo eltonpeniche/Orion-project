@@ -12,83 +12,35 @@
 
 
         <!-- ?> -->
-        <!-- ** Menu ** -->
-        <nav class="navbar navbar-expand-lg bg-light">
-
-            <div class="container-fluid">
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'lista_home' %}">Home</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Chamado
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'novo_chamado' %}">Novo Chamado</a></li>
-                                <li><a class="dropdown-item" href="{% url 'lista_chamados' %}">Chamados Abertos</a></li>
-                                <li><a class="dropdown-item" href="{% url 'chamados_fechados' %}">Chamados Fechados</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                cadastros
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'clientes'%}">Clientes</a></li>
-                                <li><a class="dropdown-item" href="{% url 'equipamentos'%} ">Equipamentos</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Relatórios
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Horas Trabalhadas</a></li>
-                                <li><a class="dropdown-item" href="#">Reembolso de Gastos de Viagem</a></li>
-                                <li><a class="dropdown-item" href="#">Chamados</a></li>
-                                <li><a class="dropdown-item" href="#">Ponto</a></li>
-                            </ul>
-                        </li>
-
-                    </ul>
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-item dropdown">
-
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">Usuário</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Meus Dados</a></li>
-                                <li><a class="dropdown-item" href="#" class="navText">Sair</a> </li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
+        <!-- ** navbar ** -->
+        {% include 'orion/partials/navbar.html' %}
         <!-- End nav -->
 
         <!-- ?> -->
         <!-- ** conteudo ** -->
+        <div id="conteudo">
+            <!-- InstanceBeginEditable name="conteudo" -->
             
-        {% block content %}
-        {% endblock %}
+            {% if home %}
+                <h4> {{ titulo }} </h4>
+                
+                {% if user.is_authenticated %}
+                <h4> Olá, {{ user.get_username }} </h4>
+                {% endif %}
+            {% endif %}      
+
+                
+                
+        
+            {% block content %}
+            {% endblock %}
+        
+        </div>  
 
 
-        <footer class="rodape" role="contentinfo">
-            <hr class="bg-info">
-            <p> Orion - Sistema de Atendimento ao Cliente</p>
-            <p>&copy; 2022 </p>
-        </footer>
+
+        {% include 'orion/partials/footer.html' %}
+        
     </div>
 
     <!-- JavaScript Bundle with Popper -->

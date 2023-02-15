@@ -5,6 +5,8 @@ from django.forms.formsets import formset_factory
 from django.utils.translation import gettext_lazy as _
 from smart_selects.db_fields import ChainedForeignKey
 
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 # from validate_docbr import CPF
 
 # Create your models here.
@@ -62,12 +64,15 @@ class TIPO_STATUS(models.TextChoices):
     NORMAL = 'N', _('Normal')
     OUTROS = 'O', _('Outros')
 
+class TIPO_USUARIO(models.TextChoices):
+    ADMIN = 'A', _('Admin')
+    TECNICO = 'T', _('Tecnico')
 
 class Usuario(models.Model):
     user = models.OneToOneField(
         User, related_name='usuarios', on_delete=models.CASCADE, null=True)
-    tipo = models.CharField(max_length=540)
-
+    tipo = models.CharField(max_length=1, choices=TIPO_USUARIO.choices)
+    
     def __str__(self):
         return f'{self.user.username}'
 

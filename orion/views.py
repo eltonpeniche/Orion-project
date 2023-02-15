@@ -9,8 +9,10 @@ from orion.models import (CargaHoraria, Contato, Empresa, Endereco,
                           Equipamento, Ordem_Servico, Usuario)
 
 from .forms import (CargaHorariaForm, ContatoForm, EmpresaForm, EnderecoForm,
-                    EquipamentosForm, OrdemServicoForm)
+                    EquipamentosForm, OrdemServicoForm, LoginForm, CadastroUsuarioForm)
 
+from django.contrib import auth, messages
+from django.contrib.auth.models import User
 # Create your views here.
 
 
@@ -274,3 +276,85 @@ def teste_create(request):
     request.session['teste_create_data'] = POST
     form = CargaHorariaForm(request.POST)
     return redirect('teste')
+
+
+
+#autenticação de usuários
+def tecnicos(request):
+    usuarios = Usuario.objects.all()
+    contexto = {
+        'forms' : usuarios,
+        'titulo': 'Lista de Técnicos'
+    }
+    return render(request, 'orion/pages/tecnicos.html', contexto)
+
+
+def logout(request):
+    auth.logout(request)
+    messages.success(request, "Logout realizado com sucesso")
+    print("Logout realizado com sucesso")
+    return redirect('login')
+
+def login(request):
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST) 
+        if form.is_valid():
+            login = form['login'].value()  
+            senha = form['senha'].value()
+            usuario = auth.authenticate(
+                request,
+                username = login,
+                password = senha
+            )
+            if usuario is not None:
+                auth.login(request, usuario)
+                messages.success(request, f"Bem-vindo, {login} ")
+                print("LOGOU")
+                return redirect('lista_home')
+
+            else:
+                messages.error(request, "Login ou Senha incorretos")
+                return redirect('login')
+    else:
+        formLogin = LoginForm()
+        contexto = {
+                'form' : formLogin
+            }
+        return render(request, 'orion/pages/login.html', contexto)
+
+def cadastro_usuario(request):
+
+    if request.method == 'POST':
+        form = CadastroUsuarioForm(request.POST) 
+        if form.is_valid():
+            login = form['login'].value()
+            email = form['login'].value()    
+            senha = form['senha'].value()
+            senha2 = form['confirmacao_senha'].value()
+            if senha != senha2:
+                messages.error(request, "As senhas não são iguais.")
+                return redirect('cadastro_usuario')
+            
+            if User.objects.filter(username=login).exists():
+                messages.error(request, "Técnico já cadastrado anteriormente")
+                return redirect('cadastro_usuario')
+            
+            user = User.objects.create_user(
+                username=login,
+                password=senha,
+                email=email
+            )
+            user.save()
+
+            usuario = Usuario.objects.create(user = user, tipo = 'T')
+            usuario.save()
+            messages.success(request, f"Técnico {login} salvo com sucesso.")
+    
+            return redirect('tecnicos')
+    else:
+        cadastroUsuarioForm = CadastroUsuarioForm()
+        contexto = {
+            'form' : cadastroUsuarioForm
+            }
+        return render(request, 'orion/pages/cadastro_usuario.html', contexto)

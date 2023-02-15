@@ -2,9 +2,73 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <div id="conteudo">
-        <!-- InstanceBeginEditable name="conteudo" -->
-        {% include 'orion/partials/lista_equipamentos.html' %}
 
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-info">
+            <br>
+            <div class="panel-heading">
+                <h3 class="panel-title">Equipamentos</h3>
+            </div>
+
+            <div class=" d-flex justify-content-end m-2">
+                <a href="{% url 'cadastrar_equipamentos' %}">  
+                        <button type="submit" class="btn btn-primary"> Novo Equipamento</button>
+                </a>
+                
+        
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped">
+                    <colgroup>
+                        <col class="col-xs-3">
+                        <col class="col-xs-2">
+                        <col class="col-xs-2">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Equipamento</th>
+                            <th>Tipo de Equipamento</th>
+                            <th>Descrição</th>
+                            <th>Número de Série</th>
+                            <th>Empresa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% if equipamentos  %}
+                            {% for equipamento in equipamentos %}
+                            
+                                <tr>
+                                    <td>{{ equipamento.equipamento}} </td>
+                                    <td>{{ equipamento.tipo_equipamento }}</td>
+                                    <td>{{ equipamento.descricao }} </td>
+                                    <td>{{ equipamento.numero_serie}} </td>
+                                    <td>{{ equipamento.empresa}} </td>
+                                    <td align="center"><a href="{% url 'detalhar_equipamento' equipamento.id %}" title="Editar"><i
+                                        class="fa-solid fa-pen-to-square"></i></a></td>
+                                </tr>
+                                
+                            {% endfor %}
+                            
+                        {% else %}    
+                            
+                            <tr>
+                                <td colspan="8">Sem registros</td>
+                            </tr>
+                        
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
+
 {% endblock %}
