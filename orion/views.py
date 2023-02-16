@@ -17,7 +17,8 @@ from django.contrib.auth.models import User
 
 
 def lista_home(request):
-
+    if not request.user.is_authenticated:
+        return redirect('login')
     ordens_servico = Ordem_Servico.objects.all().order_by('-id')
     contexto = {
         'ordens_servico': ordens_servico,
@@ -38,6 +39,11 @@ def lista_chamados(request):
 
 
 def editar_chamado(request, id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    usuario = get_object_or_404(Usuario, user_id=request.user.id)
+
     if request.method == "GET": 
 
         ordem_servico = get_object_or_404(Ordem_Servico, pk = id)
@@ -60,17 +66,22 @@ def editar_chamado(request, id):
         return render(request, 'orion/pages/detalhes_chamado.html', contexto)
 
     else:
-        print(request.POST)
-        ordem_servico = get_object_or_404(Ordem_Servico, pk = id)
-    
-        ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico )
+        #print("POST = ", request.POST)
+        if id !=0 :
+            ordem_servico = get_object_or_404(Ordem_Servico, pk = id)
+            ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico )
+        else:
+            ordemForm = OrdemServicoForm(request.POST) 
+        
         form_ch = CargaHorariaForm(request.POST )
         #carregando todos os horarios relacionados com a instancia de ordem_servico
         lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
-        
-        if ordemForm.is_valid() and form_ch.is_valid():
-            print("é valido")
+        if ordemForm.is_valid(): 
             ordemForm.save()
+            print(" ordemFormé valido")
+        
+        if form_ch.is_valid():
+            print("form_ch é valido")
             ch = form_ch.save(commit=False)
             ch.ordem_servico = ordem_servico
             ch.save()
@@ -84,6 +95,7 @@ def editar_chamado(request, id):
                 return render(request, 'orion/pages/detalhes_chamado.html', contexto)
             return redirect("lista_home")
         else:
+            print("não é valido")
             contexto = {
                 'ordemForm': ordemForm,
                 #'carga_horaria' : carga_horaria,
@@ -91,7 +103,6 @@ def editar_chamado(request, id):
                 'id' : id,
             }
             return render(request, 'orion/pages/detalhes_chamado.html', contexto)
-
 
 def novo_chamado(request):
     if request.method == 'GET':
@@ -332,6 +343,7 @@ def cadastro_usuario(request):
             email = form['login'].value()    
             senha = form['senha'].value()
             senha2 = form['confirmacao_senha'].value()
+            
             if senha != senha2:
                 messages.error(request, "As senhas não são iguais.")
                 return redirect('cadastro_usuario')

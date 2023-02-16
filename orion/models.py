@@ -112,7 +112,7 @@ class Ordem_Servico(models.Model):
 
     aberto_por = models.ForeignKey(
         Usuario, on_delete=models.SET_NULL, blank=True, null=True)
-
+    
     def __str__(self):
         return f'Status = {self.status}, Tipo de chamado - {self.tipo_chamado}, - Criado em {self.criado_em}'
 
