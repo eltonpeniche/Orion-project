@@ -124,7 +124,7 @@ class CargaHoraria(models.Model):
     #total_horas 
     status = models.CharField( max_length=1, choices=TIPO_STATUS.choices, blank=False, null=False, default='N')
     #técnico
-    ordem_servico = models.ForeignKey(Ordem_Servico, on_delete=models.CASCADE, related_name='carga_horaria')
+    ordem_servico = models.ForeignKey(Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='carga_horaria')
 
     def __str__(self):
         return f'dia = {self.data} -Entrada =  {self.hora_inicio} -Saida =  {self.hora_termino}'

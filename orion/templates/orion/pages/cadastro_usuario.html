@@ -28,8 +28,13 @@
                         </div>
                         <div class="col-8">
                             {{form.login}}
-
+                            
                         </div>
+                        {% if form.login.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{form.login.errors}}   
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="form-group mt-1 mb-3 row ">
@@ -39,8 +44,12 @@
                         </div>
                         <div class="col-8">
                             {{form.email}}
-
                         </div>
+                        {% if form.email.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{form.email.errors}}   
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="form-group mt-3 mb-3 row ">
@@ -50,8 +59,9 @@
                         </div>
                         <div class="col-8">
                             {{form.senha}}
-
+                            
                         </div>
+
                     </div>
 
                     <div class="form-group mt-3 mb-3 row ">
@@ -61,8 +71,13 @@
                         </div>
                         <div class="col-8">
                             {{form.confirmacao_senha}}
-
                         </div>
+                        
+                        {% if form.confirmacao_senha.errors %}
+                        <div class="alert alert-danger mt-3" role="alert">
+                            {{form.confirmacao_senha.errors}}   
+                        </div>
+                        {% endif %}
                     </div>
                     
                     

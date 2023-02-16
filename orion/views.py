@@ -109,8 +109,12 @@ def novo_chamado(request):
         }
         return render(request, 'orion/pages/novo_chamado.html', contexto)
     else:
+        usuario = get_object_or_404(Usuario, user_id=request.user.id)
+
         form = OrdemServicoForm(request.POST) 
-        form.save()
+        ordem_form = form.save(commit=False)
+        ordem_form.aberto_por = usuario
+        ordem_form.save()
         messages.success(request, f"Novo chamado cadastrado com sucesso")
         return redirect('lista_chamados')
 
@@ -336,18 +340,16 @@ def cadastro_usuario(request):
     if request.method == 'POST':
         form = CadastroUsuarioForm(request.POST) 
         if form.is_valid():
+        
             login = form['login'].value()
-            email = form['login'].value()    
+            email = form['email'].value()    
             senha = form['senha'].value()
             senha2 = form['confirmacao_senha'].value()
             
-            if senha != senha2:
-                messages.error(request, "As senhas não são iguais.")
-                return redirect('cadastro_usuario')
             
             if User.objects.filter(username=login).exists():
                 messages.error(request, "Técnico já cadastrado anteriormente")
-                return redirect('cadastro_usuario')
+                return render(request, 'orion/pages/cadastro_usuario.html',  {'form' : form })
             
             user = User.objects.create_user(
                 username=login,
@@ -359,8 +361,13 @@ def cadastro_usuario(request):
             usuario = Usuario.objects.create(user = user, tipo = 'T')
             usuario.save()
             messages.success(request, f"Técnico {login} salvo com sucesso.")
-    
+
             return redirect('tecnicos')
+        
+       
+        
+        return render(request, 'orion/pages/cadastro_usuario.html',  {'form' : form })
+    
     else:
         cadastroUsuarioForm = CadastroUsuarioForm()
         contexto = {

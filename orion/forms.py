@@ -120,4 +120,20 @@ class CadastroUsuarioForm(forms.Form):
         required=True,
         widget = forms.PasswordInput(attrs={'placeholder':'Confirme a senha', 'class':'form-control'}))
         
-    #tipo_usuario
+    def clean_login(self):
+        login = self.cleaned_data.get("login")
+        if login:
+            login = login.strip()
+            if " " in login:
+                raise forms.ValidationError("Login não pode conter espaços em branco")
+            else:
+                return login
+
+    def clean_confirmacao_senha(self):
+        senha = self.cleaned_data.get("senha")
+        senha2 = self.cleaned_data.get("confirmacao_senha")
+        if senha and senha2:
+            if senha != senha2:
+                raise forms.ValidationError("As senhas não podem ser diferentes")
+            else:
+                return senha2
