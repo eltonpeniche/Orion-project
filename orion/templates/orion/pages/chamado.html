@@ -1,6 +1,13 @@
 {% extends "orion/base.html"%}
 
 {% block content %}
+
+{% for message in messages %}
+<div class="alert alert-primary" role="alert">
+   <p id = "messages"> {{ message }}</p>
+</div>
+{% endfor %}
+
 <br>
 <div class="row">
     <div class="col-sm-12">

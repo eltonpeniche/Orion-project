@@ -1,0 +1,27 @@
+{% extends "orion/base.html" %}
+
+{% block content %}
+{% load widget_tweaks %}
+
+<form id="form-chamado" action= "{% url 'editar_chamado' id %}" method="post">
+
+    {% include 'orion/partials/detalhes_chamado.html' %}
+
+</form>
+
+
+    <div class=" d-flex justify-content-center m-2">
+      
+        <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
+
+
+        <form action="{% url 'deletar_chamado' id  %}">
+            <button type="submit" class="btn btn-danger"> Apagar </button>
+        </form>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

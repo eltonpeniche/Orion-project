@@ -1,11 +1,5 @@
-{% extends "orion/base.html" %}
-
-{% block content %}
 {% load widget_tweaks %}
-
-<form id="form-chamado" action= "{% url 'editar_chamado' id %}" method="post">
-
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
                 data-bs-target="#dados-tab-pane" type="button" role="tab" aria-controls="dados-tab-pane"
@@ -205,26 +199,3 @@
         </div>
 
     </div>
-
-
-
-
-
-</form>
-
-
-    <div class=" d-flex justify-content-center m-2">
-      
-        <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
-
-
-        <form action="{% url 'deletar_chamado' id  %}">
-            <button type="submit" class="btn btn-danger"> Apagar </button>
-        </form>
-
-    </div>
-
-
-</div>
-
-{% endblock %}

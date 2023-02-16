@@ -63,16 +63,13 @@ def editar_chamado(request, id):
         }
         
         #return render(request, 'orion/pages/teste.html', contexto)
-        return render(request, 'orion/pages/detalhes_chamado.html', contexto)
+        return render(request, 'orion/pages/editar_chamado.html', contexto)
 
     else:
-        #print("POST = ", request.POST)
-        if id !=0 :
-            ordem_servico = get_object_or_404(Ordem_Servico, pk = id)
-            ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico )
-        else:
-            ordemForm = OrdemServicoForm(request.POST) 
-        
+
+        ordem_servico = get_object_or_404(Ordem_Servico, pk = id)
+        ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico )
+ 
         form_ch = CargaHorariaForm(request.POST )
         #carregando todos os horarios relacionados com a instancia de ordem_servico
         lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
@@ -92,7 +89,7 @@ def editar_chamado(request, id):
                     'carga_horaria' : lista_carga_horaria,
                     'id' : id,
                 }
-                return render(request, 'orion/pages/detalhes_chamado.html', contexto)
+                return render(request, 'orion/pages/editar_chamado.html', contexto)
             return redirect("lista_home")
         else:
             print("não é valido")
@@ -102,28 +99,28 @@ def editar_chamado(request, id):
                 'form_ch' :form_ch,
                 'id' : id,
             }
-            return render(request, 'orion/pages/detalhes_chamado.html', contexto)
+            return render(request, 'orion/pages/editar_chamado.html', contexto)
 
 def novo_chamado(request):
     if request.method == 'GET':
         ordemServicoForm = OrdemServicoForm()
         contexto = {
-            'ordemForm': ordemServicoForm,
-            'id': 0
+            'ordemForm': ordemServicoForm
         }
-        return render(request, 'orion/pages/detalhes_chamado.html', contexto)
+        return render(request, 'orion/pages/novo_chamado.html', contexto)
     else:
         form = OrdemServicoForm(request.POST) 
         form.save()
-
-        return redirect('home')
+        messages.success(request, f"Novo chamado cadastrado com sucesso")
+        return redirect('lista_chamados')
 
 
 def deletar_chamado(request,id):
         chamado = get_object_or_404(Ordem_Servico, pk=id)
         print('deletar = ', chamado)
         chamado.delete()
-        return redirect('home')
+        messages.success(request, f"Chamado deletado com sucesso")
+        return redirect('lista_home')
 
 
 def chamados_fechados(request):
