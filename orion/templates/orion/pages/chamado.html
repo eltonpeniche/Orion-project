@@ -2,11 +2,7 @@
 
 {% block content %}
 
-{% for message in messages %}
-<div class="alert alert-primary" role="alert">
-   <p id = "messages"> {{ message }}</p>
-</div>
-{% endfor %}
+{% include 'orion/partials/_alertas.html' %}
 
 <br>
 <div class="row">

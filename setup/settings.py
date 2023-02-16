@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -140,3 +141,10 @@ USE_DJANGO_JQUERY = True
 #JQUERY_URL = True
 
 TEMPUS_DOMINUS_LOCALIZE = True
+
+#MESSAGES
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning'
+}

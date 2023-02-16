@@ -19,7 +19,8 @@ from django.contrib.auth.models import User
 def lista_home(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    ordens_servico = Ordem_Servico.objects.all().order_by('-id')
+    usuario = get_object_or_404(Usuario, user_id=request.user.id)
+    ordens_servico = Ordem_Servico.objects.filter(aberto_por = usuario).order_by('-id')
     contexto = {
         'ordens_servico': ordens_servico,
         'home' : 'Olá, Usuário'

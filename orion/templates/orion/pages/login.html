@@ -1,5 +1,5 @@
 {% load static %}
-{% include 'orion/partials/head.html' %}
+{% include 'orion/partials/_head.html' %}
 
 <body>
 
@@ -12,11 +12,7 @@
 
 
         <!-- ?> -->
-        {% for message in messages %}
-         <div class="alert alert-primary" role="alert">
-            <p id = "messages"> {{ message }}</p>
-         </div>
-        {% endfor %}
+        {% include 'orion/partials/_alertas.html' %}
 
         <div class="row title-login">
             <div class="col">
