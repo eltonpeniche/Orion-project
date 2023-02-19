@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,8 +36,10 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'tempus_dominus',
     'orion',
+    'usuarios',
     'widget_tweaks',
     'smart_selects',
+    'django.forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,11 +141,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 USE_DJANGO_JQUERY = True
-#JQUERY_URL = True
+# JQUERY_URL = True
 
 TEMPUS_DOMINUS_LOCALIZE = True
 
-#MESSAGES
+# MESSAGES
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     messages.SUCCESS: 'success',
