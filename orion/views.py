@@ -49,7 +49,7 @@ def novo_chamado_view(request, id):
     ordemServicoForm = OrdemServicoForm(OrdemServico_form_data)
 
     form_carga_horaria_factory = inlineformset_factory(
-        Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=1)
+        Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
 
     formCargaHoraria = form_carga_horaria_factory()
 
@@ -82,6 +82,7 @@ def novo_chamado(request):
         
         formCargaHoraria = form_carga_horaria_factory(request.POST)
         if formCargaHoraria.is_valid():
+            print(formCargaHoraria)
             formCargaHoraria.instance = ordem_servico
             formCargaHoraria.save()
             
@@ -100,7 +101,7 @@ def editar_chamado(request, id):
             ordemServicoForm = OrdemServicoForm(instance=ordem_servico) 
 
             form_carga_horaria_factory = inlineformset_factory(
-                Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=1)
+                Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
 
             formCargaHoraria = form_carga_horaria_factory(instance=ordem_servico)
             
@@ -298,18 +299,28 @@ def list_teste(request):
 
 
 def teste(request):
-    ordemForm = OrdemServicoForm()
-    form_carga_horaria_factory = inlineformset_factory(
-        Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=1)
+    if request.method == 'GET':
+        form = EquipamentosForm()
+        formEmpresa = EmpresaForm()
+        contexto = {
+            'form': form,
+            'formEmpresa': formEmpresa
+        }
+        return render(request, 'orion/pages/teste.html', contexto)
+    else:
+        form = EquipamentosForm(request.POST)
+        formEmpresa = EmpresaForm(request.POST)
 
-    formCargaHoraria = form_carga_horaria_factory()
+        if formEmpresa.is_valid():
+            formEmpresa.save()
+            redirect('teste')
+            
+        else:
+            print("Form não valido")
+            for field in formEmpresa:
+                print(field.value())
 
-    contexto = {
-        'formCargaHoraria': formCargaHoraria,
-        'ordemForm': ordemForm
-    }
-
-    return render(request, 'orion/pages/teste.html', contexto)
+    return redirect('teste')
 
 
 def teste_create(request):

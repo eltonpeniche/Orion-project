@@ -5,8 +5,8 @@ from django.contrib.admin.widgets import (AdminDateWidget, AdminSplitDateTime,
                                           AdminTimeWidget)
 from tempus_dominus.widgets import DatePicker, DateTimePicker, TimePicker
 
-from .models import (CargaHoraria, Contato, Empresa, Endereco, Equipamento,
-                     Ordem_Servico)
+from .models import (TIPO_STATUS, CargaHoraria, Contato, Empresa, Endereco,
+                     Equipamento, Ordem_Servico)
 
 
 class OrdemServicoForm(forms.ModelForm):
@@ -86,26 +86,28 @@ class ContatoForm(forms.ModelForm):
         } """
         
 class CargaHorariaForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super(CargaHorariaForm, self).__init__(*args, **kwargs)
         #self.fields['data'].initial = datetime.now()
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
-
+        self.fields['status'].widget.attrs['class'] = 'form-control timefield'
 
     class Meta:
         model = CargaHoraria
         # exclude = ['status_chamado']
         # '__all__'#['status', 'tipo_chamado']
         fields = ['data', 'hora_inicio', 'hora_termino', 'status']
+        
         widgets = {
-            'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'datetimefield' }),
-
-            'hora_inicio': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '08:00' }),
+            'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control datetimefield' }),
 
 
-            'hora_termino': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '12:00'}),           
+            'hora_inicio': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '08:00', 'class': 'timefield form-control' }),
 
 
+            'hora_termino': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '12:00', 'class': 'timefield form-control'}),           
 
+            
         }
 

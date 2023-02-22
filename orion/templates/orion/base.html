@@ -25,7 +25,7 @@
                 <h4> {{ titulo }} </h4>
                 
                 {% if user.is_authenticated %}
-                <h4> Olá, {{ user.get_username }} </h4>
+                <h4> Olá, {{ user.get_username|title }} </h4>
                 {% endif %}
             {% endif %}      
 

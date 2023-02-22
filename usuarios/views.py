@@ -1,7 +1,7 @@
 
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from usuarios.forms import CadastroUsuarioForm, LoginForm
 
@@ -13,7 +13,7 @@ def tecnicos(request):
     usuarios = Usuario.objects.all()
     contexto = {
         'forms': usuarios,
-        'titulo': 'Lista de Técnicos'
+        'titulo': 'Lista de Usuários'
     }
     return render(request, 'orion/pages/tecnicos.html', contexto)
 
@@ -55,6 +55,13 @@ def login(request):
 
 
 def cadastro_usuario(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    usuario = get_object_or_404(Usuario, user_id=request.user.id)
+    if usuario.tipo != 'A':
+        messages.error(request, f"Usuário {usuario.user.username} não é Administrador")
+        return redirect('lista_home')
+
 
     if request.method == 'POST':
         form = CadastroUsuarioForm(request.POST)
@@ -64,7 +71,8 @@ def cadastro_usuario(request):
             email = form['email'].value()
             senha = form['senha'].value()
             senha2 = form['confirmacao_senha'].value()
-
+            tipo_usuario = form['tipo_usuario'].value()
+           
             if User.objects.filter(username=login).exists():
                 messages.error(request, "Técnico já cadastrado anteriormente")
                 return render(request, 'orion/pages/cadastro_usuario.html',  {'form': form})
@@ -76,7 +84,7 @@ def cadastro_usuario(request):
             )
             user.save()
 
-            usuario = Usuario.objects.create(user=user, tipo='T')
+            usuario = Usuario.objects.create(user=user, tipo=tipo_usuario)
             usuario.save()
             messages.success(request, f"Técnico {login} salvo com sucesso.")
 

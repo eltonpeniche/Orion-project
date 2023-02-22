@@ -1,8 +1,7 @@
 
 from django import forms
-from tempus_dominus.widgets import DatePicker, DateTimePicker, TimePicker
 
-from .models import Usuario
+from .models import TIPO_USUARIO, Usuario
 
 
 #Formulario de autenticação de usuários
@@ -43,7 +42,12 @@ class CadastroUsuarioForm(forms.Form):
         max_length=100,
         required=True,
         widget = forms.PasswordInput(attrs={'placeholder':'Confirme a senha', 'class':'form-control'}))
-        
+
+    tipo_usuario = forms.ChoiceField(choices = TIPO_USUARIO.choices, label="Tipo de Usuário", initial='', widget=forms.Select(attrs={'class':'form-select'}), required=True)
+                                    
+
+   
+
     def clean_login(self):
         login = self.cleaned_data.get("login")
         if login:

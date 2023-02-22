@@ -41,8 +41,8 @@ class Empresa (models.Model):
     telefone = models.CharField(max_length=14)
     email = models.CharField(max_length=35)
     observacao = models.CharField(max_length=280)
-    endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE)
-    contato = models.ForeignKey(Contato, on_delete=models.CASCADE)
+    endereco = models.ForeignKey(Endereco, on_delete=models.SET_NULL, null=True, blank=True)
+    contato = models.ForeignKey(Contato, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome}'
