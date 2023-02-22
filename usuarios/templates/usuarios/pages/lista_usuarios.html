@@ -43,12 +43,27 @@
                                     <td>{{ cliente.user.username}} </td>
                                     <td>{{ cliente.user.email }}</td>
                                     <td>{{ cliente.get_tipo_display }}</td>
-                                    <td align="center"><a href="" title="Editar"><i
-                                        class="fa-solid fa-pen-to-square"></i></a></td>
+                                    <td align="center">
+                                        <span class="link me-2"><a href="" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a></span>
+                                        
+                                    
+                                        <span class="link ms-3">
+                                            <a href="#" class="botao_modal"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deletar_usuario_modal"
+                                            data-id="{{ cliente.user.id }}"
+                                            data-name="{{ cliente.user.username }}">
+                                            <i class="fa-solid fa-trash"> </i>
+                                            </a>
+                                        </span>
+                                    </td>
+
+                    
                                 </tr>
                                 
-                            {% endfor %}
-                            
+                                {% include 'usuarios/partials/_deletar_usuario_modal.html' %}
+                                {% endfor %}
+                                
                         {% else %}    
                             
                             <tr>
@@ -62,4 +77,20 @@
         </div>
     </div>
 </div>
+<script>
+
+    $('.botao_modal').click(function(){
+        $('#building-id').html($(this).data('id'));
+        $('#building-name').html($(this).data('name'));
+
+
+        const formmodal = document.getElementById("form-modal")
+        link = formmodal.action.split('/').slice(0,-1).join('/')+'/'+$(this).data('id')
+        formmodal.action = link
+        console.log(link)
+        
+
+    });
+
+</script>
 {% endblock %}
