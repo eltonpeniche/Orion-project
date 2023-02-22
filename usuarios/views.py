@@ -15,7 +15,7 @@ def tecnicos(request):
         'forms': usuarios,
         'titulo': 'Lista de Usuários'
     }
-    return render(request, 'orion/pages/tecnicos.html', contexto)
+    return render(request, 'usuarios/pages/tecnicos.html', contexto)
 
 
 def logout(request):
@@ -51,13 +51,14 @@ def login(request):
         contexto = {
             'form': formLogin
         }
-        return render(request, 'orion/pages/login.html', contexto)
+        return render(request, 'usuarios/pages/login.html', contexto)
 
 
 def cadastro_usuario(request):
     if not request.user.is_authenticated:
         return redirect('login')
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
+    
     if usuario.tipo != 'A':
         messages.error(request, f"Usuário {usuario.user.username} não é Administrador")
         return redirect('lista_home')
@@ -75,7 +76,7 @@ def cadastro_usuario(request):
            
             if User.objects.filter(username=login).exists():
                 messages.error(request, "Técnico já cadastrado anteriormente")
-                return render(request, 'orion/pages/cadastro_usuario.html',  {'form': form})
+                return render(request, 'usuarios/pages/cadastro_usuario.html',  {'form': form})
 
             user = User.objects.create_user(
                 username=login,
@@ -90,11 +91,15 @@ def cadastro_usuario(request):
 
             return redirect('tecnicos')
 
-        return render(request, 'orion/pages/cadastro_usuario.html',  {'form': form})
+        return render(request, 'usuarios/pages/cadastro_usuario.html',  {'form': form})
 
     else:
         cadastroUsuarioForm = CadastroUsuarioForm()
         contexto = {
             'form': cadastroUsuarioForm
         }
-        return render(request, 'orion/pages/cadastro_usuario.html', contexto)
+        return render(request, 'usuarios/pages/cadastro_usuario.html', contexto)
+
+
+def usuario_teste(request):
+    return render(request, 'usuarios/pages/usuario.html')
