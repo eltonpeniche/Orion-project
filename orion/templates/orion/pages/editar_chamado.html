@@ -14,17 +14,42 @@
     <div class="d-grid gap-2 d-md-flex justify-content-md-center p-3">
         
         <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
-
-        <form action="{% url 'fechar_chamado' id  %}">
-            <button type="submit" class="btn btn-secondary"> Fechar </button>
-        </form>
         
-        <form action="{% url 'deletar_chamado' id  %}">
+        <button type="button" class="btn btn-secondary b_fechar_chamado_modal"
+            data-bs-toggle="modal"
+            data-bs-target="#fechar_chamado_modal"
+            data-id="{{ id }}"
+            data-number="{{ ordemForm.numero_chamado.value}}">
+            
+            Fechar 
+        </button>
+
+        <form action="{% url 'deletar_chamado' id %}">
             <button type="submit" class="btn btn-danger"> Apagar </button>
         </form>
         
 
+        {% include 'orion/partials/_fechar_chamado_modal.html' %}
 
     </div>
+
+
+    <script>
+
+        $('.b_fechar_chamado_modal').click(function(){
+            $('#data-id').html($(this).data('id'));
+            $('#data-number').html($(this).data('number'));
+    
+    
+            const formmodal = document.getElementById("form-fechar-chamado-modal")
+            link = formmodal.action.split('/').slice(0,-1).join('/')+'/'+$(this).data('id')
+            formmodal.action = link
+
+            console.log(link)
+            
+    
+        });
+    
+    </script>
 
 {% endblock %}
