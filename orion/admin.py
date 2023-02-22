@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from orion.models import (CargaHoraria, Contato, Empresa, Endereco,
-                          Equipamento, Ordem_Servico)
+from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
+                          Ordem_Servico)
 
 # Register your models here.
 
@@ -12,12 +12,6 @@ class EnderecoAdmin(admin.ModelAdmin):
 
 admin.site.register(Endereco, EnderecoAdmin)
 
-
-class ContatoAdmin(admin.ModelAdmin):
-    ...
-
-
-admin.site.register(Contato, ContatoAdmin)
 
 
 class EmpresaAdmin(admin.ModelAdmin):

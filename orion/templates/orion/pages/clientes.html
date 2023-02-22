@@ -37,7 +37,6 @@
                             <th>Email</th>
                             <th>Observação</th>
                             <th>Endereço</th>
-                            <th>Contato</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,7 +51,6 @@
                                     <td>{{ cliente.email }}</td>
                                     <td>{{ cliente.observacao }} </td>
                                     <td>{{ cliente.endereco }} </td>
-                                    <td>{{ cliente.contato }} </td>
                                     <td align="center"><a href="{% url 'detalhar_cliente' cliente.id %}" title="Editar"><i
                                         class="fa-solid fa-pen-to-square"></i></a></td>
                                 </tr>

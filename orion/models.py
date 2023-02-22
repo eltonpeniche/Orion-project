@@ -26,15 +26,6 @@ class Endereco(models.Model):
         return f'{self.rua}, {self.numero} - {self.bairro}, {self.cidade}-{self.uf}, {self.cep}'
 
 
-class Contato(models.Model):
-    nomeContato = models.CharField(max_length=100)
-    telefone = models.CharField(max_length=14)
-    email = models.CharField(max_length=35)
-
-    def __str__(self):
-        return self.nomeContato
-
-
 class Empresa (models.Model):
     nome = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=14)
@@ -42,7 +33,6 @@ class Empresa (models.Model):
     email = models.CharField(max_length=35)
     observacao = models.CharField(max_length=280)
     endereco = models.ForeignKey(Endereco, on_delete=models.SET_NULL, null=True, blank=True)
-    contato = models.ForeignKey(Contato, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome}'
@@ -98,9 +88,8 @@ class Ordem_Servico(models.Model):
     equipamento = ChainedForeignKey(Equipamento, chained_field="empresa",
                                     chained_model_field="empresa", show_all=False, auto_choose=True, sort=True)
 
-    contato = ChainedForeignKey(Contato, chained_field="empresa",
-                                chained_model_field="empresa", show_all=False, auto_choose=True, sort=True)
-
+    contato = models.CharField(max_length=100, null=True, blank=True)
+    
     aberto_por = models.ForeignKey(
         Usuario, on_delete=models.SET_NULL, blank=True, null=True)
 

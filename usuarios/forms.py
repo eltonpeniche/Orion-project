@@ -43,7 +43,7 @@ class CadastroUsuarioForm(forms.Form):
         required=True,
         widget = forms.PasswordInput(attrs={'placeholder':'Confirme a senha', 'class':'form-control'}))
 
-    tipo_usuario = forms.ChoiceField(choices = TIPO_USUARIO.choices, label="Tipo de Usuário", initial='', widget=forms.Select(attrs={'class':'form-select'}), required=True)
+    tipo_usuario = forms.ChoiceField(choices = TIPO_USUARIO.choices, label="Tipo de Usuário", initial='T', widget=forms.Select(attrs={'class':'form-select'}), required=True)
                                     
 
    

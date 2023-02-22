@@ -1,12 +1,8 @@
 from datetime import datetime
 
 from django import forms
-from django.contrib.admin.widgets import (AdminDateWidget, AdminSplitDateTime,
-                                          AdminTimeWidget)
-from tempus_dominus.widgets import DatePicker, DateTimePicker, TimePicker
 
-from .models import (TIPO_STATUS, CargaHoraria, Contato, Empresa, Endereco,
-                     Equipamento, Ordem_Servico)
+from .models import CargaHoraria, Empresa, Endereco, Equipamento, Ordem_Servico
 
 
 class OrdemServicoForm(forms.ModelForm):
@@ -52,13 +48,6 @@ class EnderecoForm(forms.ModelForm):
         fields = '__all__'  # ['status', 'tipo_chamado']
 
 
-class ContatoForm(forms.ModelForm):
-
-    class Meta:
-        model = Contato
-        # exclude = ['status_chamado']
-        fields = '__all__'  # ['status', 'tipo_chamado']
-
 
 """ class CargaHorariaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -91,7 +80,7 @@ class CargaHorariaForm(forms.ModelForm):
         super(CargaHorariaForm, self).__init__(*args, **kwargs)
         #self.fields['data'].initial = datetime.now()
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
-        self.fields['status'].widget.attrs['class'] = 'form-control timefield'
+        self.fields['status'].widget.attrs['class'] = 'form-control form-select datetimefield'
 
     class Meta:
         model = CargaHoraria

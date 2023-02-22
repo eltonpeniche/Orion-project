@@ -7,11 +7,11 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from orion.models import (CargaHoraria, Contato, Empresa, Endereco,
-                          Equipamento, Ordem_Servico)
+from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
+                          Ordem_Servico)
 from usuarios.models import Usuario
 
-from .forms import (CargaHorariaForm, ContatoForm, EmpresaForm, EnderecoForm,
+from .forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
                     EquipamentosForm, OrdemServicoForm)
 
 
@@ -77,6 +77,13 @@ def novo_chamado(request):
 
     if ordemForm.is_valid():
         ordem_servico = ordemForm.save(commit=False)
+        
+        #verificando se numero de chamado gerado já existe.
+        if Ordem_Servico.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
+            messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
+            request.session['OrdemServico_form_data'] = None
+            return redirect('lista_chamados')
+
         ordem_servico.aberto_por = usuario
         ordem_servico.save()
         
@@ -85,6 +92,7 @@ def novo_chamado(request):
             print(formCargaHoraria)
             formCargaHoraria.instance = ordem_servico
             formCargaHoraria.save()
+            messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
             
         request.session['OrdemServico_form_data'] = None
         return redirect('lista_chamados')
@@ -159,7 +167,6 @@ def chamados_fechados(request):
     return render(request, 'orion/pages/chamado.html', contexto)
 
 def fechar_chamado(request, id):
-    print("fechar_chamado")
     try:
         ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
     except Ordem_Servico.DoesNotExist:
@@ -278,11 +285,11 @@ def cadastrar_clientes(request):
     if request.method == 'GET':
         form = EmpresaForm()
         formEndereco = EnderecoForm()
-        formContato = ContatoForm()
+        
         contexto = {
             'form': form,
             'formEndereco': formEndereco,
-            'formContato': formContato
+            
         }
         return render(request, 'orion/pages/detalhes_cliente.html', contexto)
     else:
@@ -290,13 +297,10 @@ def cadastrar_clientes(request):
 
         formEndereco = EnderecoForm(request.POST)
 
-        formContato = ContatoForm(request.POST)
-
         endereco = formEndereco.save()
-        contato = formContato.save()
         empresa = form.save(commit=False)
         empresa.endereco = endereco
-        empresa.contato = contato
+       
         empresa.save()
 
         return redirect('clientes')
