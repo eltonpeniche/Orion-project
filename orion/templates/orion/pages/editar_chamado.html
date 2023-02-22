@@ -10,18 +10,21 @@
 </form>
 
 
-    <div class=" d-flex justify-content-center m-2">
-      
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center p-3">
+        
         <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
 
-
+        <form action="{% url 'fechar_chamado' id  %}">
+            <button type="submit" class="btn btn-secondary"> Fechar </button>
+        </form>
+        
         <form action="{% url 'deletar_chamado' id  %}">
             <button type="submit" class="btn btn-danger"> Apagar </button>
         </form>
+        
+
 
     </div>
-
-
-</div>
 
 {% endblock %}

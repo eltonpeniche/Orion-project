@@ -140,6 +140,7 @@ def editar_chamado(request, id):
 
 
 def deletar_chamado(request, id):
+
     chamado = get_object_or_404(Ordem_Servico, pk=id)
     print('deletar = ', chamado)
     chamado.delete()
@@ -157,6 +158,17 @@ def chamados_fechados(request):
     }
     return render(request, 'orion/pages/chamado.html', contexto)
 
+def fechar_chamado(request, id):
+    print("fechar_chamado")
+    try:
+        ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
+    except Ordem_Servico.DoesNotExist:
+        raise Http404("No Model matches the given query.")
+    
+    ordem_servico.status_chamado = 'F'
+    ordem_servico.save()
+    messages.success(request, f"chamado {ordem_servico.numero_chamado} fechado com sucesso")
+    return redirect(lista_chamados)
 
 def equipamentos(request):
 
