@@ -6,19 +6,19 @@ from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
 # Register your models here.
 
 
+@admin.register(Endereco)
 class EnderecoAdmin(admin.ModelAdmin):
-    ...
+    list_display = ( 'id','rua', 'numero', 'bairro', 'cep', 'uf', 'cidade')
+    list_display_links = ( 'id','rua', 'numero', 'bairro', 'cep', 'uf', 'cidade')
+    ordering = ('id',)
 
 
-admin.site.register(Endereco, EnderecoAdmin)
 
-
-
+@admin.register(Empresa)
 class EmpresaAdmin(admin.ModelAdmin):
-    ...
-
-
-admin.site.register(Empresa, EmpresaAdmin)
+    list_display = ( 'id','nome', 'cnpj', 'telefone', 'email', 'observacao')
+    list_display_links = ( 'id','nome', 'cnpj', 'telefone', 'email', 'observacao')
+    ordering = ('id',)
 
 
 class CargaHorariaInline(admin.StackedInline):
@@ -28,24 +28,24 @@ class CargaHorariaInline(admin.StackedInline):
     # fields = ['name', 'quanity', 'unit', 'directions']
 
 
+@admin.register(Ordem_Servico)
 class Ordem_ServicoAdmin(admin.ModelAdmin):
     inlines = [CargaHorariaInline]
     list_display = ('id', 'numero_chamado', 'descricao_chamado',
                     'get_tipo_chamado_display', 'equipamento', 'criado_em', 'get_status_display', 'get_status_chamado_display')
+    list_display_links = ('id', 'numero_chamado', 'descricao_chamado',
+                    'get_tipo_chamado_display', 'equipamento', 'criado_em', 'get_status_display', 'get_status_chamado_display')
+    ordering = ('id',)
 
-
-admin.site.register(Ordem_Servico, Ordem_ServicoAdmin)
-
-
+@admin.register(Equipamento)
 class EquipamentoAdmin(admin.ModelAdmin):
-    ...
+    list_display = ( 'id', 'numero_serie', 'equipamento', 'tipo_equipamento','empresa', 'descricao')
+    list_display_links = ( 'id', 'numero_serie', 'equipamento', 'tipo_equipamento','empresa', 'descricao')
+    ordering = ('id',)
 
 
-admin.site.register(Equipamento, EquipamentoAdmin)
-
-
+@admin.register(CargaHoraria)
 class CargaHorariaAdmin(admin.ModelAdmin):
-    ...
+    ... 
 
 
-admin.site.register(CargaHoraria, CargaHorariaAdmin)
