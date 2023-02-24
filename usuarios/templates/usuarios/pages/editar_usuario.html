@@ -1,0 +1,32 @@
+{% extends "globals/base.html"%}
+
+{% block content %}
+
+{% include 'globals/partials/_alertas.html' %}
+
+<br>
+<div class="panel-heading">
+    <h3 class="panel-title">{{ title }}</h3>
+</div>
+
+<div class="container col-10">
+    <br>
+
+    <form action="{% url 'editar_usuario' id %}" method="post">
+        {% csrf_token %}
+        
+        {% if form %}
+            {% include 'usuarios/partials/_detalhes_usuario.html' %}
+        {% endif %}
+
+        <div class=" d-flex justify-content-center m-2">
+            <button type="submit" class="btn btn-primary m-2" > Salvar </button>
+        </div>
+
+    
+    </form>    
+         
+    </div>
+
+</div>
+{% endblock %}

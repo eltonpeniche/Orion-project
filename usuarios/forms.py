@@ -1,5 +1,9 @@
 
 from django import forms
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 from .models import TIPO_USUARIO, Usuario
 
@@ -18,6 +22,64 @@ class LoginForm(forms.Form):
         required=True,
         widget = forms.PasswordInput(attrs={'placeholder':'Senha', 'class':'form-control'})
     )
+
+class UserUpdateForm(UserChangeForm):
+    password = forms.CharField( label='Senha', required=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
+    
+    password2 = forms.CharField( label='Confirmar Senha', required=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['first_name'].widget.attrs['disabled'] = True
+        
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+
+    class Meta:
+        model = User
+        fields = ['first_name','email', 'username']
+        readonly_fields = ('first_name', )
+        labels = {
+            'username': 'Login',  # Alterar o label do campo 
+            'first_name': 'Nome',
+            'email': 'E-mail',
+        }
+    
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not password:
+            # Mantém a senha atual se o campo de senha estiver vazio
+            return self.instance.password
+
+        return password
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password = self.cleaned_data.get('password')
+        if password:
+            user.set_password(password)
+            
+        if commit:
+            user.save()
+        return user
+
+
+class UsuarioForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        #self.fields['tipo'].widget.attrs['readonly'] = True
+        #self.fields['tipo'].widget.attrs['disabled'] = True
+        self.fields['tipo'].widget.attrs.update({'class': 'form-control'})
+
+    class Meta:
+        model = Usuario
+        fields = ['tipo']
+
 
 
 class CadastroUsuarioForm(forms.Form):
@@ -57,11 +119,14 @@ class CadastroUsuarioForm(forms.Form):
             else:
                 return login
 
-    def clean_confirmacao_senha(self):
-        senha = self.cleaned_data.get("senha")
-        senha2 = self.cleaned_data.get("confirmacao_senha")
-        if senha and senha2:
-            if senha != senha2:
-                raise forms.ValidationError("As senhas não podem ser diferentes")
-            else:
-                return senha2
+    def clean(self):
+        cleaned_data = super().clean()
+        senha = cleaned_data.get('senha')
+        senha2 = cleaned_data.get('confirmacao_senha')
+        if senha != senha2:
+            raise forms.ValidationError({'confirmacao_senha':"As senhas não podem ser diferentes"})
+        else:
+            return senha2
+        
+            
+

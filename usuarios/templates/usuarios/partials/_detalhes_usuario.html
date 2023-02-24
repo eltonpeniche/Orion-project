@@ -1,0 +1,38 @@
+
+
+{% for field in form.visible_fields %}
+
+    <div class="form-group mt-3 mb-3 row ">
+        <div class="col-2 label-class">
+            <label class="col-form-label" for="{{ field.id_for_label}}">
+                {{field.label}}</label>
+            </div>
+            <div class="col-8">
+                
+                
+                {{field}}
+                
+                
+            </div>
+        </div>
+            
+{% endfor %}
+            
+
+
+{% if usuarioForm %}
+    {% for field in usuarioForm.visible_fields %}
+
+    <div class="form-group mt-3 mb-3 row ">
+        <div class="col-2 label-class">
+            <label class="col-form-label" for="{{ field.id_for_label}}">
+                {{field.label}}</label>
+            </div>
+            
+            <div class="col-8">
+                {{field}}
+            </div>
+        </div>
+        
+        {% endfor %}
+{% endif %}

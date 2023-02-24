@@ -219,6 +219,7 @@ def cadastrar_equipamentos(request):
     else:
         form = EquipamentosForm(request.POST)
         form.save()
+        messages.success(request, 'Novo equipamento cadastrado com sucesso')
 
         return redirect('equipamentos')
 

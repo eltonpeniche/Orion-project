@@ -1,13 +1,23 @@
 
 from django.contrib import auth, messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
+from django.forms import inlineformset_factory
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from usuarios.forms import CadastroUsuarioForm, LoginForm
+from usuarios.forms import (CadastroUsuarioForm, LoginForm, UserUpdateForm,
+                            UsuarioForm)
 
 from .models import Usuario
 
+
+#utils
+def isUserAdmin(user):
+    usuario = get_object_or_404(Usuario, user_id=user.id)
+    if usuario.tipo == 'A':
+        return True
+    return False
 
 # autenticação de usuários
 def lista_usuarios(request):
@@ -122,5 +132,76 @@ def deletar_usuario(request, id):
     messages.success(request, f"Usuário {nome} excluido com sucesso")
     return redirect('lista_usuarios')
 
+def dados_usuario(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            # Atualiza a sessão do usuário para evitar que ele seja desconectado após alterar a senha
+            update_session_auth_hash(request, request.user)
+            messages.success(request, "Editado com sucesso")
+            return redirect('lista_usuarios')
+        else:
+            messages.error(request, "Dados Inválidos")
+    else:
+        userForm = UserUpdateForm(instance = request.user)
+        
+        usuario = get_object_or_404(Usuario, user_id=request.user.id)
+        usuarioForm = UsuarioForm(instance = usuario)
+        
+        if not isUserAdmin(request.user):
+            usuarioForm.fields['tipo'].widget.attrs['readonly'] = True
+            usuarioForm.fields['tipo'].widget.attrs['disabled'] = True
+
+        contexto = {
+            'title':' Meus Dados',
+            'form': userForm,
+            'usuarioForm': usuarioForm
+
+        }
+    return render(request, 'usuarios/pages/dados_usuario.html', contexto)
+
+
+def editar_usuario(request, id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    user = get_object_or_404(User, pk = id)
+    userForm = UserUpdateForm(instance = user)
+    
+    usuario = get_object_or_404(Usuario, user_id = user.id)
+    usuarioForm = UsuarioForm(instance = usuario)
+    
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Editado com sucesso")
+            return redirect('lista_usuarios')
+        else:
+            messages.error(request, "Dados Inválidos")
+
+    else:
+        
+        if not isUserAdmin(request.user):
+            messages.error(request, "Você não é administrador")
+            return redirect('lista_usuarios')
+        
+        contexto = {
+            'title':' Edição de Usuários',
+            'id': id,
+            'form': userForm,
+            'usuarioForm': usuarioForm
+
+        }
+        return render(request, 'usuarios/pages/editar_usuario.html', contexto)
+
 def usuario_teste(request):
     return render(request, 'usuarios/pages/usuario.html')
+
+
+
+
+# usuario = Usuario.objects.select_related('user').get(pk=2)

@@ -30,8 +30,11 @@
                     </colgroup>
                     <thead>
                         <tr>
+                            <th>Login</th>
                             <th>Nome</th>
                             <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,10 +44,11 @@
                             
                                 <tr>
                                     <td>{{ cliente.user.username}} </td>
+                                    <td>{{ cliente.user.first_name}} {{ cliente.user.last_name}} </td>
                                     <td>{{ cliente.user.email }}</td>
                                     <td>{{ cliente.get_tipo_display }}</td>
                                     <td align="center">
-                                        <span class="link me-2"><a href="" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a></span>
+                                        <span class="link me-2"><a href="{% url 'editar_usuario' cliente.user.id %}" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a></span>
                                         
                                     
                                         <span class="link ms-3">
