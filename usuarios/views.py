@@ -82,7 +82,6 @@ def cadastro_usuario(request):
             login = form['login'].value()
             email = form['email'].value()
             senha = form['senha'].value()
-            senha2 = form['confirmacao_senha'].value()
             tipo_usuario = form['tipo_usuario'].value()
            
             if User.objects.filter(username=login).exists():
@@ -135,21 +134,25 @@ def deletar_usuario(request, id):
 def dados_usuario(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    
+    usuario = get_object_or_404(Usuario, user_id=request.user.id)
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, instance=request.user)
+        usuarioForm = UsuarioForm(request.POST, instance = usuario)
+        
         if form.is_valid():
             form.save()
             # Atualiza a sessão do usuário para evitar que ele seja desconectado após alterar a senha
             update_session_auth_hash(request, request.user)
             messages.success(request, "Editado com sucesso")
             return redirect('lista_usuarios')
-        else:
-            messages.error(request, "Dados Inválidos")
+        
+        return render(request, 'usuarios/pages/dados_usuario.html', 
+                {  'title':' Meus Dados',
+                    'form': form,
+                    'usuarioForm': usuarioForm  })
     else:
         userForm = UserUpdateForm(instance = request.user)
-        
-        usuario = get_object_or_404(Usuario, user_id=request.user.id)
+       
         usuarioForm = UsuarioForm(instance = usuario)
         
         if not isUserAdmin(request.user):
@@ -168,26 +171,34 @@ def dados_usuario(request):
 def editar_usuario(request, id):
     if not request.user.is_authenticated:
         return redirect('login')
-    user = get_object_or_404(User, pk = id)
-    userForm = UserUpdateForm(instance = user)
     
+    if not isUserAdmin(request.user):
+        messages.error(request, "Você não é administrador")
+        return redirect('lista_usuarios')
+
+    user = get_object_or_404(User, pk = id)
     usuario = get_object_or_404(Usuario, user_id = user.id)
-    usuarioForm = UsuarioForm(instance = usuario)
     
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, instance=user)
-        if form.is_valid():
+        usuarioForm = UsuarioForm(request.POST, instance = usuario)
+        
+        if form.is_valid() and usuarioForm.is_valid():
             form.save()
+            usuarioForm.save()
             messages.success(request, "Editado com sucesso")
             return redirect('lista_usuarios')
-        else:
-            messages.error(request, "Dados Inválidos")
+        
+        return render(request, 'usuarios/pages/editar_usuario.html', 
+                { 'title':' Edição de Usuários',
+                   'id': id,
+                'form': form,
+                'usuarioForm': usuarioForm
+        })
 
     else:
-        
-        if not isUserAdmin(request.user):
-            messages.error(request, "Você não é administrador")
-            return redirect('lista_usuarios')
+        userForm = UserUpdateForm(instance = user)
+        usuarioForm = UsuarioForm(instance = usuario)
         
         contexto = {
             'title':' Edição de Usuários',

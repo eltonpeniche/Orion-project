@@ -24,7 +24,7 @@ class LoginForm(forms.Form):
     )
 
 class UserUpdateForm(UserChangeForm):
-    password = forms.CharField( label='Senha', required=False,
+    password = forms.CharField( label='Senha', help_text= '* Ao deixar este campo vazio, a senha atual será mantida', required=False,
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
     
@@ -52,9 +52,14 @@ class UserUpdateForm(UserChangeForm):
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        if not password:
+        password2 = self.cleaned_data.get('password2')
+        
+        if not password and not password2:
             # Mantém a senha atual se o campo de senha estiver vazio
             return self.instance.password
+        
+        if password != password2:
+            raise forms.ValidationError("As senhas não podem ser diferentes")
 
         return password
     
