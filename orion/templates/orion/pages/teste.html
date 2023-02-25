@@ -186,126 +186,138 @@
 
             <form action="" id="form-equipamento" method="post">
                 {% csrf_token %}
-                
-        
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
-                        <label class="col-form-label" for="{{ form.empresa.id_for_label}}">
-                            {{form.empresa.label}}</label>
-                    </div>
-                    <div class="col-8">
-                        
-                        {{form.empresa|add_class:'form-control'}}
+                {{ form.media.js }}
+                {{ form.as_p }}
 
-    
-                    </div>
-                    <div class="col-1">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            +
-                        </button>
+                {% include 'orion/partials/_tabela_carga_horaria.html' %}
 
-
-                    </div>
-                    
+                <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
+                    <button id="add-more" type="button" class="btn btn-primary me-md-2">Adicionar Horas</button>
                 </div>
                 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
-                        <label class="col-form-label" for="{{ form.numero_serie.id_for_label}}">
-                            {{form.numero_serie.label}}</label>
-                    </div>
-                    <div class="col-8">
-                        
-                        {{form.numero_serie|add_class:'form-control'}}
-                            
-    
-                    </div>
-                </div>
-
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
-                        <label class="col-form-label" for="{{ form.equipamento.id_for_label}}">
-                            {{form.equipamento.label}}</label>
-                    </div>
-                    <div class="col-8">
-                        
-                        {{form.equipamento|add_class:'form-control'}}
-                            
-    
-                    </div>
-                </div>
-
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
-                        <label class="col-form-label" for="{{ form.tipo_equipamento.id_for_label}}">
-                            {{form.tipo_equipamento.label}}</label>
-                    </div>
-                    <div class="col-8">
-                        
-                        {{form.tipo_equipamento|add_class:'form-control'}}
-                            
-    
-                    </div>
-                </div>
-
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
-                        <label class="col-form-label" for="{{ form.descricao.id_for_label}}">
-                            {{form.descricao.label}}</label>
-                    </div>
-                    <div class="col-8">
-                        
-                        {{form.descricao|add_class:'form-control'}}
-                            
-    
-                    </div>
-                </div>
-                
-
-
-                
-            </form>    
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Nova Empresa: </h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form method='post' action = {% url 'teste' %}>  {% csrf_token %}
-                            <div class="modal-body">
-    
-                                {% for field in formEmpresa.visible_fields %}
-        
-                                <div class="form-group mt-3 mb-3 row ">
-                                    <div class="col-3 label-class">
-                                        <label class="col-form-label" for="{{ field.id_for_label}}">
-                                            {{field.label}}</label>
-                                    </div>
-                                    <div class="col-7">
-                                        
-                                        {{field|add_class:'form-control'}}
-                                            
+                <div class="row ">
                     
-                                    </div>
-                                </div>
-                    
-                                {% endfor %}
-                    
+                    <div id="ch-form-list" class="hidden">
+                        {{ form_ch.management_form }} 
+                        {% for form  in form_ch %}
+                            <div class="repetir">
+                                {{ form }}
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Salvar</button>
-                            </div>
-                        </form>  
+                        {% endfor %}
+                    </div> 
+                    
+                    
+                    <div id="empty-form" class="hidden" > 
+                        {{ form_ch.empty_form }} 
+                         
                     </div>
+                    
                 </div>
+                
+                <div class=" d-flex justify-content-center m-2">
+      
+                    <button type="submit" class="btn btn-primary" > Salvar </button>
+            
+                </div>
+            </form>
+            <div id="temp">
+
+            </div>
+            <div class=" d-flex justify-content-center m-2">
+                <button id ="save_hours" type="button" class="btn btn-primary" > Salvar hora </button>
             </div>
         </div>
 
-
     </body>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+        
+        
+        const addMoreBtn = document.getElementById("add-more")
+        const totalNewForms = document.getElementById("id_carga_horaria-TOTAL_FORMS")
+        const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
+        var copyEmptyFormEl = null;
+        
+        addMoreBtn.addEventListener('click', add_new_form)
+        
+        function add_new_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+
+            const currentCargaHorariaForms = document.getElementsByClassName("repetir")
+            const currentFormCount = currentCargaHorariaForms.length //+  1
+            const formCopyTarget = document.getElementById("temp")
+            copyEmptyFormEl = document.getElementById("empty-form").cloneNode(true);
+
+            copyEmptyFormEl.setAttribute('class', 'repetir-temp' )
+            copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}` )
+            const regex = new RegExp('__prefix__', 'g' )
+            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
+            formCopyTarget.append(copyEmptyFormEl)
+
+            
+        } 
+
+        
+        const saveHoursBtn = document.getElementById("save_hours");
+        saveHoursBtn.addEventListener('click', save_new_form)
+        function save_new_form(event){
+            const currentCargaHorariaForms = document.getElementsByClassName("repetir")
+            const currentFormCount = currentCargaHorariaForms.length //+  1
+            const formCopyTarget = document.getElementById("ch-form-list")
+            const temForm = document.getElementsByClassName("repetir-temp")
+            
+            copyEmptyFormEl.setAttribute('class', 'repetir' )
+            totalNewForms.setAttribute('value', currentFormCount + 1)
+            
+            formCopyTarget.append(copyEmptyFormEl)
+           
+    
+
+            //--------------------------------------------------------------------
+
+            const varData = document.getElementById("id_carga_horaria-"+currentFormCount+"-data").value;
+            console.log("varData" + varData )
+            const varHoraInicio = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_inicio").value;
+            const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
+            const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
+            const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
+            var novaLinha = document.createElement("tr");
+            var valores = [varData, varHoraInicio, varHoraTermino, varHorasDeTrabalho, varStatus, '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
+            //var valores = ['24/02/2023', '09:30', '13:30','05:00' ,'Normal', '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
+            for (var i = 0; i < 6; i++) {
+                var novaCelula = document.createElement("td");
+                novaCelula.innerHTML = valores[i];
+                novaLinha.appendChild(novaCelula);
+            }
+            
+            
+            novaLinha.appendChild(novaCelula);
+            tabelaCargaHoraria.append(novaLinha);
+        
+        
+        
+        }
+
+        function subtrairHorarios(horario1, horario2) {
+            var partes1 = horario1.split(":");
+            var partes2 = horario2.split(":");
+            var data1 = new Date(0, 0, 0, partes1[0], partes1[1]);
+            var data2 = new Date(0, 0, 0, partes2[0], partes2[1]);
+            var diferenca = data2.getTime() - data1.getTime();
+            var horas = Math.floor(diferenca / (1000 * 60 * 60));
+            diferenca -= horas * (1000 * 60 * 60);
+            var minutos = Math.floor(diferenca / (1000 * 60));
+            if (minutos < 10) {
+              minutos = "0" + minutos;
+            }
+            return horas + ":" + minutos;
+        }
+
+    </script>
+
 </html>

@@ -12,6 +12,7 @@ from .models import Usuario
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
     list_display = ('id','user','tipo' )
+    list_display_links = ('id','user','tipo' )
     ordering = ('id',)
 
     

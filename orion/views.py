@@ -317,27 +317,35 @@ def list_teste(request):
 
 def teste(request):
     if request.method == 'GET':
-        form = EquipamentosForm()
-        formEmpresa = EmpresaForm()
+        form = OrdemServicoForm()
+        form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
+        
+        form_ch = form_carga_horaria_factory()
+        
         contexto = {
             'form': form,
-            'formEmpresa': formEmpresa
+            'form_ch': form_ch
         }
         return render(request, 'orion/pages/teste.html', contexto)
     else:
-        form = EquipamentosForm(request.POST)
-        formEmpresa = EmpresaForm(request.POST)
+        ordemForm = OrdemServicoForm(request.POST)
+        
+        form_carga_horaria_factory = inlineformset_factory(
+            Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
+        
+        formCargaHoraria = form_carga_horaria_factory(request.POST)
 
-        if formEmpresa.is_valid():
-            formEmpresa.save()
-            redirect('teste')
+        if ordemForm.is_valid():
+            ordem_servico = ordemForm.save()
             
-        else:
-            print("Form não valido")
-            for field in formEmpresa:
-                print(field.value())
+            if formCargaHoraria.is_valid():
+                formCargaHoraria.instance = ordem_servico
+                formCargaHoraria.save()
+                return redirect('lista_chamados')
+        print(formCargaHoraria)
+        print("não foi valido")
+        return redirect('lista_home')  
 
-    return redirect('teste')
 
 
 def teste_create(request):

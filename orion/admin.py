@@ -46,6 +46,6 @@ class EquipamentoAdmin(admin.ModelAdmin):
 
 @admin.register(CargaHoraria)
 class CargaHorariaAdmin(admin.ModelAdmin):
-    ... 
+    list_display = ('id', 'hora_inicio', 'hora_termino','status','horas_de_trabalho')
 
 

@@ -1,4 +1,6 @@
 
+from datetime import datetime, time
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -27,23 +29,23 @@ class Endereco(models.Model):
 
 
 class Empresa (models.Model):
-    nome = models.CharField(max_length=100)
-    cnpj = models.CharField(max_length=14)
-    telefone = models.CharField(max_length=14)
-    email = models.CharField(max_length=35)
+    nome       = models.CharField(max_length=100)
+    cnpj       = models.CharField(max_length=14)
+    telefone   = models.CharField(max_length=14)
+    email      = models.CharField(max_length=35)
     observacao = models.CharField(max_length=280)
-    endereco = models.ForeignKey(Endereco, on_delete=models.SET_NULL, null=True, blank=True)
+    endereco   = models.ForeignKey(Endereco, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome}'
 
 
 class Equipamento(models.Model):
-    empresa = models.ForeignKey(Empresa, on_delete=models.SET_NULL, null=True)
-    numero_serie = models.CharField(max_length=100)
-    equipamento = models.CharField(max_length=100)
+    empresa          = models.ForeignKey(Empresa, on_delete=models.SET_NULL, null=True)
+    numero_serie     = models.CharField(max_length=100)
+    equipamento      = models.CharField(max_length=100)
     tipo_equipamento = models.CharField(max_length=35)
-    descricao = models.CharField(max_length=100, blank=True)
+    descricao        = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f'{self.equipamento}'
@@ -101,7 +103,7 @@ class CargaHoraria(models.Model):
     data = models.DateField()
     hora_inicio = models.TimeField()
     hora_termino = models.TimeField()
-    # total_horas
+    horas_de_trabalho = models.TimeField()
     status = models.CharField(
         max_length=1, choices=TIPO_STATUS.choices, blank=False, null=False, default='N')
     # técnico
@@ -110,3 +112,17 @@ class CargaHoraria(models.Model):
 
     def __str__(self):
         return f'dia = {self.data} -Entrada =  {self.hora_inicio} -Saida =  {self.hora_termino}'
+
+    def save(self, *args, **kwargs):
+        # Convertendo cada objeto datetime.time em um objeto datetime
+        hora_inicio = datetime.combine(self.data, self.hora_inicio)
+        hora_termino = datetime.combine(self.data, self.hora_termino)
+        
+        # Calcule a diferença entre os dois horarios
+        diferenca = hora_termino - hora_inicio
+        
+        diferenca_horas, diferenca_segundos = divmod(diferenca.seconds, 3600)
+        diferenca_minutos, _ = divmod(diferenca_segundos, 60)
+        #horas trabalhadas
+        self.horas_de_trabalho= time(hour=diferenca_horas, minute=diferenca_minutos, second=0)
+        super(CargaHoraria, self).save(*args, **kwargs)

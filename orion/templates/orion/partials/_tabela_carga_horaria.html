@@ -1,7 +1,8 @@
 <div class="table-responsive">
 
-    <table class="table table-bordered table-striped">
+    <table  class="table table-bordered table-striped">
         <colgroup>
+            <col class="col-2">
             <col class="col-2">
             <col class="col-2">
             <col class="col-2">
@@ -13,11 +14,12 @@
                 <th>Data</th>
                 <th>Hora Inicio</th>
                 <th>Hora Termino</th>
+                <th>Horas de Trabalho</th>
                 <th>Status</th>
                 <th>ações</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id = "tabela-carga_horaria-corpo">
 
 
             {% if carga_horaria  %}
@@ -26,8 +28,9 @@
                     <tr>
                         
                         <td>{{fch.data|date:"d/m/Y" }} </td>
-                        <td> {{ fch.hora_inicio }} </td>
+                        <td>{{ fch.hora_inicio }} </td>
                         <td>{{ fch.hora_termino }}</td>
+                        <td>{{ fch.horas_de_trabalho }}</td>
                         <td>{{ fch.get_status_display }} </td>
 
                         <td align="center"><a href="#" title="Editar"><i
@@ -35,13 +38,6 @@
                     </tr>
                     
                 {% endfor %}
-                
-            {% else %}    
-                
-                <tr>
-                    <td colspan="8">Sem registros</td>
-                </tr>
-            
             {% endif %}
         </tbody>
     </table>

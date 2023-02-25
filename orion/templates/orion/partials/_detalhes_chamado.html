@@ -138,7 +138,7 @@
 
                 {% comment %} {% include 'orion/partials/_carga_horaria_modal.html' %} {% endcomment %}
 
-                {% comment %}  {% include 'orion/partials/_tabela_carga_horaria.html' %} {% endcomment %}
+                {% comment %} {% include 'orion/partials/_tabela_carga_horaria.html' %} {% endcomment %}
 
                 {% comment %} {% include 'orion/partials/lista_carga_horaria.html' %} {% endcomment %}
 
@@ -150,13 +150,16 @@
                             <div class="repetir">
                                 
                                 {{ form }}
-                            
+                
+
                             </div>
                         {% endfor %}
                     </div> 
                     
                     <div id="empty-form" class="hidden" > 
-                        {{ form_ch.empty_form.as_table }}  
+                        {{ form_ch.empty_form }} 
+                        
+                      
                     </div>
                     
                     <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
@@ -221,7 +224,7 @@
         
         const addMoreBtn = document.getElementById("add-more")
         const totalNewForms = document.getElementById("id_carga_horaria-TOTAL_FORMS")
-        
+        const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
         
         addMoreBtn.addEventListener('click', add_new_form)
         
@@ -235,11 +238,26 @@
             const copyEmptyFormEl = document.getElementById("empty-form").cloneNode(true)
             copyEmptyFormEl.setAttribute('class', 'repetir' )
             copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}` )
-            //console.log(copyEmptyFormEl.id)
+            console.log(copyEmptyFormEl.id)
             const regex = new RegExp('__prefix__', 'g' )
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             totalNewForms.setAttribute('value', currentFormCount + 1)
             formCopyTarget.append(copyEmptyFormEl)
-            console.log(totalNewForms.value)
+            
+            console.log(currentFormCount)
+
+            var novaLinha = document.createElement("tr");
+            var valores = ["24/02/2023", "08:00", "12:00", "04:00", "Normal", '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
+            
+            for (var i = 0; i < 6; i++) {
+                var novaCelula = document.createElement("td");
+                novaCelula.innerHTML = valores[i];
+                novaLinha.appendChild(novaCelula);
+            }
+            
+            
+            novaLinha.appendChild(novaCelula);
+            tabelaCargaHoraria.append(novaLinha);
+
         } 
     </script>
