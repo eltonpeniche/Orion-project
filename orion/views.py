@@ -123,7 +123,7 @@ def editar_chamado(request, id):
             contexto = {
                 'ordemForm': ordemServicoForm,
                 'form_ch' : formCargaHoraria,
-                'carga_horaria' : zip(lista_carga_horaria,ids,values),
+                'carga_horaria' : zip(lista_carga_horaria,ids,values, formCargaHoraria),
                 'id' : id,
             }
         
@@ -138,15 +138,25 @@ def editar_chamado(request, id):
         
         formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
 
-        if ordemForm.is_valid():
+        if ordemForm.is_valid() and formCargaHoraria.is_valid():
             ordemForm.save()
-            
-            if formCargaHoraria.is_valid():
-                formCargaHoraria.save()
-                request.session['OrdemServico_form_data'] = None
-                return redirect('lista_chamados')
+            formCargaHoraria.save()
+            request.session['OrdemServico_form_data'] = None
+            return redirect('lista_chamados')
+        
+        #carregando todos os horarios relacionados com a instancia de ordem_servico
+        lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
+        #print("form_ch" ,form_ch)
+        ids = ['deletar-elemento-lista-'+str(x) for x in range(0,lista_carga_horaria.count())]
+        values = [x for x in range(0,lista_carga_horaria.count())]
 
-        return redirect('novo_chamado_view', id)  
+        messages.error(request, 'Informações nâo válidas')
+        return render(request, 'orion/pages/editar_chamado.html', 
+        {   'ordemForm': ordemForm,
+            'form_ch' : formCargaHoraria,
+            'carga_horaria' : zip(lista_carga_horaria,ids,values,formCargaHoraria),
+            'id' : id,
+        })
 
 
 def deletar_chamado(request, id):

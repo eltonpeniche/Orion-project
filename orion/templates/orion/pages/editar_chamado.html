@@ -1,7 +1,8 @@
 {% extends "globals/base.html"%}
+{% load widget_tweaks %}
 
 {% block content %}
-{% load widget_tweaks %}
+{% include 'globals/partials/_alertas.html' %}
 
 <form id="form-chamado" action= "{% url 'editar_chamado' id %}" method="post">
 
@@ -34,8 +35,9 @@
     </div>
 
 
+    
     <script>
-
+        //Confirmação de fechamento de chamado
         $('.b_fechar_chamado_modal').click(function(){
             $('#data-id').html($(this).data('id'));
             $('#data-number').html($(this).data('number'));

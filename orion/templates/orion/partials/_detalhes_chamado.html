@@ -137,6 +137,7 @@
                 </div>
 
                 {% include 'orion/partials/_carga_horaria_modal.html' %}
+                {% include 'orion/partials/_carga_horaria_error_modal.html' %}
                 
                 <!-- Button trigger modal -->
                 <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
@@ -152,7 +153,7 @@
                     <div id="ch-form-list" class="hidden">
                         {{ form_ch.management_form }} 
                         
-                        {% for form  in form_ch %}
+                        {% for form in form_ch %}
                             <div class="repetir">
                                 {{ form }}
                             </div>
@@ -163,7 +164,6 @@
                     <div id="empty-form" class="hidden" > 
 
                         
-
                         <div class="form-group mt-3 mb-3 row ">
                             <div class="col-4 label-class">
                                 <label class="col-form-label" for="{{ form_ch.empty_form.data.id_for_label}}">
@@ -253,6 +253,7 @@
         </div>
 
     </div>
+    
 
     <div class="tab-pane fade" id="time-tab-pane" role="tabpanel" aria-labelledby="time-tab" tabindex="0">
 
@@ -299,7 +300,18 @@
                 btn = event.target;
                 console.log('O botão: ' + btn.id);
                 elemForm = document.getElementById("id_carga_horaria-"+btn.value+"-DELETE")
-                elemForm.checked = true
+                if (elemForm == null){
+                    elmPai = document.getElementById("form-"+btn.value)
+                    const input = document.createElement("input");
+                    input.setAttribute("type", "checkbox");
+                    input.checked = true;
+                    input.setAttribute("name", "carga_horaria-"+btn.value+"-DELETE");
+                    input.setAttribute("id", "id_carga_horaria-"+btn.value+"-DELETE");
+                    elmPai.appendChild(input);
+                }else{
+                    elemForm.checked = true
+
+                }
 
                 //---------------------------------------------
                 var tr = document.getElementById(btn.value);
@@ -332,6 +344,20 @@
             const formCopyTarget = document.getElementById("ch-form-list")
             const temForm = document.getElementsByClassName("repetir-temp")
             
+            //variaveis que compoe a lista de horarios trabalhados
+            const varData = formatarData(document.getElementById("id_carga_horaria-"+currentFormCount+"-data").value);
+            const varHoraInicio = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_inicio").value;
+            const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
+            const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
+            
+            //verifica se horaro já existe
+            if (verificaHorario(varData, varHoraInicio, varHoraTermino,tabelaCargaHoraria)){
+                not_save_new_form()
+                $('#error_ch_Modal').modal('show');
+                return; // interrompe a execução da função
+
+            }
+            
             copyEmptyFormEl.setAttribute('class', 'repetir' )
             totalNewForms.setAttribute('value', currentFormCount + 1)
             
@@ -340,15 +366,10 @@
 
             //--------------------------------------------------------------------
 
-            const varData = formatarData(document.getElementById("id_carga_horaria-"+currentFormCount+"-data").value);
-            const varHoraInicio = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_inicio").value;
-            const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
-            const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
             const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
             var novaLinha = document.createElement("tr");
             novaLinha.setAttribute("id", currentFormCount );
             var valores = [varData, varHoraInicio, varHoraTermino, varHorasDeTrabalho, varStatus, '<button id="deletar-elemento-lista-'+currentFormCount+'" type="button" class="del-el-lista btn btn-danger" value='+currentFormCount+'> X </button>'];
-            //var valores = ['24/02/2023', '09:30', '13:30','05:00' ,'Normal', '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
             for (var i = 0; i < 6; i++) {
                 var novaCelula = document.createElement("td");
                 if(i==5){ novaCelula.setAttribute("align", "center"); }
@@ -359,27 +380,6 @@
             novaLinha.appendChild(novaCelula);
             tabelaCargaHoraria.append(novaLinha);
         
-        }
-
-        function formatarData(data){
-            const partes = data.split("-"); // Divide a string em partes separadas por "-"
-            const novaData = partes[2] + "/" + partes[1] + "/" + partes[0]; // Reorganiza as partes em nova string com a ordem desejada
-            return novaData; 
-        }
-
-        function subtrairHorarios(horario1, horario2) {
-            var partes1 = horario1.split(":");
-            var partes2 = horario2.split(":");
-            var data1 = new Date(0, 0, 0, partes1[0], partes1[1]);
-            var data2 = new Date(0, 0, 0, partes2[0], partes2[1]);
-            var diferenca = data2.getTime() - data1.getTime();
-            var horas = Math.floor(diferenca / (1000 * 60 * 60));
-            diferenca -= horas * (1000 * 60 * 60);
-            var minutos = Math.floor(diferenca / (1000 * 60));
-            if (minutos < 10) {
-              minutos = "0" + minutos;
-            }
-            return horas + ":" + minutos;
         }
 
     </script>

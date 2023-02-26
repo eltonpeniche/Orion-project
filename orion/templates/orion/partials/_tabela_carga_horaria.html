@@ -26,11 +26,13 @@
             {% if carga_horaria  %}
             
                 
-                {% for fch, id, value in carga_horaria %}
+                {% for fch, id, value, form in carga_horaria %}
                 
                     <tr id = {{ value }}>
                         
-                        <td>{{ fch.data|date:"d/m/Y" }} </td>
+                        <td>{{ fch.data|date:"d/m/Y" }} 
+                        {% if form.data.errors  %}{% endif %}
+                            {{ form.data.errors }} </td>
                         <td>{{ fch.hora_inicio }} </td>
                         <td>{{ fch.hora_termino }}</td>
                         <td>{{ fch.horas_de_trabalho }}</td>
@@ -38,7 +40,6 @@
                                                        
                         <td align="center"><button id = {{id}}  type="button" class="del-el-lista btn btn-danger" value = {{ value }} > X </button></td>
                     </tr>
-                
 
 
                 {% endfor %}
