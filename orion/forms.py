@@ -100,28 +100,31 @@ class CargaHorariaForm(forms.ModelForm):
             
         }
     
-"""     def clean(self):
+    def clean(self):
         cleaned_data = super().clean()
         
-        #id = cleaned_data.get('data')
         data = cleaned_data.get('data')
         hora_inicio = cleaned_data.get('hora_inicio')
         hora_termino = cleaned_data.get('hora_termino')
-        print("CLEAN")
+
         if self.instance.ordem_servico:
-            #self.instance.pk
             #carregando todos os horarios relacionados com a instancia de ordem_servico
             lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=self.instance.ordem_servico.pk).filter(data=data)
-            #
+
             for ch in lista_carga_horaria:
                 if ch.data == data:
-                    if self.instance.pk:    
-                        if ch.id != self.instance.pk:
-                            print(data, self.instance.id  , " | ", ch.data, ch.id)
-                            raise forms.ValidationError({'data':"As datas não podem ser iguais"})
-                    else:
-                        print(data, self.instance.id  , " | ", ch.data, ch.id)
-                        raise forms.ValidationError({'data':"As datas não podem ser iguais"})
-        else:
-            print( "not self.instance.ordem_servico") """
+                    if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino):
+                        if self.instance.pk:    
+                            if ch.id != self.instance.pk:
+                                raise forms.ValidationError({'hora_inicio':"As datas não podem ser iguais"})
+                        else:
+                            raise forms.ValidationError({'hora_inicio':"As datas não podem ser iguais"})
+                    
+
  
+
+
+def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):
+    if h1_inicio <= h2_inicio < h1_fim or h2_inicio <= h1_inicio < h2_fim:
+        return True
+    return False

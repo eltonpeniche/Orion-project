@@ -350,13 +350,13 @@
             const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
             const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
             
-            //verifica se horaro já existe
+{% comment %}             //verifica se horaro já existe
             if (verificaHorario(varData, varHoraInicio, varHoraTermino,tabelaCargaHoraria)){
                 not_save_new_form()
                 $('#error_ch_Modal').modal('show');
                 return; // interrompe a execução da função
 
-            }
+            } {% endcomment %}
             
             copyEmptyFormEl.setAttribute('class', 'repetir' )
             totalNewForms.setAttribute('value', currentFormCount + 1)
