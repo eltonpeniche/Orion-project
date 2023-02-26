@@ -1,3 +1,4 @@
+
 <div class="table-responsive">
 
     <table  class="table table-bordered table-striped">
@@ -23,21 +24,25 @@
 
 
             {% if carga_horaria  %}
-                {% for fch in carga_horaria %}
+            
                 
-                    <tr>
+                {% for fch, id, value in carga_horaria %}
+                
+                    <tr id = {{ value }}>
                         
-                        <td>{{fch.data|date:"d/m/Y" }} </td>
+                        <td>{{ fch.data|date:"d/m/Y" }} </td>
                         <td>{{ fch.hora_inicio }} </td>
                         <td>{{ fch.hora_termino }}</td>
                         <td>{{ fch.horas_de_trabalho }}</td>
                         <td>{{ fch.get_status_display }} </td>
-
-                        <td align="center"><a href="#" title="Editar"><i
-                            class="fa-solid fa-pen-to-square"></i> Editar </a></td>
+                                                       
+                        <td align="center"><button id = {{id}}  type="button" class="del-el-lista btn btn-danger" value = {{ value }} > X </button></td>
                     </tr>
-                    
+                
+
+
                 {% endfor %}
+                  
             {% endif %}
         </tbody>
     </table>

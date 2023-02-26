@@ -191,9 +191,15 @@
 
                 {% include 'orion/partials/_tabela_carga_horaria.html' %}
 
-                <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
-                    <button id="add-more" type="button" class="btn btn-primary me-md-2">Adicionar Horas</button>
-                </div>
+{% comment %}                 <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
+                    <button id="add-more" type="button" class="btn btn-primary me-md-2">
+                        Adicionar Horas</button>
+                </div> {% endcomment %}
+
+                <!-- Button trigger modal -->
+                <button id="add-more" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Adicionar Horas
+                </button>
                 
                 <div class="row ">
                     
@@ -220,12 +226,36 @@
             
                 </div>
             </form>
-            <div id="temp">
 
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="temp">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button id ="not_save_hours" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id ="save_hours" type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar hora</button>
+                    
+{% comment %}                     <div class=" d-flex justify-content-center m-2">
+                        <button id ="save_hours" type="button" class="btn btn-primary" > Salvar hora </button>
+                    </div> {% endcomment %}
+
+                    </div>
+                </div>
+                </div>
             </div>
-            <div class=" d-flex justify-content-center m-2">
-                <button id ="save_hours" type="button" class="btn btn-primary" > Salvar hora </button>
-            </div>
+            <!-- End Modal -->
+            
+
+            
         </div>
 
     </body>
@@ -247,7 +277,7 @@
             if(event){
                 event.preventDefault()   
             }
-
+            console.log("add_hours")
             const currentCargaHorariaForms = document.getElementsByClassName("repetir")
             const currentFormCount = currentCargaHorariaForms.length //+  1
             const formCopyTarget = document.getElementById("temp")
@@ -262,10 +292,27 @@
             
         } 
 
+        const notSaveHoursBtn = document.getElementById("not_save_hours");
+        notSaveHoursBtn.addEventListener('click', not_save_new_form)
+        function not_save_new_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+            console.log("not_save_hours")
+            const temForm = document.getElementById("temp");
+            while (temForm.firstChild) {
+                temForm.removeChild(temForm.firstChild);
+            }
+        }
+
         
         const saveHoursBtn = document.getElementById("save_hours");
         saveHoursBtn.addEventListener('click', save_new_form)
         function save_new_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+            console.log("save_hours")
             const currentCargaHorariaForms = document.getElementsByClassName("repetir")
             const currentFormCount = currentCargaHorariaForms.length //+  1
             const formCopyTarget = document.getElementById("ch-form-list")

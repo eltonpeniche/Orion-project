@@ -49,13 +49,15 @@ def novo_chamado_view(request, id):
     ordemServicoForm = OrdemServicoForm(OrdemServico_form_data)
 
     form_carga_horaria_factory = inlineformset_factory(
-        Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
+        Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0 )
 
     formCargaHoraria = form_carga_horaria_factory()
 
+    indices = [x for x in range(0,5)]
     contexto = {
         'ordemForm': ordemServicoForm,
         'form_ch': formCargaHoraria, #teste
+        'indices' : indices
     }
         
     return render(request, 'orion/pages/novo_chamado.html', contexto)
@@ -116,11 +118,12 @@ def editar_chamado(request, id):
             #carregando todos os horarios relacionados com a instancia de ordem_servico
             lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
             #print("form_ch" ,form_ch)
-            
+            ids = ['deletar-elemento-lista-'+str(x) for x in range(0,lista_carga_horaria.count())]
+            values = [x for x in range(0,lista_carga_horaria.count())]
             contexto = {
                 'ordemForm': ordemServicoForm,
                 'form_ch' : formCargaHoraria,
-                'carga_horaria' : lista_carga_horaria,
+                'carga_horaria' : zip(lista_carga_horaria,ids,values),
                 'id' : id,
             }
         
@@ -142,8 +145,7 @@ def editar_chamado(request, id):
                 formCargaHoraria.save()
                 request.session['OrdemServico_form_data'] = None
                 return redirect('lista_chamados')
-        print(formCargaHoraria)
-        print("não foi valido")
+
         return redirect('novo_chamado_view', id)  
 
 
@@ -320,6 +322,7 @@ def teste(request):
         form = OrdemServicoForm()
         form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
         
+        ch = CargaHoraria.objects.fi
         form_ch = form_carga_horaria_factory()
         
         contexto = {

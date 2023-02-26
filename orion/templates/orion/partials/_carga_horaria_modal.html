@@ -1,44 +1,31 @@
 {% load static %}
 
 {% block content %}
-<div>
-    <!-- InstanceBeginEditable name="conteudo" -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="temp">
 
-        <form id = "form_carga_horaria" >
-            {% csrf_token %}
-
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button id ="not_save_hours" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button id ="save_hours" type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar hora</button>
         
-            <!-- Button trigger modal -->
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#carga_horaria_modal">
-                Adicionar Horas
-                </button>
-            </div>
+{% comment %} <div class=" d-flex justify-content-center m-2">
+            <button id ="save_hours" type="button" class="btn btn-primary" > Salvar hora </button>
+        </div> {% endcomment %}
 
-            <!-- modais de adicao de itens -->
-            <div class="modal" tabindex="-1" id="carga_horaria_modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Adicionar Serviço</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" >
-                            
-                            {{ form_ch.media}}
-                            {{ form_ch.management_form }}
-                            {{ form_ch.as_p }}
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary" name= "salvar_modal" >Salvar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-          
+        </div>
+    </div>
+    </div>
 </div>
+<!-- End Modal -->
 
 {% endblock %}

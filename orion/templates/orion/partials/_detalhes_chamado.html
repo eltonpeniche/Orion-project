@@ -136,37 +136,81 @@
                     </div>
                 </div>
 
-                {% comment %} {% include 'orion/partials/_carga_horaria_modal.html' %} {% endcomment %}
-
-                {% comment %} {% include 'orion/partials/_tabela_carga_horaria.html' %} {% endcomment %}
-
-                {% comment %} {% include 'orion/partials/lista_carga_horaria.html' %} {% endcomment %}
+                {% include 'orion/partials/_carga_horaria_modal.html' %}
+                
+                <!-- Button trigger modal -->
+                <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
+                    <button id="add-more" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Adicionar Horas
+                    </button>
+                </div>
+                
+                {% include 'orion/partials/_tabela_carga_horaria.html' %}
 
                 <div class="row ">
                     
-                    <div id="ch-form-list">
+                    <div id="ch-form-list" class="hidden">
                         {{ form_ch.management_form }} 
+                        
                         {% for form  in form_ch %}
                             <div class="repetir">
-                                
                                 {{ form }}
-                
-
                             </div>
+                        
                         {% endfor %}
                     </div> 
                     
                     <div id="empty-form" class="hidden" > 
-                        {{ form_ch.empty_form }} 
+
                         
-                      
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-4 label-class">
+                                <label class="col-form-label" for="{{ form_ch.empty_form.data.id_for_label}}">
+                                    {{form_ch.empty_form.data.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{form_ch.empty_form.data|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-4 label-class">
+                                <label class="col-form-label" for="{{ form_ch.empty_form.hora_inicio.id_for_label}}">
+                                    {{form_ch.empty_form.hora_inicio.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{form_ch.empty_form.hora_inicio|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-4 label-class">
+                                <label class="col-form-label" for="{{ form_ch.empty_form.hora_termino.id_for_label}}">
+                                    {{form_ch.empty_form.hora_termino.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{form_ch.empty_form.hora_termino|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-4 label-class">
+                                <label class="col-form-label" for="{{ form_ch.empty_form.status.id_for_label}}">
+                                    {{form_ch.empty_form.status.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{form_ch.empty_form.status|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
                     </div>
                     
-                    <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
-                        <button id="add-more" type="button" class="btn btn-primary me-md-2">Adicionar Horas</button>
-                    </div>
                 </div>
-                
                 
             </div>
         </div>
@@ -225,6 +269,7 @@
         const addMoreBtn = document.getElementById("add-more")
         const totalNewForms = document.getElementById("id_carga_horaria-TOTAL_FORMS")
         const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
+        var copyEmptyFormEl = null;
         
         addMoreBtn.addEventListener('click', add_new_form)
         
@@ -232,32 +277,109 @@
             if(event){
                 event.preventDefault()   
             }
+
+            const currentCargaHorariaForms = document.getElementsByClassName("repetir")
+            const currentFormCount = currentCargaHorariaForms.length //+  1
+            const formCopyTarget = document.getElementById("temp")
+            copyEmptyFormEl = document.getElementById("empty-form").cloneNode(true);
+
+            copyEmptyFormEl.setAttribute('class', 'repetir-temp' )
+            copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}` )
+            const regex = new RegExp('__prefix__', 'g' )
+            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
+            formCopyTarget.append(copyEmptyFormEl)
+
+            
+        } 
+
+
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('del-el-lista')) {
+                btn = event.target;
+                console.log('O botão: ' + btn.id);
+                elemForm = document.getElementById("id_carga_horaria-"+btn.value+"-DELETE")
+                elemForm.checked = true
+
+                //---------------------------------------------
+                var tr = document.getElementById(btn.value);
+                tr.remove()
+
+            }
+        });
+
+        
+        
+        const notSaveHoursBtn = document.getElementById("not_save_hours");
+        notSaveHoursBtn.addEventListener('click', not_save_new_form)
+        function not_save_new_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+            console.log("not_save_hours")
+            const temForm = document.getElementById("temp");
+            while (temForm.firstChild) {
+                temForm.removeChild(temForm.firstChild);
+            }
+        }
+        
+        
+        const saveHoursBtn = document.getElementById("save_hours");
+        saveHoursBtn.addEventListener('click', save_new_form)
+        function save_new_form(event){
             const currentCargaHorariaForms = document.getElementsByClassName("repetir")
             const currentFormCount = currentCargaHorariaForms.length //+  1
             const formCopyTarget = document.getElementById("ch-form-list")
-            const copyEmptyFormEl = document.getElementById("empty-form").cloneNode(true)
+            const temForm = document.getElementsByClassName("repetir-temp")
+            
             copyEmptyFormEl.setAttribute('class', 'repetir' )
-            copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}` )
-            console.log(copyEmptyFormEl.id)
-            const regex = new RegExp('__prefix__', 'g' )
-            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             totalNewForms.setAttribute('value', currentFormCount + 1)
+            
             formCopyTarget.append(copyEmptyFormEl)
-            
-            console.log(currentFormCount)
+           
 
+            //--------------------------------------------------------------------
+
+            const varData = formatarData(document.getElementById("id_carga_horaria-"+currentFormCount+"-data").value);
+            const varHoraInicio = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_inicio").value;
+            const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
+            const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
+            const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
             var novaLinha = document.createElement("tr");
-            var valores = ["24/02/2023", "08:00", "12:00", "04:00", "Normal", '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
-            
+            novaLinha.setAttribute("id", currentFormCount );
+            var valores = [varData, varHoraInicio, varHoraTermino, varHorasDeTrabalho, varStatus, '<button id="deletar-elemento-lista-'+currentFormCount+'" type="button" class="del-el-lista btn btn-danger" value='+currentFormCount+'> X </button>'];
+            //var valores = ['24/02/2023', '09:30', '13:30','05:00' ,'Normal', '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
             for (var i = 0; i < 6; i++) {
                 var novaCelula = document.createElement("td");
+                if(i==5){ novaCelula.setAttribute("align", "center"); }
                 novaCelula.innerHTML = valores[i];
                 novaLinha.appendChild(novaCelula);
             }
             
-            
             novaLinha.appendChild(novaCelula);
             tabelaCargaHoraria.append(novaLinha);
+        
+        }
 
-        } 
+        function formatarData(data){
+            const partes = data.split("-"); // Divide a string em partes separadas por "-"
+            const novaData = partes[2] + "/" + partes[1] + "/" + partes[0]; // Reorganiza as partes em nova string com a ordem desejada
+            return novaData; 
+        }
+
+        function subtrairHorarios(horario1, horario2) {
+            var partes1 = horario1.split(":");
+            var partes2 = horario2.split(":");
+            var data1 = new Date(0, 0, 0, partes1[0], partes1[1]);
+            var data2 = new Date(0, 0, 0, partes2[0], partes2[1]);
+            var diferenca = data2.getTime() - data1.getTime();
+            var horas = Math.floor(diferenca / (1000 * 60 * 60));
+            diferenca -= horas * (1000 * 60 * 60);
+            var minutos = Math.floor(diferenca / (1000 * 60));
+            if (minutos < 10) {
+              minutos = "0" + minutos;
+            }
+            return horas + ":" + minutos;
+        }
+
     </script>
