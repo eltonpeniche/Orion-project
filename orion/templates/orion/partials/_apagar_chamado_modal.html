@@ -1,0 +1,34 @@
+{% load static %}
+
+{% block content %}
+<div>
+
+<!-- modais de adicao de itens -->
+<form id="form-apagar-chamado-modal"  action="{% url 'deletar_chamado' 0 %}" method="post"> {% csrf_token %}
+    <div class="modal" tabindex="-1" id="apagar_chamado_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Apagar ! </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" >
+                    
+                    <p>Confirme a exclusão permanente do chamado  
+                        <span class="modal-title" id="data-number" > </span>    
+                    <p>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" name= "Apagar_chamado" >Apagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+    
+      
+</div>
+
+{% endblock %}

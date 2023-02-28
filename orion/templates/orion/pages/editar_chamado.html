@@ -25,12 +25,33 @@
             Fechar 
         </button>
 
-        <form action="{% url 'deletar_chamado' id %}">
-            <button type="submit" class="btn btn-danger"> Apagar </button>
-        </form>
+        <button type="button" class="btn btn-danger b_apagar_chamado_modal"
+            data-bs-toggle="modal"
+            data-bs-target="#apagar_chamado_modal"
+            data-id="{{ id }}"
+            data-number="{{ ordemForm.numero_chamado.value}}">
+        
+            Apagar 
+        </button>
+
+        <button type="button" class="btn btn-warning b_cancelar_chamado_modal"
+        data-bs-toggle="modal"
+        data-bs-target="#cancelar_chamado_modal"
+        data-id="{{ id }}"
+        data-number="{{ ordemForm.numero_chamado.value}}">
+    
+            Cancelar 
+        </button>
+             
+        
+{% comment %}         <form action="{% url 'lista_chamados' %}">
+            <button type="submit" class="btn btn-warning"> Cancelar </button>
+        </form>  {% endcomment %}
         
 
         {% include 'orion/partials/_fechar_chamado_modal.html' %}
+        {% include 'orion/partials/_apagar_chamado_modal.html' %}
+        {% include 'orion/partials/_cancelar_chamado_modal.html' %}
 
     </div>
 
@@ -49,6 +70,28 @@
 
             console.log(link)
             
+    
+        });
+
+        //Confirmação a Exclusão de chamado
+        $('.b_apagar_chamado_modal').click(function(){
+            $('#data-id').html($(this).data('id'));
+            $('#data-number').html($(this).data('number'));
+    
+    
+            const formmodal = document.getElementById("form-apagar-chamado-modal")
+            link = formmodal.action.split('/').slice(0,-1).join('/')+'/'+$(this).data('id')
+            formmodal.action = link
+
+            console.log(link)
+            
+    
+        });
+
+        //Cancelar a edição de chamado
+        $('.b_cancelar_chamado_modal').click(function(){
+            $('#data-id').html($(this).data('id'));
+            $('#data-number').html($(this).data('number'));      
     
         });
     

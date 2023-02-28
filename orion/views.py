@@ -1,6 +1,7 @@
 from datetime import date, datetime, time, timedelta
 
 from django.contrib import auth, messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.forms.models import formset_factory, inlineformset_factory
 from django.http import Http404, HttpResponse
@@ -15,6 +16,7 @@ from .forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
                     EquipamentosForm, OrdemServicoForm)
 
 
+@login_required
 def lista_home(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -28,7 +30,7 @@ def lista_home(request):
     }
     return render(request, 'orion/pages/chamado.html', contexto)
 
-
+@login_required
 def lista_chamados(request):
     if request.method == "GET":
         ordens_servico = Ordem_Servico.objects.all().filter(
@@ -39,7 +41,7 @@ def lista_chamados(request):
         }
         return render(request, 'orion/pages/chamado.html', contexto)
 
-
+@login_required
 def novo_chamado_view(request, id):
 
     #buscando dados salvos sessão 
@@ -63,7 +65,7 @@ def novo_chamado_view(request, id):
     return render(request, 'orion/pages/novo_chamado.html', contexto)
     
 
-
+@login_required
 def novo_chamado(request):
     if not request.POST:
         raise Http404()
@@ -101,6 +103,7 @@ def novo_chamado(request):
 
     return redirect('novo_chamado_view', 0)    
 
+@login_required
 def editar_chamado(request, id):
     if request.method == 'GET':
     
@@ -158,16 +161,17 @@ def editar_chamado(request, id):
             'id' : id,
         })
 
-
+@login_required
 def deletar_chamado(request, id):
+    if request.method == 'POST':
+        chamado = get_object_or_404(Ordem_Servico, pk=id)
+        print('deletar = ', chamado)
+        chamado.delete()
+        messages.success(request, f"Chamado deletado com sucesso")
+        return redirect('lista_chamados')
 
-    chamado = get_object_or_404(Ordem_Servico, pk=id)
-    print('deletar = ', chamado)
-    chamado.delete()
-    messages.success(request, f"Chamado deletado com sucesso")
-    return redirect('lista_home')
 
-
+@login_required
 def chamados_fechados(request):
     ordens_servico = Ordem_Servico.objects.all().filter(
         status_chamado='F').order_by('-id')
@@ -178,6 +182,8 @@ def chamados_fechados(request):
     }
     return render(request, 'orion/pages/chamado.html', contexto)
 
+
+@login_required
 def fechar_chamado(request, id):
     try:
         ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
@@ -189,6 +195,8 @@ def fechar_chamado(request, id):
     messages.success(request, f"chamado {ordem_servico.numero_chamado} fechado com sucesso")
     return redirect(lista_chamados)
 
+
+@login_required
 def equipamentos(request):
 
     equipamentos = Equipamento.objects.all().order_by('-id')
@@ -198,6 +206,8 @@ def equipamentos(request):
     return render(request, 'orion/pages/equipamentos.html', contexto)
 
 
+
+@login_required
 def detalhar_equipamento(request, id):
     equipamento = get_object_or_404(Equipamento, pk=id)
     print(equipamento)
@@ -221,6 +231,7 @@ def detalhar_equipamento(request, id):
         return redirect('home')
 
 
+@login_required
 def cadastrar_equipamentos(request):
     if request.method == 'GET':
         form = EquipamentosForm()
@@ -236,13 +247,16 @@ def cadastrar_equipamentos(request):
         return redirect('equipamentos')
 
 
+@login_required
 def deletar_equipamento(request, id):
-    equipamento = get_object_or_404(Equipamento, pk=id)
-    print('deletar = ', equipamento)
-    equipamento.delete()
-    return redirect('equipamentos')
+    if request.method == 'POST':
+        equipamento = get_object_or_404(Equipamento, pk=id)
+        print('deletar = ', equipamento)
+        equipamento.delete()
+        return redirect('equipamentos')
 
 
+@login_required
 def clientes(request):
 
     clientes = Empresa.objects.all().order_by('-id')
@@ -253,47 +267,42 @@ def clientes(request):
     return render(request, 'orion/pages/clientes.html', contexto)
 
 
+@login_required
 def detalhar_cliente(request, id):
     cliente = get_object_or_404(Empresa, pk=id)
-    print(cliente.contato)
-    if request.method == 'GET':
+    if request.method =='POST':
+        form = EmpresaForm(request.POST, instance=cliente)
+        enderecoForm = EnderecoForm(request.POST, instance=cliente.endereco)
+        if form.is_valid():
+            form.save()
+            enderecoForm.save()
 
+        return redirect('clientes')
+    
+    else:
+        
         clienteForm = EmpresaForm(instance=cliente)
-        formEndereco = EnderecoForm(instance=cliente.endereco)
-        formContato = ContatoForm(instance=cliente.contato)
+        enderecoForm = EnderecoForm(instance=cliente.endereco)
 
         contexto = {
             'form': clienteForm,
-            'formEndereco': formEndereco,
-            'formContato': formContato,
-            'id': id
+            'formEndereco': enderecoForm,
+            'id': id,
+            'titulo':'Detalhes Cliente'
         }
-
         return render(request, 'orion/pages/detalhes_cliente.html', contexto)
 
-    else:
-        form = EmpresaForm(request.POST, instance=cliente)
-        formEndereco = EnderecoForm(request.POST, instance=cliente.endereco)
-        formContato = ContatoForm(request.POST, instance=cliente.contato)
-        print(form)
-        if form.is_valid():
-            form.save()
-            formEndereco.save()
-            formContato.save()
 
+@login_required
+def deletar_cliente(request, id):
+    if request.method =='POST':
+        cliente = get_object_or_404(Empresa, pk=id)
+        endereco = get_object_or_404(Endereco, pk=cliente.endereco.id)
+        cliente.delete()
+        endereco.delete()
         return redirect('clientes')
 
-
-def deletar_cliente(request, id):
-    cliente = get_object_or_404(Empresa, pk=id)
-    contato = get_object_or_404(Contato, pk=cliente.contato.id)
-    endereco = get_object_or_404(Endereco, pk=cliente.endereco.id)
-    cliente.delete()
-    contato.delete()
-    endereco.delete()
-    return redirect('clientes')
-
-
+@login_required
 def cadastrar_clientes(request):
     if request.method == 'GET':
         form = EmpresaForm()
@@ -302,6 +311,7 @@ def cadastrar_clientes(request):
         contexto = {
             'form': form,
             'formEndereco': formEndereco,
+            'titulo':'Novo Cliente'
             
         }
         return render(request, 'orion/pages/detalhes_cliente.html', contexto)

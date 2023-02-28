@@ -296,6 +296,10 @@
 
 
         document.addEventListener('click', function(event) {
+            if(event){
+                event.preventDefault()   
+            }
+
             if (event.target.classList.contains('del-el-lista')) {
                 btn = event.target;
                 console.log('O botão: ' + btn.id);
@@ -339,6 +343,10 @@
         const saveHoursBtn = document.getElementById("save_hours");
         saveHoursBtn.addEventListener('click', save_new_form)
         function save_new_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+
             const currentCargaHorariaForms = document.getElementsByClassName("repetir")
             const currentFormCount = currentCargaHorariaForms.length //+  1
             const formCopyTarget = document.getElementById("ch-form-list")
@@ -350,26 +358,36 @@
             const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
             const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
             
-{% comment %}             //verifica se horaro já existe
+            //verifica se horaro já existe
             if (verificaHorario(varData, varHoraInicio, varHoraTermino,tabelaCargaHoraria)){
                 not_save_new_form()
                 $('#error_ch_Modal').modal('show');
                 return; // interrompe a execução da função
 
-            } {% endcomment %}
+            }
+            
             
             copyEmptyFormEl.setAttribute('class', 'repetir' )
             totalNewForms.setAttribute('value', currentFormCount + 1)
             
             formCopyTarget.append(copyEmptyFormEl)
-           
-
+            
+            
             //--------------------------------------------------------------------
-
+            
             const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
+            
+            let [horaHT, minHT] = varHorasDeTrabalho.split(":");
+            if (horaHT <= 0 ){
+                not_save_new_form()
+                $('#error_ch_Modal').modal('show');
+                return; // interrompe a execução da função
+
+            }
+
             var novaLinha = document.createElement("tr");
             novaLinha.setAttribute("id", currentFormCount );
-            var valores = [varData, varHoraInicio, varHoraTermino, varHorasDeTrabalho, varStatus, '<button id="deletar-elemento-lista-'+currentFormCount+'" type="button" class="del-el-lista btn btn-danger" value='+currentFormCount+'> X </button>'];
+            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varStatus, '<button id="deletar-elemento-lista-'+currentFormCount+'" type="button" class="del-el-lista btn btn-danger" value='+currentFormCount+'> X </button>'];
             for (var i = 0; i < 6; i++) {
                 var novaCelula = document.createElement("td");
                 if(i==5){ novaCelula.setAttribute("align", "center"); }
@@ -381,5 +399,7 @@
             tabelaCargaHoraria.append(novaLinha);
         
         }
+
+
 
     </script>

@@ -5,7 +5,7 @@
 
 <br>
 <div class="panel-heading">
-    <h3 class="panel-title">Novo Cliente</h3>
+    <h3 class="panel-title">{{ titulo }}</h3>
 </div>
 
 <div class="container col-10">
@@ -27,22 +27,6 @@
 
                 </div>
             </div>
-        {% endfor %}
-        
-        {% for field in formContato.visible_fields %}
-            <div class="form-group mt-3 mb-3 row ">
-                <div class="col-2 label-class">
-                    <label class="col-form-label" for="{{ field.id_for_label}}">
-                        {{field.label}}</label>
-                </div>
-                <div class="col-8">
-                    
-                    {{field|add_class:'form-control'}}
-                        
-    
-                </div>
-            </div>
-    
         {% endfor %}
         
         {% for field in formEndereco.visible_fields %}
@@ -67,7 +51,7 @@
         <button type="submit" class="btn btn-primary m-2" form="form-cliente"> Salvar </button>
         
         {% if id %}
-            <form action="{% url 'deletar_cliente' id  %}">
+            <form action="{% url 'deletar_cliente' id  %}" method="post">{% csrf_token %}
                 <button type="submit" class="btn btn-danger m-2"> Apagar </button>
             </form>
         {% endif %}
