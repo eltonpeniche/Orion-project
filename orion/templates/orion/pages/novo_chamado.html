@@ -1,13 +1,12 @@
 {% extends "globals/base.html"%}
 
-{% block content %}
 {% load widget_tweaks %}
+{% block content %}
 
 
 <form id="form-chamado" action= "{% url 'novo_chamado' %}" method="post">
 
     {% include 'orion/partials/_detalhes_chamado.html' %}
-
 </form>
 
 
@@ -20,4 +19,4 @@
 
 </div>
 
-{% endblock %}
+{% endblock content %}

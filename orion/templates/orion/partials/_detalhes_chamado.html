@@ -1,4 +1,6 @@
 {% load widget_tweaks %}
+
+{% block content %}
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
@@ -261,10 +263,10 @@
 
 </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    
 
 
-    <script type="text/javascript">
+ <script type="text/javascript">
         
         
         const addMoreBtn = document.getElementById("add-more")
@@ -294,11 +296,7 @@
         } 
 
 
-
         document.addEventListener('click', function(event) {
-            if(event){
-                event.preventDefault()   
-            }
 
             if (event.target.classList.contains('del-el-lista')) {
                 btn = event.target;
@@ -323,7 +321,6 @@
 
             }
         });
-
         
         
         const notSaveHoursBtn = document.getElementById("not_save_hours");
@@ -398,9 +395,11 @@
             novaLinha.appendChild(novaCelula);
             tabelaCargaHoraria.append(novaLinha);
         
-        }
+        } 
 
     
 
 
     </script>
+
+{% endblock content %}

@@ -1,3 +1,5 @@
+{% block content %}
+
 <nav class="navbar navbar-expand-lg bg-light">
 
     <div class="container-fluid">
@@ -25,9 +27,9 @@
                         cadastros
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'clientes'%}">Clientes</a></li>
-                        <li><a class="dropdown-item" href="{% url 'equipamentos'%} ">Equipamentos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_usuarios'%} ">Usuários</a></li>
+                        <li><a class="dropdown-item" href="{% url 'clientes' %}">Clientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'equipamentos' %} ">Equipamentos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'lista_usuarios' %} ">Usuários</a></li>
                     </ul>
                 </li>
 
@@ -69,3 +71,5 @@
         </div>
     </div>
 </nav>
+
+{% endblock content %}
