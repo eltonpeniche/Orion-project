@@ -90,7 +90,9 @@
                                 <div class="col-8">
                                     
                                     {{field|add_class:'form-control'}}
-                                    
+                                    {% if field.name == 'cep' %}
+                                    <button id='buscaCep'>buscar Cep</button>
+                                    {% endif %}
                                     
                                 </div>
                             </div>
@@ -119,6 +121,11 @@
             
     </div>
 
+
+        <!-- Adicionando JQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
     
     <script type="text/javascript">
         
@@ -144,11 +151,35 @@
             
         } 
     
-        function paginaCarregada() {
-            console.log('A página foi carregada!');
-        }
-          
-        window.addEventListener('load', paginaCarregada);
+
+
+        const buscaCepBtn = document.getElementById("buscaCep")
+        
+        buscaCepBtn.addEventListener('click', busca_cep)
+        
+        function busca_cep(event){
+            if(event){
+                event.preventDefault()   
+            }
+            var numCep = $("#id_cep").val();
+
+            var url = "https://viacep.com.br/ws/"+ numCep +"/json";
+            $.ajax({
+                url:url,
+                type:"get",
+                dataType:"json",
+                success:function(dados){
+                    console.log(dados)
+                    $("#id_rua").val(dados.logradouro);
+                    $("#id_bairro").val(dados.bairro);
+                    $("#id_uf").val(dados.uf);
+                    $("#id_cidade").val(dados.localidade);
+
+                }
+            })
+            
+        } 
+
     </script>
 </div>
 {% endblock %}

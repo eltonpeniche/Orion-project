@@ -45,7 +45,7 @@ class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
         # exclude = ['status_chamado']
-        fields = '__all__'  # ['status', 'tipo_chamado']
+        fields = ['cep','rua','numero','bairro','uf','cidade'] 
 
 
 
