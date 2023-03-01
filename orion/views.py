@@ -8,12 +8,11 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from orion.forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
+                         EquipamentosForm, OrdemServicoForm)
 from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
                           Ordem_Servico)
 from usuarios.models import Usuario
-
-from .forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
-                    EquipamentosForm, OrdemServicoForm)
 
 
 @login_required
@@ -268,21 +267,58 @@ def clientes(request):
 
 
 @login_required
+def cadastrar_clientes(request):
+    
+    if request.method == 'POST':
+        form = EmpresaForm(request.POST)
+
+        enderecoForm = EnderecoForm(request.POST)
+        print("endereco form ", enderecoForm.fields)
+        if form.is_valid():
+            empresa = form.save(commit=False)
+            if enderecoForm.is_valid():
+                endereco = enderecoForm.save()
+                empresa.endereco = endereco
+            empresa.save()
+            messages.success(request, "Novo Cliente cadastrado com sucesso.")
+
+        return redirect('clientes')
+    else:
+        form = EmpresaForm()
+        formEndereco = EnderecoForm()
+        formEndereco.instance = False
+        contexto = {
+            'form': form,
+            'formEndereco': formEndereco,
+            'titulo':'Novo Cliente'
+            
+        }
+        return render(request, 'orion/pages/detalhes_cliente.html', contexto)
+    
+
+@login_required
 def detalhar_cliente(request, id):
     cliente = get_object_or_404(Empresa, pk=id)
     if request.method =='POST':
         form = EmpresaForm(request.POST, instance=cliente)
-        enderecoForm = EnderecoForm(request.POST, instance=cliente.endereco)
-        if form.is_valid():
-            form.save()
-            enderecoForm.save()
+        enderecoForm = EnderecoForm(request.POST )
+        if form.is_valid() and enderecoForm.is_valid() :
+            empresa = form.save(commit=False)
+            endereco = enderecoForm.save()
+            empresa.endereco = endereco
+            empresa.save()
+        else:
+            print("não valido")
 
         return redirect('clientes')
     
     else:
-        
+
         clienteForm = EmpresaForm(instance=cliente)
-        enderecoForm = EnderecoForm(instance=cliente.endereco)
+        enderecoForm = EnderecoForm(instance=cliente.endereco or None) 
+        
+        if cliente.endereco is None :
+            enderecoForm.instance= False
 
         contexto = {
             'form': clienteForm,
@@ -292,41 +328,19 @@ def detalhar_cliente(request, id):
         }
         return render(request, 'orion/pages/detalhes_cliente.html', contexto)
 
-
 @login_required
-def deletar_cliente(request, id):
+def deletar_cliente(request):
     if request.method =='POST':
+        id = request.POST['id']
         cliente = get_object_or_404(Empresa, pk=id)
-        endereco = get_object_or_404(Endereco, pk=cliente.endereco.id)
+        nome = cliente.nome
+        if(cliente.endereco):
+            endereco = Endereco.objects.filter(pk=cliente.endereco.id).first()
+            endereco.delete()
         cliente.delete()
-        endereco.delete()
-        return redirect('clientes')
+        messages.success(request, f"Cliente {nome} deletado com sucesso")
+    return redirect('clientes')
 
-@login_required
-def cadastrar_clientes(request):
-    if request.method == 'GET':
-        form = EmpresaForm()
-        formEndereco = EnderecoForm()
-        
-        contexto = {
-            'form': form,
-            'formEndereco': formEndereco,
-            'titulo':'Novo Cliente'
-            
-        }
-        return render(request, 'orion/pages/detalhes_cliente.html', contexto)
-    else:
-        form = EmpresaForm(request.POST)
-
-        formEndereco = EnderecoForm(request.POST)
-
-        endereco = formEndereco.save()
-        empresa = form.save(commit=False)
-        empresa.endereco = endereco
-       
-        empresa.save()
-
-        return redirect('clientes')
 
 def list_teste(request):
 

@@ -4,9 +4,11 @@
 {% load widget_tweaks %}
 
 <br>
+
 <div class="panel-heading">
     <h3 class="panel-title">{{ titulo }}</h3>
 </div>
+
 
 <div class="container col-10">
     <br>
@@ -29,36 +31,124 @@
             </div>
         {% endfor %}
         
-        {% for field in formEndereco.visible_fields %}
-            <div class="form-group mt-3 mb-3 row ">
-                <div class="col-2 label-class">
-                    <label class="col-form-label" for="{{ field.id_for_label}}">
-                        {{field.label}}</label>
-                </div>
-                <div class="col-8">
-                    
-                    {{field|add_class:'form-control'}}
+        <div id="targetEndereco">
+        {% if formEndereco.instance  %}
+            {% for field in formEndereco.visible_fields %}
+                <div class="form-group mt-3 mb-3 row ">
+                    <div class="col-2 label-class">
+                        <label class="col-form-label" for="{{ field.id_for_label}}">
+                            {{field.label}}</label>
+                    </div>
+                    <div class="col-8">
                         
-
+                        {{field|add_class:'form-control'}}
+                        
+                        
+                    </div>
+                </div>
+                
+                {% endfor %}
+            {% endif %}    
+        </div>
+    
+        {% if formEndereco.instance is False  %} 
+            <div id="div_adicionar_endereco" class="form-group mt-3 mb-3 row ">
+                <div class="col-2 label-class">
+                <label class="col-form-label" for="adicionar_endereco">
+                    Endereço:  </label>
+                </div>
+                    <div class="col-4 d-flex">
+                        <input id = "adicionar_endereco" type="text" class="form-control" placeholder ="Sem endereço cadastrado" >
+                        <button class="btn btn-success" type="button" id="btn_adicionar_endereco" 
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i></button>
+                        
+                        
+                    </div>
+            </div>
+            
+        {% endif %}
+                
+        </form>    
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="endereco-modal">
+                     
+                        {% for field in formEndereco.visible_fields %}
+                        <div class="form-group mt-3 mb-3 row ">
+                            <div class="col-2 label-class">
+                                <label class="col-form-label" for="{{ field.id_for_label}}">
+                                    {{field.label}}</label>
+                                </div>
+                                <div class="col-8">
+                                    
+                                    {{field|add_class:'form-control'}}
+                                    
+                                    
+                                </div>
+                            </div>
+                            
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id='btn_salvar_endereco' type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
                 </div>
             </div>
-
-        {% endfor %}
-
-    </form>    
+            </div>
+        </div>
+        <!-- End Modal -->
     
     <div class=" d-flex justify-content-center m-2">
         <button type="submit" class="btn btn-primary m-2" form="form-cliente"> Salvar </button>
         
         {% if id %}
-            <form action="{% url 'deletar_cliente' id  %}" method="post">{% csrf_token %}
+            <form action="{% url 'deletar_cliente'%}" method="post">{% csrf_token %}
+                <input type="hidden" name='id' value="{{ id }}" > </input>
                 <button type="submit" class="btn btn-danger m-2"> Apagar </button>
             </form>
         {% endif %}
             
     </div>
 
+    
+    <script type="text/javascript">
+        
+        
+        const salvarEnderecoBtn = document.getElementById("btn_salvar_endereco")
+        
+        salvarEnderecoBtn.addEventListener('click', salvar_endereco)
+        
+        function salvar_endereco(event){
+            if(event){
+                event.preventDefault()   
+            }
+            const formCopyTarget = document.getElementById("targetEndereco")
+            const copyFormEl = document.getElementById("endereco-modal").cloneNode(true);
+            copyFormEl.setAttribute("id","endereco-form")
+            formCopyTarget.append(copyFormEl)
+            enderecoModal = document.getElementById("endereco-modal")
+            enderecoModal.remove()
 
-
+            //oculta o botão de add endereço
+            div_adicionar_endereco = document.getElementById("div_adicionar_endereco")
+            div_adicionar_endereco.classList.add('hidden');
+            
+        } 
+    
+        function paginaCarregada() {
+            console.log('A página foi carregada!');
+        }
+          
+        window.addEventListener('load', paginaCarregada);
+    </script>
 </div>
 {% endblock %}

@@ -33,9 +33,11 @@ class Empresa (models.Model):
     cnpj       = models.CharField(max_length=14)
     telefone   = models.CharField(max_length=14)
     email      = models.CharField(max_length=35)
-    observacao = models.CharField(max_length=280)
-    endereco   = models.ForeignKey(Endereco, on_delete=models.SET_NULL, null=True, blank=True)
+    observacao = models.CharField(max_length=280)#
+    endereco   = models.OneToOneField(Endereco, on_delete=models.SET_NULL, 
+                                      null=True, blank=True, related_name='empresa')
 
+    
     def __str__(self):
         return f'{self.nome}'
 

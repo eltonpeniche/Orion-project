@@ -22,7 +22,7 @@ urlpatterns = [
           views.deletar_equipamento, name='deletar_equipamento'),
      path('clientes', views.clientes, name='clientes'),
      path('clientes/<int:id>/', views.detalhar_cliente, name='detalhar_cliente'),
-     path('deletar_cliente/<int:id>/',
+     path('deletar_cliente/',
           views.deletar_cliente, name='deletar_cliente'),
      path('cadastrar_clientes', views.cadastrar_clientes, name='cadastrar_clientes'),
      path('teste', views.teste, name='teste'),
