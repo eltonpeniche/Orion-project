@@ -24,7 +24,11 @@ class EmpresaForm(forms.ModelForm):
         model = Empresa
         exclude = ['contato', 'endereco']
         fields = '__all__'
-        # fields = ['nome']
+     
+    def __init__(self, *args, **kwargs):
+        super(EmpresaForm, self).__init__(*args, **kwargs)
+        self.fields['cnpj'].widget.attrs.update({'class':'cnpj'})
+        self.fields['telefone'].widget.attrs.update({'class':'telefone'})
 
 
 class EquipamentosForm(forms.ModelForm):
@@ -45,8 +49,11 @@ class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
         # exclude = ['status_chamado']
-        fields = ['cep','rua','numero','bairro','uf','cidade'] 
-
+        fields = ['cep','rua','bairro','uf','cidade', 'numero'] 
+    
+    def __init__(self, *args, **kwargs):
+        super(EnderecoForm, self).__init__(*args, **kwargs)
+        self.fields['cep'].widget.attrs.update({'class':'cep'})
 
 
 """ class CargaHorariaForm(forms.ModelForm):
@@ -81,6 +88,7 @@ class CargaHorariaForm(forms.ModelForm):
         #self.fields['data'].initial = datetime.now()
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
         self.fields['status'].widget.attrs['class'] = 'form-control form-select datetimefield'
+        #self.fields['status'].widget.attrs.update({'class':''})
 
     class Meta:
         model = CargaHoraria

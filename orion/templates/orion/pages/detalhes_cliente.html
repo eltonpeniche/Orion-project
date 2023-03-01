@@ -1,7 +1,7 @@
 {% extends "globals/base.html"%}
+{% load widget_tweaks %}
 
 {% block content %}
-{% load widget_tweaks %}
 
 <br>
 
@@ -39,10 +39,13 @@
                         <label class="col-form-label" for="{{ field.id_for_label}}">
                             {{field.label}}</label>
                     </div>
-                    <div class="col-8">
-                        
+
+                    <div class=" d-inline-flex flex-row col-8">
+                                    
                         {{field|add_class:'form-control'}}
-                        
+                        {% if field.name == 'cep' %}
+                        <button id='buscaCep' name="buscaCepForm" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
+                        {% endif %}
                         
                     </div>
                 </div>
@@ -57,8 +60,8 @@
                 <label class="col-form-label" for="adicionar_endereco">
                     Endereço:  </label>
                 </div>
-                    <div class="col-4 d-flex">
-                        <input id = "adicionar_endereco" type="text" class="form-control" placeholder ="Sem endereço cadastrado" >
+                    <div class="col-3 d-flex">
+                        <input id = "adicionar_endereco" type="text" class="form-control" placeholder ="Cadastrar Endereço" disabled>
                         <button class="btn btn-success" type="button" id="btn_adicionar_endereco" 
                         data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i></button>
                         
@@ -66,48 +69,48 @@
                     </div>
             </div>
             
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="endereco-modal">
+                         
+                            {% for field in formEndereco.visible_fields %}
+                            <div class="form-group mt-3 mb-3 row ">
+                                <div class="col-2 label-class">
+                                    <label class="col-form-label" for="{{ field.id_for_label}}">
+                                        {{field.label}}</label>
+                                    </div>
+                                    <div class=" d-inline-flex flex-row col-8">
+                                        
+                                        {{field|add_class:'form-control'}}
+                                        {% if field.name == 'cep' %}
+                                        <button id='buscaCep' name="buscaCepModal" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
+                                        {% endif %}
+                                        
+                                    </div>
+                                </div>
+                                
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id='btn_salvar_endereco' type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- End Modal -->
         {% endif %}
                 
         </form>    
         
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="endereco-modal">
-                     
-                        {% for field in formEndereco.visible_fields %}
-                        <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-2 label-class">
-                                <label class="col-form-label" for="{{ field.id_for_label}}">
-                                    {{field.label}}</label>
-                                </div>
-                                <div class="col-8">
-                                    
-                                    {{field|add_class:'form-control'}}
-                                    {% if field.name == 'cep' %}
-                                    <button id='buscaCep'>buscar Cep</button>
-                                    {% endif %}
-                                    
-                                </div>
-                            </div>
-                            
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id='btn_salvar_endereco' type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
-                </div>
-            </div>
-            </div>
-        </div>
-        <!-- End Modal -->
     
     <div class=" d-flex justify-content-center m-2">
         <button type="submit" class="btn btn-primary m-2" form="form-cliente"> Salvar </button>
@@ -132,25 +135,28 @@
         
         const salvarEnderecoBtn = document.getElementById("btn_salvar_endereco")
         
-        salvarEnderecoBtn.addEventListener('click', salvar_endereco)
-        
-        function salvar_endereco(event){
-            if(event){
-                event.preventDefault()   
-            }
-            const formCopyTarget = document.getElementById("targetEndereco")
-            const copyFormEl = document.getElementById("endereco-modal").cloneNode(true);
-            copyFormEl.setAttribute("id","endereco-form")
-            formCopyTarget.append(copyFormEl)
-            enderecoModal = document.getElementById("endereco-modal")
-            enderecoModal.remove()
+        if(salvarEnderecoBtn){
 
-            //oculta o botão de add endereço
-            div_adicionar_endereco = document.getElementById("div_adicionar_endereco")
-            div_adicionar_endereco.classList.add('hidden');
+            salvarEnderecoBtn.addEventListener('click', salvar_endereco)
             
-        } 
-    
+            function salvar_endereco(event){
+                if(event){
+                    event.preventDefault()   
+                }
+                const formCopyTarget = document.getElementById("targetEndereco")
+                const copyFormEl = document.getElementById("endereco-modal").cloneNode(true);
+                copyFormEl.setAttribute("id","endereco-form")
+                formCopyTarget.append(copyFormEl)
+                enderecoModal = document.getElementById("endereco-modal")
+                enderecoModal.remove()
+                
+                //oculta o botão de add endereço
+                div_adicionar_endereco = document.getElementById("div_adicionar_endereco")
+                div_adicionar_endereco.classList.add('hidden');
+                
+            } 
+            
+        }
 
 
         const buscaCepBtn = document.getElementById("buscaCep")
@@ -161,25 +167,42 @@
             if(event){
                 event.preventDefault()   
             }
+            buscaCepBtn.textContent = 'Processando...';
             var numCep = $("#id_cep").val();
 
-            var url = "https://viacep.com.br/ws/"+ numCep +"/json";
+            var url = "https://viacep.com.br/ws/"+ numCep +"/json/?callback=?";
             $.ajax({
                 url:url,
                 type:"get",
                 dataType:"json",
                 success:function(dados){
                     console.log(dados)
-                    $("#id_rua").val(dados.logradouro);
-                    $("#id_bairro").val(dados.bairro);
-                    $("#id_uf").val(dados.uf);
-                    $("#id_cidade").val(dados.localidade);
+                    if(!dados.erro){
 
+                        $("#id_rua").val(dados.logradouro);
+                        $("#id_bairro").val(dados.bairro);
+                        $("#id_uf").val(dados.uf);
+                        $("#id_cidade").val(dados.localidade);
+                    }else{ 
+                        alert("Erro ao buscar o Cep"); 
+                    }
+                    buscaCepBtn.textContent = 'Buscar'
+
+                },
+                error: function(){
+                    alert("Erro ao buscar o Cep");
+                    buscaCepBtn.textContent = 'Buscar'
                 }
             })
             
         } 
+        $(document).ready(function(){
+            $('.cep').mask('00000-000');
+            $('.cnpj').mask('00.000.000/0000-00');
+            $('.telefone').mask('(00) 00000-0000');
+
+        });
 
     </script>
 </div>
-{% endblock %}
+{% endblock content %}
