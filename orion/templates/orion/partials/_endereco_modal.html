@@ -1,0 +1,42 @@
+{% load widget_tweaks %}
+{% block content %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="enderecoModal" tabindex="-1" aria-labelledby="enderecoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="enderecoModalLabel">Endereço</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="endereco-modal">
+                    
+                    {% for field in formEndereco.visible_fields %}
+                    <div class="form-group mt-3 mb-3 row ">
+                        <div class="col-2 label-class">
+                            <label class="col-form-label" for="{{ field.id_for_label}}">
+                                {{field.label}}</label>
+                            </div>
+                            <div class=" d-inline-flex flex-row col-8">
+                                
+                                {{field|add_class:'form-control'}}
+                                {% if field.name == 'cep' %}
+                                    <button id='buscaCep' name="buscaCepModal" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                        
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button id='btn_salvar_endereco' type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+{% endblock content %}

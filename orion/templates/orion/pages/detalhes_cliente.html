@@ -25,9 +25,12 @@
                 <div class="col-8">
                     
                     {{field|add_class:'form-control'}}
-                        
-
                 </div>
+                {% if field.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{field.errors}}   
+                </div>
+                {% endif %}
             </div>
         {% endfor %}
         
@@ -54,7 +57,10 @@
             {% endif %}    
         </div>
     
-        {% if formEndereco.instance is False  %} 
+        </form>    
+        
+        {% if formEndereco.instance is False  %}
+        <!-- Modal -->
             <div id="div_adicionar_endereco" class="form-group mt-3 mb-3 row ">
                 <div class="col-2 label-class">
                 <label class="col-form-label" for="adicionar_endereco">
@@ -63,54 +69,13 @@
                     <div class="col-3 d-flex">
                         <input id = "adicionar_endereco" type="text" class="form-control" placeholder ="Cadastrar Endereço" disabled>
                         <button class="btn btn-success" type="button" id="btn_adicionar_endereco" 
-                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i></button>
+                        data-bs-toggle="modal" data-bs-target="#enderecoModal"><i class="fa-solid fa-plus"></i></button>
                         
                         
                     </div>
             </div>
-            
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="endereco-modal">
-                         
-                            {% for field in formEndereco.visible_fields %}
-                            <div class="form-group mt-3 mb-3 row ">
-                                <div class="col-2 label-class">
-                                    <label class="col-form-label" for="{{ field.id_for_label}}">
-                                        {{field.label}}</label>
-                                    </div>
-                                    <div class=" d-inline-flex flex-row col-8">
-                                        
-                                        {{field|add_class:'form-control'}}
-                                        {% if field.name == 'cep' %}
-                                        <button id='buscaCep' name="buscaCepModal" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
-                                        {% endif %}
-                                        
-                                    </div>
-                                </div>
-                                
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id='btn_salvar_endereco' type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <!-- End Modal -->
+            {% include 'orion/partials/_endereco_modal.html' %}
         {% endif %}
-                
-        </form>    
-        
     
     <div class=" d-flex justify-content-center m-2">
         <button type="submit" class="btn btn-primary m-2" form="form-cliente"> Salvar </button>
@@ -125,10 +90,10 @@
     </div>
 
 
-        <!-- Adicionando JQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
+    <!-- Adicionando JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
     
     <script type="text/javascript">
         
@@ -196,13 +161,23 @@
             })
             
         } 
+        // mascara de telefone 
+        var SPMaskBehavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+          },
+        spOptions = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
         $(document).ready(function(){
             $('.cep').mask('00000-000');
             $('.cnpj').mask('00.000.000/0000-00');
-            $('.telefone').mask('(00) 00000-0000');
+            $('.telefone').mask(SPMaskBehavior, spOptions);
 
         });
 
     </script>
 </div>
-{% endblock content %}
+{% endblock %}

@@ -271,18 +271,28 @@ def cadastrar_clientes(request):
     
     if request.method == 'POST':
         form = EmpresaForm(request.POST)
-
         enderecoForm = EnderecoForm(request.POST)
-        print("endereco form ", enderecoForm.fields)
+        
         if form.is_valid():
             empresa = form.save(commit=False)
             if enderecoForm.is_valid():
                 endereco = enderecoForm.save()
                 empresa.endereco = endereco
+                messages.error(request, "Endereço informando não válido.")
+            
             empresa.save()
             messages.success(request, "Novo Cliente cadastrado com sucesso.")
+            return redirect('clientes')
+        else:
+            if not enderecoForm.is_valid(): 
+                enderecoForm.instance = False
+            contexto = {
+                'form': form,
+                'formEndereco': enderecoForm,
+                'titulo':'Novo Cliente'
+            }
+            return render(request, 'orion/pages/detalhes_cliente.html', contexto)
 
-        return redirect('clientes')
     else:
         form = EmpresaForm()
         formEndereco = EnderecoForm()
@@ -307,9 +317,12 @@ def detalhar_cliente(request, id):
             endereco = enderecoForm.save()
             empresa.endereco = endereco
             empresa.save()
-        else:
-            print("não valido")
-
+        elif form.is_valid():
+            form.save()
+            messages.success(request, "Cliente salvo com sucesso.")
+            if enderecoForm.is_bound:
+                messages.error(request, "Endereço informando não válido.")
+            
         return redirect('clientes')
     
     else:

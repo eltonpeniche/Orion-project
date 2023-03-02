@@ -1,6 +1,8 @@
+import re
 from datetime import datetime
 
 from django import forms
+from validate_docbr import CNPJ
 
 from .models import CargaHoraria, Empresa, Endereco, Equipamento, Ordem_Servico
 
@@ -20,6 +22,10 @@ class OrdemServicoForm(forms.ModelForm):
 
 
 class EmpresaForm(forms.ModelForm):
+    
+    cnpj  = forms.CharField(max_length=18)
+    telefone  = forms.CharField(max_length=15)
+    
     class Meta:
         model = Empresa
         exclude = ['contato', 'endereco']
@@ -27,9 +33,25 @@ class EmpresaForm(forms.ModelForm):
      
     def __init__(self, *args, **kwargs):
         super(EmpresaForm, self).__init__(*args, **kwargs)
-        self.fields['cnpj'].widget.attrs.update({'class':'cnpj'})
-        self.fields['telefone'].widget.attrs.update({'class':'telefone'})
-
+        self.fields['cnpj'].widget.attrs.update({'class':'cnpj' })
+        self.fields['telefone'].widget.attrs.update({'class':'telefone' })
+    
+    def clean_cnpj(self):
+        valida_cnpj = CNPJ()
+        cnpj = self.cleaned_data.get('cnpj')
+        cnpj = re.sub(r"\D", "", cnpj)
+        print(cnpj, len(cnpj))
+        if valida_cnpj.validate(cnpj):
+            return cnpj
+        raise forms.ValidationError("CNPJ informado não é válido")
+    
+        
+    
+    def clean_telefone(self):
+        telefone = self.cleaned_data.get('telefone')
+        telefone = re.sub(r"\D", "", telefone)
+        if len(telefone) == 10 or len(telefone) == 11:
+            return telefone
 
 class EquipamentosForm(forms.ModelForm):
 
@@ -46,6 +68,8 @@ class EquipamentosForm(forms.ModelForm):
 
 class EnderecoForm(forms.ModelForm):
 
+    cep  = forms.CharField(max_length=9)
+    
     class Meta:
         model = Endereco
         # exclude = ['status_chamado']
@@ -54,6 +78,13 @@ class EnderecoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EnderecoForm, self).__init__(*args, **kwargs)
         self.fields['cep'].widget.attrs.update({'class':'cep'})
+    
+    def clean_cep(self):
+        cep = self.cleaned_data.get('cep')
+        cep = re.sub(r"\D", "", cep)
+        print(cep, len(cep))
+        if len(cep) == 8:
+            return cep
 
 
 """ class CargaHorariaForm(forms.ModelForm):
