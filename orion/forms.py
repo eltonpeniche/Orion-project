@@ -17,7 +17,7 @@ class OrdemServicoForm(forms.ModelForm):
 
     class Meta:
         model = Ordem_Servico
-        exclude = ['status_chamado']
+        exclude = ['status_chamado', 'aberto_por']
         # fields = '__all__'#['status', 'tipo_chamado']
 
 

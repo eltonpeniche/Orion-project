@@ -65,7 +65,7 @@
     
     
             const formmodal = document.getElementById("form-fechar-chamado-modal")
-            link = formmodal.action.split('/').slice(0,-1).join('/')+'/'+$(this).data('id')
+            link = formmodal.action.split('/').slice(0,-2).join('/')+'/'+$(this).data('id')+'/'
             formmodal.action = link
 
             console.log(link)
@@ -80,7 +80,7 @@
     
     
             const formmodal = document.getElementById("form-apagar-chamado-modal")
-            link = formmodal.action.split('/').slice(0,-1).join('/')+'/'+$(this).data('id')
+            link = formmodal.action.split('/').slice(0,-2).join('/')+'/'+$(this).data('id')+'/'
             formmodal.action = link
 
             console.log(link)

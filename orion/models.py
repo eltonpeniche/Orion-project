@@ -31,9 +31,9 @@ class Endereco(models.Model):
 class Empresa (models.Model):
     nome       = models.CharField(max_length=100)
     cnpj       = models.CharField(max_length=14)
-    telefone   = models.CharField(max_length=14)
-    email      = models.CharField(max_length=35)
-    observacao = models.CharField(max_length=280)#
+    telefone   = models.CharField(max_length=14, null=True, blank=True)
+    email      = models.CharField(max_length=35,null=True, blank=True)
+    observacao = models.CharField(max_length=280, null=True, blank=True)#
     endereco   = models.OneToOneField(Endereco, on_delete=models.SET_NULL, 
                                       null=True, blank=True, related_name='empresa')
 
@@ -43,11 +43,11 @@ class Empresa (models.Model):
 
 
 class Equipamento(models.Model):
-    empresa          = models.ForeignKey(Empresa, on_delete=models.SET_NULL, null=True)
+    empresa          = models.ForeignKey(Empresa, on_delete=models.SET_NULL, related_name='equipamento', null=True, blank=True)
     numero_serie     = models.CharField(max_length=100)
     equipamento      = models.CharField(max_length=100)
     tipo_equipamento = models.CharField(max_length=35)
-    descricao        = models.CharField(max_length=100, blank=True)
+    descricao        = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f'{self.equipamento}'
@@ -77,16 +77,16 @@ class Ordem_Servico(models.Model):
 
     numero_chamado = models.CharField(max_length=14)  # YYYY DD MM HHHH SS
     descricao_chamado = models.CharField(max_length=150, blank=False)
-    descricao_servico = models.TextField(blank=True)
+    descricao_servico = models.TextField(null=True, blank=True)
     # horas_atendimento
     # despesas
-    observacoes_do_cliente = models.TextField(blank=True)
+    observacoes_do_cliente = models.TextField(blank=True, null = True)
     # assinatura
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 
     empresa = models.ForeignKey(
-        Empresa, on_delete=models.SET_NULL, blank=True, null=True)
+        Empresa, on_delete=models.SET_NULL, related_name='ordem_servico', null=True, blank=True)
 
     # equipamento = models.ForeignKey(Equipamento, on_delete=models.SET_NULL, blank=True, null=True)
     equipamento = ChainedForeignKey(Equipamento, chained_field="empresa",
@@ -95,7 +95,7 @@ class Ordem_Servico(models.Model):
     contato = models.CharField(max_length=100, null=True, blank=True)
     
     aberto_por = models.ForeignKey(
-        Usuario, on_delete=models.SET_NULL, blank=True, null=True)
+        Usuario, on_delete=models.SET_NULL, null=True, related_name='ordem_servico')
 
     def __str__(self):
         return f'Status = {self.status}, Tipo de chamado - {self.tipo_chamado}, - Criado em {self.criado_em}'

@@ -54,11 +54,9 @@ def novo_chamado_view(request, id):
 
     formCargaHoraria = form_carga_horaria_factory()
 
-    indices = [x for x in range(0,5)]
     contexto = {
         'ordemForm': ordemServicoForm,
         'form_ch': formCargaHoraria, #teste
-        'indices' : indices
     }
         
     return render(request, 'orion/pages/novo_chamado.html', contexto)
@@ -72,7 +70,7 @@ def novo_chamado(request):
     #salvando a requicao post na sessão 
     request.session['OrdemServico_form_data'] = request.POST
     
-    usuario = get_object_or_404(Usuario, user_id=request.user.id)
+    usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
 
     ordemForm = OrdemServicoForm(request.POST)
     form_carga_horaria_factory = inlineformset_factory(
@@ -80,6 +78,7 @@ def novo_chamado(request):
 
     if ordemForm.is_valid():
         ordem_servico = ordemForm.save(commit=False)
+        ordem_servico.aberto_por = usuario_logado
         
         #verificando se numero de chamado gerado já existe.
         if Ordem_Servico.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
@@ -87,19 +86,19 @@ def novo_chamado(request):
             request.session['OrdemServico_form_data'] = None
             return redirect('orion:lista_chamados')
 
-        ordem_servico.aberto_por = usuario
         ordem_servico.save()
         
-        formCargaHoraria = form_carga_horaria_factory(request.POST)
+        formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
         if formCargaHoraria.is_valid():
             print(formCargaHoraria)
-            formCargaHoraria.instance = ordem_servico
+            #formCargaHoraria.instance = ordem_servico
             formCargaHoraria.save()
             messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
             
         request.session['OrdemServico_form_data'] = None
         return redirect('orion:lista_chamados')
 
+    print(ordemForm)
     return redirect('orion:novo_chamado_view', 0)    
 
 @login_required
@@ -144,7 +143,7 @@ def editar_chamado(request, id):
             ordemForm.save()
             formCargaHoraria.save()
             request.session['OrdemServico_form_data'] = None
-            return redirect('lista_chamados')
+            return redirect('orion:lista_chamados')
         
         #carregando todos os horarios relacionados com a instancia de ordem_servico
         lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
@@ -167,7 +166,7 @@ def deletar_chamado(request, id):
         print('deletar = ', chamado)
         chamado.delete()
         messages.success(request, f"Chamado deletado com sucesso")
-        return redirect('lista_chamados')
+        return redirect('orion:lista_chamados')
 
 
 @login_required
@@ -184,15 +183,16 @@ def chamados_fechados(request):
 
 @login_required
 def fechar_chamado(request, id):
-    try:
-        ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
-    except Ordem_Servico.DoesNotExist:
-        raise Http404("No Model matches the given query.")
-    
-    ordem_servico.status_chamado = 'F'
-    ordem_servico.save()
-    messages.success(request, f"chamado {ordem_servico.numero_chamado} fechado com sucesso")
-    return redirect(lista_chamados)
+    if request.method == 'POST':
+        try:
+            ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
+        except Ordem_Servico.DoesNotExist:
+            raise Http404("No Model matches the given query.")
+        
+        ordem_servico.status_chamado = 'F'
+        ordem_servico.save()
+        messages.success(request, f"chamado {ordem_servico.numero_chamado} fechado com sucesso")
+        return redirect('orion:lista_chamados')
 
 
 @login_required
@@ -227,7 +227,7 @@ def detalhar_equipamento(request, id):
         if form.is_valid():
             form.save()
 
-        return redirect('home')
+        return redirect('orion:lista_home')
 
 
 @login_required
@@ -323,7 +323,7 @@ def detalhar_cliente(request, id):
             if enderecoForm.is_bound:
                 messages.error(request, "Endereço informando não válido.")
             
-        return redirect('clientes')
+        return redirect('orion:clientes')
     
     else:
 
