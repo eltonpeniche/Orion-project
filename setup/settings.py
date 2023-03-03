@@ -34,11 +34,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'tempus_dominus',
     'orion',
     'usuarios',
-    'widget_tweaks',
-    'smart_selects',
     'django.forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #apps de terceiros
+    'widget_tweaks',
+    'smart_selects',
+    'tempus_dominus',
 ]
 
 MIDDLEWARE = [

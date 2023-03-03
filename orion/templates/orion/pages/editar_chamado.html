@@ -4,7 +4,7 @@
 {% block content %}
 {% include 'globals/partials/_alertas.html' %}
 
-<form id="form-chamado" action= "{% url 'editar_chamado' id %}" method="post">
+<form id="form-chamado" action= "{% url 'orion:editar_chamado' id %}" method="post">
 
     {% include 'orion/partials/_detalhes_chamado.html' %}
 

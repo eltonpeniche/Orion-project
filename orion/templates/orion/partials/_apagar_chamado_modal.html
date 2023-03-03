@@ -4,7 +4,7 @@
 <div>
 
 <!-- modais de adicao de itens -->
-<form id="form-apagar-chamado-modal"  action="{% url 'deletar_chamado' 0 %}" method="post"> {% csrf_token %}
+<form id="form-apagar-chamado-modal"  action="{% url 'orion:deletar_chamado' 0 %}" method="post"> {% csrf_token %}
     <div class="modal" tabindex="-1" id="apagar_chamado_modal">
         <div class="modal-dialog">
             <div class="modal-content">

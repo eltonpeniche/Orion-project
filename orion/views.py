@@ -18,7 +18,7 @@ from usuarios.models import Usuario
 @login_required
 def lista_home(request):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('usuarios:login')
 
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     ordens_servico = Ordem_Servico.objects.filter(
@@ -85,7 +85,7 @@ def novo_chamado(request):
         if Ordem_Servico.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
             messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
             request.session['OrdemServico_form_data'] = None
-            return redirect('lista_chamados')
+            return redirect('orion:lista_chamados')
 
         ordem_servico.aberto_por = usuario
         ordem_servico.save()
@@ -98,9 +98,9 @@ def novo_chamado(request):
             messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
             
         request.session['OrdemServico_form_data'] = None
-        return redirect('lista_chamados')
+        return redirect('orion:lista_chamados')
 
-    return redirect('novo_chamado_view', 0)    
+    return redirect('orion:novo_chamado_view', 0)    
 
 @login_required
 def editar_chamado(request, id):

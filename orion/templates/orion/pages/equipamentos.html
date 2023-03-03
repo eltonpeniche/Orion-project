@@ -14,7 +14,7 @@
             </div>
 
             <div class=" d-flex justify-content-end m-2">
-                <a href="{% url 'cadastrar_equipamentos' %}">  
+                <a href="{% url 'orion:cadastrar_equipamentos' %}">  
                         <button type="submit" class="btn btn-primary"> Novo Equipamento</button>
                 </a>
                 
@@ -54,7 +54,7 @@
                                     <td>{{ equipamento.descricao }} </td>
                                     <td>{{ equipamento.numero_serie}} </td>
                                     <td>{{ equipamento.empresa}} </td>
-                                    <td align="center"><a href="{% url 'detalhar_equipamento' equipamento.id %}" title="Editar"><i
+                                    <td align="center"><a href="{% url 'orion:detalhar_equipamento' equipamento.id %}" title="Editar"><i
                                         class="fa-solid fa-pen-to-square"></i></a></td>
                                 </tr>
                                 

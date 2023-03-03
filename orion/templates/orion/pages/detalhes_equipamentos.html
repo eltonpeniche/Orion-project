@@ -35,7 +35,7 @@
         <button type="submit" class="btn btn-primary m-2" form="form-equipamento"> Salvar </button>
         
         {% if id %}
-            <form action="{% url 'deletar_equipamento' id %}" method="post"> {% csrf_token %}
+            <form action="{% url 'orion:deletar_equipamento' id %}" method="post"> {% csrf_token %}
                 <button type="submit" class="btn btn-danger m-2"> Apagar </button>
             </form>
         {% endif %}

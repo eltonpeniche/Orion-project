@@ -81,7 +81,7 @@
         <button type="submit" class="btn btn-primary m-2" form="form-cliente"> Salvar </button>
         
         {% if id %}
-            <form action="{% url 'deletar_cliente'%}" method="post">{% csrf_token %}
+            <form action="{% url 'orion:deletar_cliente'%}" method="post">{% csrf_token %}
                 <input type="hidden" name='id' value="{{ id }}" > </input>
                 <button type="submit" class="btn btn-danger m-2"> Apagar </button>
             </form>

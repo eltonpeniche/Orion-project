@@ -13,7 +13,7 @@
             </div>
 
             <div class=" d-flex justify-content-end m-2">
-                <a href="{% url 'cadastro_usuario' %}">  
+                <a href="{% url 'usuarios:cadastro_usuario' %}">  
                         <button type="submit" class="btn btn-primary"> Novo Usuário</button>
                 </a>
                 
@@ -48,7 +48,7 @@
                                     <td>{{ cliente.user.email }}</td>
                                     <td>{{ cliente.get_tipo_display }}</td>
                                     <td align="center">
-                                        <span class="link me-2"><a href="{% url 'editar_usuario' cliente.user.id %}" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a></span>
+                                        <span class="link me-2"><a href="{% url 'usuarios:editar_usuario' cliente.user.id %}" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a></span>
                                         
                                     
                                         <span class="link ms-3">

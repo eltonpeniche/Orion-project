@@ -33,7 +33,7 @@ def logout(request):
     auth.logout(request)
     messages.success(request, "Logout realizado com sucesso")
     print("Logout realizado com sucesso")
-    return redirect('login')
+    return redirect('usuarios:login')
 
 
 def login(request):
@@ -52,11 +52,11 @@ def login(request):
                 auth.login(request, usuario)
                 messages.success(request, f"Bem-vindo, {login} ")
                 print("LOGOU")
-                return redirect('lista_home')
+                return redirect('orion:lista_home')
 
             else:
                 messages.error(request, "Login ou Senha incorretos")
-                return redirect('login')
+                return redirect('usuarios:login')
     else:
         formLogin = LoginForm()
         contexto = {
@@ -72,7 +72,7 @@ def cadastro_usuario(request):
     
     if usuario.tipo != 'A':
         messages.error(request, f"Usuário {usuario.user.username} não é Administrador")
-        return redirect('lista_home')
+        return redirect('orion:lista_home')
 
 
     if request.method == 'POST':
@@ -99,7 +99,7 @@ def cadastro_usuario(request):
             usuario.save()
             messages.success(request, f"Técnico {login} salvo com sucesso.")
 
-            return redirect('lista_usuarios')
+            return redirect('usuarios:lista_usuarios')
 
         return render(request, 'usuarios/pages/cadastro_usuario.html',  {'form': form})
 
@@ -118,7 +118,7 @@ def deletar_usuario(request, id):
     
     if usuario_logado.tipo != 'A':
         messages.error(request, f"Usuário {usuario_logado.user.username} não é Administrador")
-        return redirect('lista_home')
+        return redirect('orion:lista_home')
     try:
         user = get_object_or_404(User, pk=id)
         usuario = get_object_or_404(Usuario, user_id=id)
@@ -129,11 +129,11 @@ def deletar_usuario(request, id):
     usuario.delete()
     user.delete()
     messages.success(request, f"Usuário {nome} excluido com sucesso")
-    return redirect('lista_usuarios')
+    return redirect('usuarios:lista_usuarios')
 
 def dados_usuario(request):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('usuarios:login')
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, instance=request.user)
@@ -144,7 +144,7 @@ def dados_usuario(request):
             # Atualiza a sessão do usuário para evitar que ele seja desconectado após alterar a senha
             update_session_auth_hash(request, request.user)
             messages.success(request, "Editado com sucesso")
-            return redirect('lista_usuarios')
+            return redirect('usuarios:lista_usuarios')
         
         return render(request, 'usuarios/pages/dados_usuario.html', 
                 {  'title':' Meus Dados',
@@ -174,7 +174,7 @@ def editar_usuario(request, id):
     
     if not isUserAdmin(request.user):
         messages.error(request, "Você não é administrador")
-        return redirect('lista_usuarios')
+        return redirect('usuarios:lista_usuarios')
 
     user = get_object_or_404(User, pk = id)
     usuario = get_object_or_404(Usuario, user_id = user.id)
@@ -187,7 +187,7 @@ def editar_usuario(request, id):
             form.save()
             usuarioForm.save()
             messages.success(request, "Editado com sucesso")
-            return redirect('lista_usuarios')
+            return redirect('usuarios:lista_usuarios')
         
         return render(request, 'usuarios/pages/editar_usuario.html', 
                 { 'title':' Edição de Usuários',

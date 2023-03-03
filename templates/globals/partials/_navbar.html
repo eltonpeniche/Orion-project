@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'lista_home' %}">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'orion:lista_home' %}">Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -15,9 +15,9 @@
                         Chamado
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'novo_chamado_view' 0 %}">Novo Chamado</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_chamados' %}">Chamados Abertos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'chamados_fechados' %}">Chamados Fechados</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orion:novo_chamado_view' 0 %}">Novo Chamado</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orion:lista_chamados' %}">Chamados Abertos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orion:chamados_fechados' %}">Chamados Fechados</a></li>
                     </ul>
                 </li>
 
@@ -27,9 +27,9 @@
                         cadastros
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'clientes' %}">Clientes</a></li>
-                        <li><a class="dropdown-item" href="{% url 'equipamentos' %} ">Equipamentos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_usuarios' %} ">Usuários</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orion:clientes' %}">Clientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orion:equipamentos' %} ">Equipamentos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'usuarios:lista_usuarios' %} ">Usuários</a></li>
                     </ul>
                 </li>
 
@@ -62,8 +62,8 @@
                     {% endif %}
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'dados_usuario' %}">Meus Dados</a></li>
-                        <li><a class="dropdown-item" href="{% url 'logout' %}" class="navText">Sair</a> </li>
+                        <li><a class="dropdown-item" href="{% url 'usuarios:dados_usuario' %}">Meus Dados</a></li>
+                        <li><a class="dropdown-item" href="{% url 'usuarios:logout' %}" class="navText">Sair</a> </li>
                     </ul>
                 </li>
             </ul>
