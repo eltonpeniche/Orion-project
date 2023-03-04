@@ -264,7 +264,8 @@
 </div>
 
     
-
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
  <script type="text/javascript">
         
@@ -398,7 +399,34 @@
         } 
 
     
+        $('.select2').select2({
+            theme: 'bootstrap4',
+            placeholder: 'Selecione uma opção'
+        });
 
+
+        
+        $(document).ready(function() {
+            if ($('#id_equipamento').val() == ''){
+                $('#id_equipamento').html('<option value=""> </option>');
+            }
+
+            $('#id_empresa').on('change', function() {
+                var selectedValue = $(this).val();
+                $.ajax({
+                    url: '/teste_create/' + selectedValue,
+                    dataType: 'json',
+                    success: function(data) {
+                        var options = '';
+                        for (var i = 0; i < data.length; i++) {
+                            options += '<option value="' + data[i].id + '">' + data[i].nome + '</option>';
+                        }
+                        $('#id_equipamento').html(options);
+                        $('#id_equipamento').trigger('change');
+                    }
+                });
+            });
+        });
 
     </script>
 

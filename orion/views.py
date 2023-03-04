@@ -4,6 +4,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.forms.models import formset_factory, inlineformset_factory
+from django.http import JsonResponse  # teste select2
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -282,7 +283,7 @@ def cadastrar_clientes(request):
             
             empresa.save()
             messages.success(request, "Novo Cliente cadastrado com sucesso.")
-            return redirect('clientes')
+            return redirect('orion:clientes')
         else:
             if not enderecoForm.is_valid(): 
                 enderecoForm.instance = False
@@ -369,7 +370,6 @@ def teste(request):
         form = OrdemServicoForm()
         form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
         
-        ch = CargaHoraria.objects.fi
         form_ch = form_carga_horaria_factory()
         
         contexto = {
@@ -398,25 +398,8 @@ def teste(request):
 
 
 
-def teste_create(request):
-    if not request.POST:
-        raise Http404
-
-    ordemForm = OrdemServicoForm(request.POST)
-    form_carga_horaria_factory = inlineformset_factory(
-        Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
-    
-    formCargaHoraria = form_carga_horaria_factory(request.POST)
-    
-    if ordemForm.is_valid() and formCargaHoraria.is_valid():
-        ordem_servico = ordemForm.save()
-        formCargaHoraria.instance = ordem_servico
-        formCargaHoraria.save()
-        return redirect('list_teste')
-    
-    contexto = {
-        'formCargaHoraria': formCargaHoraria,
-        'ordemForm': ordemForm
-    }
-    return render(request, 'orion/pages/teste.html', contexto)
-
+def teste_create(request, id):
+    dados = Equipamento.objects.filter(empresa=id)
+    dados_json = [{'id': '', 'text':'-------------dsdd---------'}]
+    dados_json = [{'id': d.id, 'nome': d.equipamento} for d in dados]
+    return JsonResponse(dados_json, safe=False)

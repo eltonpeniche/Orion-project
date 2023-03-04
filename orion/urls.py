@@ -28,7 +28,7 @@ urlpatterns = [
           views.deletar_cliente, name='deletar_cliente'),
      path('cadastrar_clientes/', views.cadastrar_clientes, name='cadastrar_clientes'),
      path('teste', views.teste, name='teste'),
-     path('teste_create', views.teste_create, name='teste_create'),
+     path('teste_create/<int:id>/', views.teste_create, name='teste_create'),
      path('list_teste', views.list_teste, name='list_teste'),
 
 ]

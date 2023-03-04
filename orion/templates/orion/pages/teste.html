@@ -175,7 +175,9 @@
 
             }
         </style>
-    
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/path/to/select2.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
     </head>
 
     <body>    
@@ -186,7 +188,6 @@
 
             <form action="" id="form-equipamento" method="post">
                 {% csrf_token %}
-                {{ form.media.js }}
                 {{ form.as_p }}
 
                 {% include 'orion/partials/_tabela_carga_horaria.html' %}
@@ -260,8 +261,8 @@
 
     </body>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script type="text/javascript">
         
@@ -364,6 +365,33 @@
             }
             return horas + ":" + minutos;
         }
+
+        $('.select2').select2({
+            theme: 'bootstrap4',
+            placeholder: 'Selecione uma opção'
+        });
+
+
+        $(document).ready(function() {
+           
+            
+            $('#id_empresa').on('change', function() {
+                var selectedValue = $(this).val();
+                $.ajax({
+                    url: '/teste_create/' + selectedValue,
+                    dataType: 'json',
+                    success: function(data) {
+                        var options = '';
+                        for (var i = 0; i < data.length; i++) {
+                            options += '<option value="' + data[i].id + '">' + data[i].nome + '</option>';
+                        }
+                        $('#id_equipamento').html(options);
+                        $('#id_equipamento').trigger('change');
+                    }
+                });
+            });
+            
+          });
 
     </script>
 

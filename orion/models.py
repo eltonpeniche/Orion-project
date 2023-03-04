@@ -7,9 +7,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms.formsets import formset_factory
 from django.utils.translation import gettext_lazy as _
-from smart_selects.db_fields import ChainedForeignKey
 
 from usuarios.models import Usuario
+
+#from smart_selects.db_fields import ChainedForeignKey
+
 
 # from validate_docbr import CPF
 
@@ -89,8 +91,7 @@ class Ordem_Servico(models.Model):
         Empresa, on_delete=models.SET_NULL, related_name='ordem_servico', null=True, blank=True)
 
     # equipamento = models.ForeignKey(Equipamento, on_delete=models.SET_NULL, blank=True, null=True)
-    equipamento = ChainedForeignKey(Equipamento, chained_field="empresa",
-                                    chained_model_field="empresa", show_all=False, auto_choose=True, sort=True)
+    equipamento = models.ForeignKey(Equipamento, on_delete=models.SET_NULL, null=True, blank=True)
 
     contato = models.CharField(max_length=100, null=True, blank=True)
     
