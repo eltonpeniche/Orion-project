@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 
     #apps de terceiros
     'widget_tweaks',
-    'smart_selects',
+    #'smart_selects',
     'tempus_dominus',
 ]
 

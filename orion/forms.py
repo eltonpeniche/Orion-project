@@ -12,9 +12,10 @@ class OrdemServicoForm(forms.ModelForm):
         super(OrdemServicoForm, self).__init__(*args, **kwargs)
         self.fields['numero_chamado'].initial = datetime.now().strftime(
             "%Y%m%d%H%M%S")
-        self.fields['equipamento'].empty_label = "Selecione uma Opção"
-        self.fields['empresa'].empty_label = "Selecione uma Opção"
-
+        #self.fields['equipamento'].empty_label = "Selecione uma Opção"
+        #self.fields['empresa'].empty_label = "Selecione uma Opção"
+        self.fields['empresa'].widget.attrs.update({'class':'select2' })
+        self.fields['equipamento'].widget.attrs.update({'class':'select2' })
     class Meta:
         model = Ordem_Servico
         exclude = ['status_chamado', 'aberto_por']
