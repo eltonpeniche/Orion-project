@@ -1,74 +1,209 @@
+<!DOCTYPE html>
+{% load jsignature_filters %}
 {% load static %}
-{% include 'orion/partials/_head.html' %}
-    <body>
+{% load widget_tweaks %}
+
+<html lang="pt-br">
+
+    <head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+   
+    <title>Orion - Sistema de Atendimento ao Cliente </title>
     <style>
+        :root {
+            --color-primary: #269fe6;
+            --color-primary-hover: #2086c2;
+            --color-primary-dark: #13141f;
+            --color-primary-dark-hover: #212336;
+            --color-primary-light: #d4ecfa;
+            --color-primary-light-hover: #bdd8e7;
+
+            --color-white: #fff;
+            --color-black: #000;
+
+            --color-dark-text: #444;
+            --color-info-light: #cce5ff;
+            --color-debug-light: #cce5ff;
+            --color-success-light: #d4edda;
+            --color-alert-light: #fff3cd;
+            --color-warning-light: #fff3cd;
+            --color-error-light: #f8d7da;
+
+            --color-info-dark: #4d86c4;
+            --color-debug-dark: #4d86c4;
+            --color-success-dark: #4a9c5d;
+            --color-alert-dark: #927f40;
+            --color-warning-dark: #927f40;
+            --color-error-dark: #da525d;
+
+            --color-gray-0: #f9f9f9;
+            --color-gray-1: #e0e0e0;
+            --color-gray-2: #c7c7c7;
+            --color-gray-3: #aeaeae;
+            --color-gray-4: #959595;
+            --color-gray-5: #7d7d7d;
+            --color-gray-6: #646464;
+            --color-gray-7: #4b4b4b;
+            --color-gray-8: #323232;
+            --color-gray-9: #191919;
+
+            --font-primary: sans-serif;
+            --font-headings: 'Roboto Slab', serif;
+
+            --spacing-gutter-medium: 3rem;
+            --spacing-gutter-large: 4rem;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+
+
+        }
+
+        html {
+            font-size: 62, 5%;
+
+        }
+
+        body {
+            background: #E8F3FF;
+            height: 300px;
+            width: 800px;
+        }
+
         .hidden{
             display:none;
         }
         button {
             padding: 0.4rem;
         }
-    </style>    
-        <h1>Hello World</h1>
+
+        .repetir{
+            position: relative"
+        }
         
-        <div class="table-responsive col-8">
+        
+        .topo {
+            background-image: url({% static '/img/topo2.jpg' %});
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            line-height: 200px;
+            color: #004080;
+            text-shadow: 2px 2px #c4e1ff;
+            text-align: center;
+            font-size: 2.0vw;
+            padding: 1rem;
+        }
 
-            <table class="table table-bordered table-striped">
-                <colgroup>
-                    <col class="col-xs-3">
-                    <col class="col-xs-2">
-                    <col class="col-xs-2">
-                    <col class="col-xs-1">
+        .container {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+            background: #FFF;
+            max-width: 75rem;
+        }
 
-                    <col class="col-xs-1">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Chamado</th>
-                        <th>Cliente</th>
-                        <th>Equipamento</th>
-                        <th>Tipo</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
+        #conteudo h4 {
+            text-align: center;
+            margin-top: 2rem;
+        }
 
-                    {% if ordens_servico  %}
-                        {% for ordem in ordens_servico %}
-                        
-                            <tr>
-                                <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
-                                <td>{{ordem.equipamento.empresa.nome}}</td>
-                                <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento.equipamento}}</td>
-                                <td> {{ ordem.get_tipo_chamado_display }} </td>
-                                </td>
-                                <td align="center"><a href="#" title="Editar"><i
-                                    class="fa-solid fa-pen-to-square"></i></a></td>
-                            </tr>
-                            
-                        {% endfor %}
-                        
-                    {% else %}    
-                        
-                        <tr>
-                            <td colspan="8">Sem registros</td>
-                        </tr>
-                    
-                    {% endif %}
-                </tbody>
-            </table>
+
+        .rodape p {
+            text-align: center;
+        }
+
+        .nav2 {
+            color: #337ab7;
+        }
+        .card-dados-titulo{
+
+            background:#dff0d8;
+            padding:0.4rem;
+        }
+        .dados-titulo{
+            margin-left: 1rem;
+            margin-top: 0.4rem;
+            font-family: inherit;
+            font-weight: 400;
+            line-height: 1.1;
+            color: #3C763B;
+            font-size: 1rem;
+        }
+        .card-atendimento-titulo{
+
+            background:#d9edf7;
+            padding:0.4rem;
+            border-color: #bce8f1;
+        }
+        .atendimento-titulo{
+            margin-left: 1rem;
+            margin-top: 0.4rem;
+            font-family: inherit;
+            font-weight: 400;
+            line-height: 1.1;
+            color: #31708f;
+            font-size: 1rem;
+        }
+
+        .label-class{
+            text-align: right;
+        }
+        
+        .title-login{
+            margin-top: 2em;
+
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/path/to/select2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    </head>
+
+    <body>    
+        
+        <div class="container col-8 justify-content-center ms-5">
+
+            <button id="reset-button" type="button">Limpar Assinatura</button>
+            <button onclick = 'window.close()' type="button">Salvar </button>
+            <div id = "assinatura">
+                {{ form.signature }}
+                {{ form.media }}
+            </div>
+            
         </div>
 
 
         
-        <!-- JavaScript Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        crossorigin="anonymous"></script>
-
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        
     </body>
+    <script>
+
+        $(document).ready(function() {
+            $('#reset-button').click(function(){
+                $('#jsign_signature').jSignature("reset");
+            });
+        });
+        
+        
+    </script>
+
+    
+   <script src="{% static 'js/jSignature.min.js' %}"></script>
+   <!--  <script src="{% static 'js/django_jsignature.js' %}"></script>
+-->
+
 </html>

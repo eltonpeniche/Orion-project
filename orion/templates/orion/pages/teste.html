@@ -1,183 +1,176 @@
-<!DOCTYPE html>
+{% load jsignature_filters %}
 {% load static %}
 {% load widget_tweaks %}
-<html lang="en">
+<!DOCTYPE html>
+
+<html lang="pt-br">
 
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+   
+    <title>Orion - Sistema de Atendimento ao Cliente </title>
+    <style>
+        :root {
+            --color-primary: #269fe6;
+            --color-primary-hover: #2086c2;
+            --color-primary-dark: #13141f;
+            --color-primary-dark-hover: #212336;
+            --color-primary-light: #d4ecfa;
+            --color-primary-light-hover: #bdd8e7;
+
+            --color-white: #fff;
+            --color-black: #000;
+
+            --color-dark-text: #444;
+            --color-info-light: #cce5ff;
+            --color-debug-light: #cce5ff;
+            --color-success-light: #d4edda;
+            --color-alert-light: #fff3cd;
+            --color-warning-light: #fff3cd;
+            --color-error-light: #f8d7da;
+
+            --color-info-dark: #4d86c4;
+            --color-debug-dark: #4d86c4;
+            --color-success-dark: #4a9c5d;
+            --color-alert-dark: #927f40;
+            --color-warning-dark: #927f40;
+            --color-error-dark: #da525d;
+
+            --color-gray-0: #f9f9f9;
+            --color-gray-1: #e0e0e0;
+            --color-gray-2: #c7c7c7;
+            --color-gray-3: #aeaeae;
+            --color-gray-4: #959595;
+            --color-gray-5: #7d7d7d;
+            --color-gray-6: #646464;
+            --color-gray-7: #4b4b4b;
+            --color-gray-8: #323232;
+            --color-gray-9: #191919;
+
+            --font-primary: sans-serif;
+            --font-headings: 'Roboto Slab', serif;
+
+            --spacing-gutter-medium: 3rem;
+            --spacing-gutter-large: 4rem;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
 
 
+        }
+
+        html {
+            font-size: 62, 5%;
+
+        }
+
+        body {
+            background: #E8F3FF;
+        }
+
+        .hidden{
+            display:none;
+        }
+        button {
+            padding: 0.4rem;
+        }
+
+        .repetir{
+            position: relative"
+        }
         
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/fontawesome.min.css"
-            integrity="sha512-giQeaPns4lQTBMRpOOHsYnGw1tGVzbAIHUyHRgn7+6FmiEgGGjaG0T2LZJmAPMzRCl+Cug0ItQ2xDZpTmEc+CQ=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-            
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/brands.min.css"
-            integrity="sha512-G/T7HQJXSeNV7mKMXeJKlYNJ0jrs8RsWzYG7rVACye+qrcUhEAYKYzaa+VFy6eFzM2+/JT1Q+eqBbZFSHmJQew=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-            
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/solid.min.css"
-            integrity="sha512-6mc0R607di/biCutMUtU9K7NtNewiGQzrvWX4bWTeqmljZdJrwYvKJtnhgR+Ryvj+NRJ8+NnnCM/biGqMe/iRA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-            
-            
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-            
-            
-        <title>Orion - Sistema de Atendimento ao Cliente </title>
-        <style>
-            :root {
-                --color-primary: #269fe6;
-                --color-primary-hover: #2086c2;
-                --color-primary-dark: #13141f;
-                --color-primary-dark-hover: #212336;
-                --color-primary-light: #d4ecfa;
-                --color-primary-light-hover: #bdd8e7;
+        
+        .topo {
+            background-image: url({% static '/img/topo2.jpg' %});
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            line-height: 200px;
+            color: #004080;
+            text-shadow: 2px 2px #c4e1ff;
+            text-align: center;
+            font-size: 2.0vw;
+            padding: 1rem;
+        }
 
-                --color-white: #fff;
-                --color-black: #000;
+        .container {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+            background: #FFF;
+            max-width: 75rem;
+        }
 
-                --color-dark-text: #444;
-                --color-info-light: #cce5ff;
-                --color-debug-light: #cce5ff;
-                --color-success-light: #d4edda;
-                --color-alert-light: #fff3cd;
-                --color-warning-light: #fff3cd;
-                --color-error-light: #f8d7da;
-
-                --color-info-dark: #4d86c4;
-                --color-debug-dark: #4d86c4;
-                --color-success-dark: #4a9c5d;
-                --color-alert-dark: #927f40;
-                --color-warning-dark: #927f40;
-                --color-error-dark: #da525d;
-
-                --color-gray-0: #f9f9f9;
-                --color-gray-1: #e0e0e0;
-                --color-gray-2: #c7c7c7;
-                --color-gray-3: #aeaeae;
-                --color-gray-4: #959595;
-                --color-gray-5: #7d7d7d;
-                --color-gray-6: #646464;
-                --color-gray-7: #4b4b4b;
-                --color-gray-8: #323232;
-                --color-gray-9: #191919;
-
-                --font-primary: sans-serif;
-                --font-headings: 'Roboto Slab', serif;
-
-                --spacing-gutter-medium: 3rem;
-                --spacing-gutter-large: 4rem;
-            }
-
-            * {
-                padding: 0;
-                margin: 0;
-                box-sizing: border-box;
+        #conteudo h4 {
+            text-align: center;
+            margin-top: 2rem;
+        }
 
 
-            }
+        .rodape p {
+            text-align: center;
+        }
 
-            html {
-                font-size: 62, 5%;
+        .nav2 {
+            color: #337ab7;
+        }
+        .card-dados-titulo{
 
-            }
+            background:#dff0d8;
+            padding:0.4rem;
+        }
+        .dados-titulo{
+            margin-left: 1rem;
+            margin-top: 0.4rem;
+            font-family: inherit;
+            font-weight: 400;
+            line-height: 1.1;
+            color: #3C763B;
+            font-size: 1rem;
+        }
+        .card-atendimento-titulo{
 
-            body {
-                background: #E8F3FF;
-            }
+            background:#d9edf7;
+            padding:0.4rem;
+            border-color: #bce8f1;
+        }
+        .atendimento-titulo{
+            margin-left: 1rem;
+            margin-top: 0.4rem;
+            font-family: inherit;
+            font-weight: 400;
+            line-height: 1.1;
+            color: #31708f;
+            font-size: 1rem;
+        }
 
-            .hidden{
-                display:none;
-            }
-            button {
-                padding: 0.4rem;
-            }
+        .label-class{
+            text-align: right;
+        }
+        
+        .title-login{
+            margin-top: 2em;
 
-            .repetir{
-                position: relative"
-            }
-            
-            
-            .topo {
-                background-image: url({% static '/img/topo2.jpg' %});
-                background-repeat: no-repeat;
-                background-size: 100% auto;
-                line-height: 200px;
-                color: #004080;
-                text-shadow: 2px 2px #c4e1ff;
-                text-align: center;
-                font-size: 2.0vw;
-                padding: 1rem;
-            }
-
-            .container {
-                padding-right: 15px;
-                padding-left: 15px;
-                margin-right: auto;
-                margin-left: auto;
-                background: #FFF;
-                max-width: 75rem;
-            }
-
-            #conteudo h4 {
-                text-align: center;
-                margin-top: 2rem;
-            }
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/path/to/select2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
 
 
-            .rodape p {
-                text-align: center;
-            }
-
-            .nav2 {
-                color: #337ab7;
-            }
-            .card-dados-titulo{
-
-                background:#dff0d8;
-                padding:0.4rem;
-            }
-            .dados-titulo{
-                margin-left: 1rem;
-                margin-top: 0.4rem;
-                font-family: inherit;
-                font-weight: 400;
-                line-height: 1.1;
-                color: #3C763B;
-                font-size: 1rem;
-            }
-            .card-atendimento-titulo{
-
-                background:#d9edf7;
-                padding:0.4rem;
-                border-color: #bce8f1;
-            }
-            .atendimento-titulo{
-                margin-left: 1rem;
-                margin-top: 0.4rem;
-                font-family: inherit;
-                font-weight: 400;
-                line-height: 1.1;
-                color: #31708f;
-                font-size: 1rem;
-            }
-
-            .label-class{
-                text-align: right;
-            }
-            
-            .title-login{
-                margin-top: 2em;
-
-            }
-        </style>
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/path/to/select2.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     </head>
 
     <body>    
@@ -186,213 +179,63 @@
         
         <div class="container col-8 justify-content-center p-5 mb-5">
 
-            <form action="" id="form-equipamento" method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
 
-                {% include 'orion/partials/_tabela_carga_horaria.html' %}
-
-{% comment %}                 <div class ="d-grid gap-2 d-md-flex justify-content-md-end" > 
-                    <button id="add-more" type="button" class="btn btn-primary me-md-2">
-                        Adicionar Horas</button>
-                </div> {% endcomment %}
-
-                <!-- Button trigger modal -->
-                <button id="add-more" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Adicionar Horas
-                </button>
-                
-                <div class="row ">
-                    
-                    <div id="ch-form-list" class="hidden">
-                        {{ form_ch.management_form }} 
-                        {% for form  in form_ch %}
-                            <div class="repetir">
-                                {{ form }}
-                            </div>
-                        {% endfor %}
-                    </div> 
-                    
-                    
-                    <div id="empty-form" class="hidden" > 
-                        {{ form_ch.empty_form }} 
-                         
-                    </div>
-                    
-                </div>
-                
-                <div class=" d-flex justify-content-center m-2">
-      
-                    <button type="submit" class="btn btn-primary" > Salvar </button>
-            
-                </div>
-            </form>
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="temp">
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                    <button id ="not_save_hours" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id ="save_hours" type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar hora</button>
-                    
-{% comment %}                     <div class=" d-flex justify-content-center m-2">
-                        <button id ="save_hours" type="button" class="btn btn-primary" > Salvar hora </button>
-                    </div> {% endcomment %}
-
-                    </div>
-                </div>
-                </div>
-            </div>
-            <!-- End Modal -->
-            
-
-            
+            <img id='id-img' src="{{ obj.signature|signature_base64 }}" alt="{{ obj }}" />
+            <a href="#" id="open-popup">Abrir Popup</a>
         </div>
 
+        <form id='assinatura-form' action="" method="post">
+            {% csrf_token %}
+            <button type="submit"> salvar </button>
+        </form>
+
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        
+        
     </body>
 
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script type="text/javascript">
-        
-        
-        const addMoreBtn = document.getElementById("add-more")
-        const totalNewForms = document.getElementById("id_carga_horaria-TOTAL_FORMS")
-        const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
-        var copyEmptyFormEl = null;
-        
-        addMoreBtn.addEventListener('click', add_new_form)
-        
-        function add_new_form(event){
-            if(event){
-                event.preventDefault()   
-            }
-            console.log("add_hours")
-            const currentCargaHorariaForms = document.getElementsByClassName("repetir")
-            const currentFormCount = currentCargaHorariaForms.length //+  1
-            const formCopyTarget = document.getElementById("temp")
-            copyEmptyFormEl = document.getElementById("empty-form").cloneNode(true);
-
-            copyEmptyFormEl.setAttribute('class', 'repetir-temp' )
-            copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}` )
-            const regex = new RegExp('__prefix__', 'g' )
-            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
-            formCopyTarget.append(copyEmptyFormEl)
-
-            
-        } 
-
-        const notSaveHoursBtn = document.getElementById("not_save_hours");
-        notSaveHoursBtn.addEventListener('click', not_save_new_form)
-        function not_save_new_form(event){
-            if(event){
-                event.preventDefault()   
-            }
-            console.log("not_save_hours")
-            const temForm = document.getElementById("temp");
-            while (temForm.firstChild) {
-                temForm.removeChild(temForm.firstChild);
-            }
-        }
-
-        
-        const saveHoursBtn = document.getElementById("save_hours");
-        saveHoursBtn.addEventListener('click', save_new_form)
-        function save_new_form(event){
-            if(event){
-                event.preventDefault()   
-            }
-            console.log("save_hours")
-            const currentCargaHorariaForms = document.getElementsByClassName("repetir")
-            const currentFormCount = currentCargaHorariaForms.length //+  1
-            const formCopyTarget = document.getElementById("ch-form-list")
-            const temForm = document.getElementsByClassName("repetir-temp")
-            
-            copyEmptyFormEl.setAttribute('class', 'repetir' )
-            totalNewForms.setAttribute('value', currentFormCount + 1)
-            
-            formCopyTarget.append(copyEmptyFormEl)
-           
     
-
-            //--------------------------------------------------------------------
-
-            const varData = document.getElementById("id_carga_horaria-"+currentFormCount+"-data").value;
-            console.log("varData" + varData )
-            const varHoraInicio = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_inicio").value;
-            const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
-            const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
-            const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
-            var novaLinha = document.createElement("tr");
-            var valores = [varData, varHoraInicio, varHoraTermino, varHorasDeTrabalho, varStatus, '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
-            //var valores = ['24/02/2023', '09:30', '13:30','05:00' ,'Normal', '<a href="#" title="Editar"><i class="fa-solid fa-pen-to-square"></i> Editar </a>'];
-            for (var i = 0; i < 6; i++) {
-                var novaCelula = document.createElement("td");
-                novaCelula.innerHTML = valores[i];
-                novaLinha.appendChild(novaCelula);
-            }
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>
+        
+        // função para abrir a janela popup
+        function openPopup() {
+            var url = "{% url 'orion:list_teste' %}"; 
+            //var width = window.innerWidth; // largura da janela atual
+            //var height = window.innerHeight; // altura da janela atual
             
+            var width = 800; // largura da janela atual
+            var height = 300;
             
-            novaLinha.appendChild(novaCelula);
-            tabelaCargaHoraria.append(novaLinha);
-        
-        
-        
+            //var features = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=" + width + ",height=" + height;
+            var features = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=" + width + ",height=" + height;
+            var popup = window.open(url, 'popupWindow' , 'width=800,height=300'); // abrir nova janela em tela cheia
+            
+            // Aguarda o popup ser fechado para pegar os valores atualizados
+            popup.onunload = function () {
+                var assinatura_form_popup = popup.document.getElementById('assinatura')
+                var canvas = popup.document.getElementsByClassName('jSignature');
+                var dataURL = canvas[0].toDataURL();
+                const assinatura_img = document.getElementById('id-img')
+                assinatura_img.src = dataURL
+
+                console.log("form clonado" + assinatura_form_popup.children )
+              
+                const formTarget = document.getElementById('assinatura-form')
+                formTarget.append(assinatura_form_popup)
+
+            };
+            
         }
+        
 
-        function subtrairHorarios(horario1, horario2) {
-            var partes1 = horario1.split(":");
-            var partes2 = horario2.split(":");
-            var data1 = new Date(0, 0, 0, partes1[0], partes1[1]);
-            var data2 = new Date(0, 0, 0, partes2[0], partes2[1]);
-            var diferenca = data2.getTime() - data1.getTime();
-            var horas = Math.floor(diferenca / (1000 * 60 * 60));
-            diferenca -= horas * (1000 * 60 * 60);
-            var minutos = Math.floor(diferenca / (1000 * 60));
-            if (minutos < 10) {
-              minutos = "0" + minutos;
-            }
-            return horas + ":" + minutos;
-        }
-
-        $('.select2').select2({
-            theme: 'bootstrap4',
-            placeholder: 'Selecione uma opção'
-        });
-
-
-        $(document).ready(function() {
-           
-            
-            $('#id_empresa').on('change', function() {
-                var selectedValue = $(this).val();
-                $.ajax({
-                    url: '/teste_create/' + selectedValue,
-                    dataType: 'json',
-                    success: function(data) {
-                        var options = '';
-                        for (var i = 0; i < data.length; i++) {
-                            options += '<option value="' + data[i].id + '">' + data[i].nome + '</option>';
-                        }
-                        $('#id_equipamento').html(options);
-                        $('#id_equipamento').trigger('change');
-                    }
-                });
-            });
-            
-          });
+        // adiciona um ouvinte de eventos para o clique no botão
+        document.getElementById("open-popup").addEventListener("click", openPopup);
 
     </script>
 
+    <script src="{% static 'js/jSignature.min.js' %}"></script>
+    <script src="{% static 'js/django_jsignature.js' %}"></script>
 </html>

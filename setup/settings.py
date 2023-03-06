@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-q44$h%cc-^q87+$xd_1#@zw!wx0ntk0teu2p9ot0t#xlx#zjz_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','192.168.0.8']
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     #'smart_selects',
     'tempus_dominus',
+    'jsignature',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +156,7 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning'
 }
+
+JSIGNATURE_WIDTH = 800
+JSIGNATURE_HEIGHT = 300
+JSIGNATURE_RESET_BUTTON = False

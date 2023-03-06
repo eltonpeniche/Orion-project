@@ -2,9 +2,17 @@ import re
 from datetime import datetime
 
 from django import forms
+from jsignature.widgets import JSignatureWidget
 from validate_docbr import CNPJ
 
-from .models import CargaHoraria, Empresa, Endereco, Equipamento, Ordem_Servico
+from .models import (CargaHoraria, Empresa, Endereco, Equipamento,
+                     Ordem_Servico, SignatureModel)
+
+
+class SignatureForm(forms.ModelForm):
+    class Meta:
+        model = SignatureModel
+        fields ='__all__'
 
 
 class OrdemServicoForm(forms.ModelForm):
@@ -168,3 +176,4 @@ def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):
     if h1_inicio <= h2_inicio < h1_fim or h2_inicio <= h1_inicio < h2_fim:
         return True
     return False
+

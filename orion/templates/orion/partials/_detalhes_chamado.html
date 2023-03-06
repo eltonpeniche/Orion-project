@@ -414,7 +414,7 @@
             $('#id_empresa').on('change', function() {
                 var selectedValue = $(this).val();
                 $.ajax({
-                    url: '/teste_create/' + selectedValue,
+                    url: '/equipamentos_select2/' + selectedValue,
                     dataType: 'json',
                     success: function(data) {
                         var options = '';

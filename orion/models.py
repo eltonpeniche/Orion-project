@@ -1,12 +1,9 @@
 
 from datetime import datetime, time
 
-from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.forms.formsets import formset_factory
 from django.utils.translation import gettext_lazy as _
+from jsignature.fields import JSignatureField
 
 from usuarios.models import Usuario
 
@@ -129,3 +126,7 @@ class CargaHoraria(models.Model):
         #horas trabalhadas
         self.horas_de_trabalho= time(hour=diferenca_horas, minute=diferenca_minutos, second=0)
         super(CargaHoraria, self).save(*args, **kwargs)
+
+
+class SignatureModel(models.Model):
+    signature = JSignatureField()

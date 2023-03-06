@@ -8,11 +8,13 @@ from django.http import JsonResponse  # teste select2
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from jsignature.utils import draw_signature
+from PIL import Image
 
 from orion.forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
-                         EquipamentosForm, OrdemServicoForm)
+                         EquipamentosForm, OrdemServicoForm, SignatureForm)
 from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
-                          Ordem_Servico)
+                          Ordem_Servico, SignatureModel)
 from usuarios.models import Usuario
 
 
@@ -247,6 +249,11 @@ def cadastrar_equipamentos(request):
         return redirect('equipamentos')
 
 
+def equipamentos_select2(request, id):
+    dados = Equipamento.objects.filter(empresa=id)
+    dados_json = [{'id': d.id, 'nome': d.equipamento} for d in dados]
+    return JsonResponse(dados_json, safe=False)
+
 @login_required
 def deletar_equipamento(request, id):
     if request.method == 'POST':
@@ -358,48 +365,42 @@ def deletar_cliente(request):
 
 def list_teste(request):
 
-    ordens_servico = Ordem_Servico.objects.all().order_by('-id')
-    contexto = {
-        'ordens_servico': ordens_servico,
-    }
-    return render(request, 'orion/pages/teste_list.html', contexto)
+    if request.method == 'GET':
+        form = SignatureForm()
+        contexto = {
+            'form' : form,
+        }
+        return render(request, 'orion/pages/teste_list.html', contexto)
+    else: 
+        form = SignatureForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            signature = form.cleaned_data.get('signature')
+            if signature:
+                # as an image
+                signature_picture = draw_signature(signature)
+                # Converta a imagem RGBA em uma imagem RGB
+                #signature_picture = signature_picture.convert('RGB')
+                signature_picture.save('media/imagem.png', 'PNG')
+                return redirect('orion:teste')
+            
+    
 
 
 def teste(request):
     if request.method == 'GET':
-        form = OrdemServicoForm()
-        form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
-        
-        form_ch = form_carga_horaria_factory()
-        
+        obj = SignatureModel.objects.latest('id')
+        print("obj " ,obj.signature)
         contexto = {
-            'form': form,
-            'form_ch': form_ch
+            'obj' : obj
         }
         return render(request, 'orion/pages/teste.html', contexto)
-    else:
-        ordemForm = OrdemServicoForm(request.POST)
+    
+    else: 
+        form = SignatureForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('orion:teste')
         
-        form_carga_horaria_factory = inlineformset_factory(
-            Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
-        
-        formCargaHoraria = form_carga_horaria_factory(request.POST)
-
-        if ordemForm.is_valid():
-            ordem_servico = ordemForm.save()
-            
-            if formCargaHoraria.is_valid():
-                formCargaHoraria.instance = ordem_servico
-                formCargaHoraria.save()
-                return redirect('lista_chamados')
-        print(formCargaHoraria)
-        print("não foi valido")
-        return redirect('lista_home')  
 
 
-
-def teste_create(request, id):
-    dados = Equipamento.objects.filter(empresa=id)
-    dados_json = [{'id': '', 'text':'-------------dsdd---------'}]
-    dados_json = [{'id': d.id, 'nome': d.equipamento} for d in dados]
-    return JsonResponse(dados_json, safe=False)
