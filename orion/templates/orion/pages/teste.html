@@ -184,7 +184,8 @@
             <a href="#" id="open-popup">Abrir Popup</a>
         </div>
 
-        <form id='assinatura-form' action="" method="post">
+        <form  action="" method="post">
+            <div id='assinatura-form'> </div>
             {% csrf_token %}
             <button type="submit"> salvar </button>
         </form>
@@ -215,16 +216,19 @@
             
             // Aguarda o popup ser fechado para pegar os valores atualizados
             popup.onunload = function () {
-                var assinatura_form_popup = popup.document.getElementById('assinatura')
-                var canvas = popup.document.getElementsByClassName('jSignature');
-                var dataURL = canvas[0].toDataURL();
-                const assinatura_img = document.getElementById('id-img')
-                assinatura_img.src = dataURL
-
-                console.log("form clonado" + assinatura_form_popup.children )
-              
-                const formTarget = document.getElementById('assinatura-form')
-                formTarget.append(assinatura_form_popup)
+                const inputAssinatura = popup.document.getElementById('id_signature').value 
+                //testa se a assinatura não está vazia
+                if( inputAssinatura != '[]' ){
+                    var canvas = popup.document.getElementsByClassName('jSignature');
+                    var dataURL = canvas[0].toDataURL();
+                    const assinatura_img = document.getElementById('id-img')
+                    assinatura_img.src = dataURL
+                    
+                    var assinatura_form_popup = popup.document.getElementById('assinatura')
+                    const formTarget = document.getElementById('assinatura-form')
+                    formTarget.innerHTML = '';
+                    formTarget.append(assinatura_form_popup)
+                }
 
             };
             
