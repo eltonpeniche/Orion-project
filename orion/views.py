@@ -362,6 +362,16 @@ def deletar_cliente(request):
         messages.success(request, f"Cliente {nome} deletado com sucesso")
     return redirect('clientes')
 
+def assinatura_popup(request):
+
+    if request.method == 'GET':
+        form = SignatureForm()
+        contexto = {
+            'form' : form,
+        }
+        return render(request, 'orion/partials/_assinatura-popup.html', contexto)
+            
+    
 
 def list_teste(request):
 

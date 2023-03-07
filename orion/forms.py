@@ -2,7 +2,6 @@ import re
 from datetime import datetime
 
 from django import forms
-from jsignature.widgets import JSignatureWidget
 from validate_docbr import CNPJ
 
 from .models import (CargaHoraria, Empresa, Endereco, Equipamento,

@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-q44$h%cc-^q87+$xd_1#@zw!wx0ntk0teu2p9ot0t#xlx#zjz_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','192.168.0.8']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -157,6 +157,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning'
 }
 
+JSIGNATURE_JQUERY = 'admin'
 JSIGNATURE_WIDTH = 800
 JSIGNATURE_HEIGHT = 300
 JSIGNATURE_RESET_BUTTON = False

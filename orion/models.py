@@ -80,14 +80,14 @@ class Ordem_Servico(models.Model):
     # horas_atendimento
     # despesas
     observacoes_do_cliente = models.TextField(blank=True, null = True)
-    # assinatura
+    
+    
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 
     empresa = models.ForeignKey(
         Empresa, on_delete=models.SET_NULL, related_name='ordem_servico', null=True, blank=True)
 
-    # equipamento = models.ForeignKey(Equipamento, on_delete=models.SET_NULL, blank=True, null=True)
     equipamento = models.ForeignKey(Equipamento, on_delete=models.SET_NULL, null=True, blank=True)
 
     contato = models.CharField(max_length=100, null=True, blank=True)
@@ -95,6 +95,8 @@ class Ordem_Servico(models.Model):
     aberto_por = models.ForeignKey(
         Usuario, on_delete=models.SET_NULL, null=True, related_name='ordem_servico')
 
+    assinatura = JSignatureField(null=True, blank=True)
+    
     def __str__(self):
         return f'Status = {self.status}, Tipo de chamado - {self.tipo_chamado}, - Criado em {self.criado_em}'
 

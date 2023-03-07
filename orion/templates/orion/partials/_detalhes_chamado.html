@@ -1,5 +1,6 @@
 {% load widget_tweaks %}
-
+{% load static %}
+{% load jsignature_filters %}
 {% block content %}
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
@@ -249,6 +250,22 @@
                     </div>
                 </div>
 
+                <div class="form-group mt-3 mb-3 row ">
+                    <div class="col-2 label-class">
+                        <label class="col-form-label" for="{{ ordemForm.assinatura.id_for_label}}">
+                            {{ordemForm.assinatura.label}}</label>
+                    </div>
+                    <div id ="popup-hidden" class="hidden">
+                        {{ordemForm.media}}
+                        {{ordemForm.assinatura}}
+                    </div>
+                    <div class="col-8 assinatura">
+                        <img id='id-img' src="{{ ordemForm.assinatura|signature_base64 }}" alt="" />
+                        <a href="#" id="open-popup" style="position: absolute;right: 200px">Assinar</a>
+                    </div>
+
+                </div>
+
 
             </div>
 
@@ -267,7 +284,7 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
- <script type="text/javascript">
+    <script type="text/javascript">
         
         
         const addMoreBtn = document.getElementById("add-more")
@@ -429,5 +446,59 @@
         });
 
     </script>
+    
+    <script src="{% static 'js/jSignature.min.js' %}"></script>
+    <script src="{% static 'js/django_jsignature.js' %}"></script>
 
-{% endblock content %}
+
+    <script>
+        //pega dos dados da assinatura que estão no formulario e 
+        // coloca os dados na tag img para ser redenrizado como imagem
+        $(document).ready(function() {
+            var canvas = document.getElementsByClassName('jSignature');
+            var dataURL = canvas[0].toDataURL();
+            const assinatura_img = document.getElementById('id-img')
+            assinatura_img.src = dataURL
+        })
+        
+        // função para abrir a janela popup
+        function openPopup() {
+            var url = "{% url 'orion:assinatura_popup' %}"; 
+            //var width = window.innerWidth; // largura da janela atual
+            //var height = window.innerHeight; // altura da janela atual
+            
+            var width = 800; // largura da janela atual
+            var height = 300;
+            
+            //var features = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=" + width + ",height=" + height;
+            var features = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=" + width + ",height=" + height;
+            var popup = window.open(url, 'popupWindow' , 'width=800,height=300'); // abrir nova janela em tela cheia
+            
+            // Aguarda o popup ser fechado para pegar os valores atualizados
+            popup.onunload = function () {
+                const inputAssinatura = popup.document.getElementById('id_signature').value 
+                
+                //se a assinatura no popup estiver vazia,nada é feito na tela principal
+                if( inputAssinatura != '[]' ){
+                    var canvas = popup.document.getElementsByClassName('jSignature');
+                    var dataURL = canvas[0].toDataURL();
+                    const assinatura_img = document.getElementById('id-img')
+                    assinatura_img.src = dataURL
+                    
+                    var assinatura_form_popup = popup.document.getElementById('id_signature')
+                    console.log("assinatura "+ assinatura_form_popup.value)
+                    const formTarget = document.getElementById('id_assinatura')
+                    formTarget.value = assinatura_form_popup.value
+                }
+
+            };
+            
+        }
+        
+
+        // adiciona um ouvinte de eventos para o clique no botão de assinar
+        document.getElementById("open-popup").addEventListener("click", openPopup);
+
+    </script>
+
+    {% endblock content %}

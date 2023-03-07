@@ -28,6 +28,7 @@ urlpatterns = [
      path('deletar_cliente/',
           views.deletar_cliente, name='deletar_cliente'),
      path('cadastrar_clientes/', views.cadastrar_clientes, name='cadastrar_clientes'),
+     path('assinatura_popup', views.assinatura_popup, name='assinatura_popup'),
      path('teste', views.teste, name='teste'),
      path('list_teste', views.list_teste, name='list_teste'),
 
