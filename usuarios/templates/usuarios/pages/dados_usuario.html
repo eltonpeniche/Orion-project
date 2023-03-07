@@ -12,7 +12,7 @@
 <div class="container col-10">
     <br>
 
-    <form action="{% url 'dados_usuario' %}" method="post">
+    <form action="{% url 'usuarios:dados_usuario' %}" method="post">
         {% csrf_token %}
         
         {% if form %}

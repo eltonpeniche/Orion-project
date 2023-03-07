@@ -1,16 +1,13 @@
-from datetime import date, datetime, time, timedelta
 
-from django.contrib import auth, messages
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.forms.models import formset_factory, inlineformset_factory
-from django.http import JsonResponse  # teste select2
-from django.http import Http404, HttpResponse
+from django.db.models import Q
+from django.forms.models import inlineformset_factory
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from jsignature.utils import draw_signature
-from PIL import Image
 
+from orion import utils
 from orion.forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
                          EquipamentosForm, OrdemServicoForm, SignatureForm)
 from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
@@ -42,6 +39,29 @@ def lista_chamados(request):
             'titulo': 'Chamados abertos'
         }
         return render(request, 'orion/pages/chamado.html', contexto)
+
+@login_required
+def busca_chamados(request):
+    termo_pesquisado = request.GET.get('q', '').strip()
+    
+    if not termo_pesquisado:
+        raise Http404()
+    
+    
+    ordens_servico = Ordem_Servico.objects.filter( 
+                        Q(numero_chamado__icontains = termo_pesquisado) |
+                        Q(empresa__nome__icontains = termo_pesquisado) |
+                        Q(equipamento__equipamento__icontains = termo_pesquisado)|
+                        Q(criado_em__icontains = utils.converter_data(termo_pesquisado)),
+                        status_chamado='A'
+                        ).order_by('-id')
+    contexto = {
+        'termo_pesquisado': termo_pesquisado,
+        'ordens_servico': ordens_servico,
+        'titulo': f'Pesquisa por {termo_pesquisado}...'
+    }
+    return render(request, 'orion/pages/busca.html', contexto)
+
 
 @login_required
 def novo_chamado_view(request, id):

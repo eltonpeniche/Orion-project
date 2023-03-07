@@ -9,6 +9,7 @@ app_name = 'orion'
 urlpatterns = [
      path('', views.lista_home, name='lista_home'),
      path('chamados/', views.lista_chamados, name='lista_chamados'),
+     path('chamados/busca/', views.busca_chamados, name='busca_chamados'),
      path('chamados_fechados/', views.chamados_fechados, name='chamados_fechados'),
      path('fechar_chamado/<int:id>/', views.fechar_chamado, name='fechar_chamado'),
      path('chamados/<int:id>/', views.novo_chamado_view, name='novo_chamado_view'),
