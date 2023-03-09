@@ -37,24 +37,9 @@
         <div id="targetEndereco">
         {% if formEndereco.instance  %}
             {% for field in formEndereco.visible_fields %}
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
-                        <label class="col-form-label" for="{{ field.id_for_label}}">
-                            {{field.label}}</label>
-                    </div>
-
-                    <div class=" d-inline-flex flex-row col-8">
-                                    
-                        {{field|add_class:'form-control'}}
-                        {% if field.name == 'cep' %}
-                        <button id='buscaCep' name="buscaCepForm" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
-                        {% endif %}
-                        
-                    </div>
-                </div>
-                
-                {% endfor %}
-            {% endif %}    
+                {% include 'orion/partials/_endereco_form.html' %}    
+            {% endfor %}
+        {% endif %}    
         </div>
     
         </form>    

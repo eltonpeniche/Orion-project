@@ -327,6 +327,7 @@ def cadastrar_clientes(request):
             if enderecoForm.is_valid():
                 endereco = enderecoForm.save()
                 empresa.endereco = endereco
+            else:
                 messages.error(request, "Endereço informando não válido.")
             
             empresa.save()
@@ -401,7 +402,7 @@ def deletar_cliente(request):
             endereco.delete()
         cliente.delete()
         messages.success(request, f"Cliente {nome} deletado com sucesso")
-    return redirect('clientes')
+    return redirect('orion:clientes')
 
 def assinatura_popup(request):
 

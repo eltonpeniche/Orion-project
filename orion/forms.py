@@ -81,7 +81,7 @@ class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
         # exclude = ['status_chamado']
-        fields = ['cep','rua','bairro','uf','cidade', 'numero'] 
+        fields = ['cep','rua','bairro','uf','cidade', 'numero', 'complemento'] 
     
     def __init__(self, *args, **kwargs):
         super(EnderecoForm, self).__init__(*args, **kwargs)

@@ -3,31 +3,18 @@
 
     <!-- Modal -->
     <div class="modal fade" id="enderecoModal" tabindex="-1" aria-labelledby="enderecoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
             <h1 class="modal-title fs-5" id="enderecoModalLabel">Endereço</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body ">
+
                 <div id="endereco-modal">
                     
                     {% for field in formEndereco.visible_fields %}
-                    <div class="form-group mt-3 mb-3 row ">
-                        <div class="col-2 label-class">
-                            <label class="col-form-label" for="{{ field.id_for_label}}">
-                                {{field.label}}</label>
-                            </div>
-                            <div class=" d-inline-flex flex-row col-8">
-                                
-                                {{field|add_class:'form-control'}}
-                                {% if field.name == 'cep' %}
-                                    <button id='buscaCep' name="buscaCepModal" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
-                                {% endif %}
-                                
-                            </div>
-                        </div>
-                        
+                        {% include 'orion/partials/_endereco_form.html' %} 
                     {% endfor %}
                 </div>
             </div>
