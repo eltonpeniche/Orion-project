@@ -79,7 +79,7 @@ def busca_chamados(request):
 
 @login_required
 def novo_chamado_view(request, id):
-
+    
     #buscando dados salvos sessão 
     OrdemServico_form_data = request.session.get('OrdemServico_form_data', None)
     
@@ -182,7 +182,9 @@ def editar_chamado(request, id):
             #-----------------------------------
             if request.user != chamado.aberto_por.user:
                hoje = datetime.now().strftime("%d/%m/%Y")
-               notify.send(request.user, recipient=chamado.aberto_por.user, verb=f"O chamado que você abriu {chamado.numero_chamado}, foi editado por {request.user.username} em {hoje}" )
+               notify.send(request.user, recipient=chamado.aberto_por.user, 
+                           verb=f"O chamado que você abriu {chamado.numero_chamado}, foi editado por {request.user.username} em {hoje}" ,
+                           target = chamado)
             #-----------------------------------
             request.session['OrdemServico_form_data'] = None
             return redirect('orion:lista_chamados')

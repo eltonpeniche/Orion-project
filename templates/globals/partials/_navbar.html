@@ -99,7 +99,7 @@
                             <form class = "notificacao-form" method="post">{% csrf_token %}
                                 <div class="notification-item">
                                     <div class="notification-item-content">
-                                        <a href="{% url 'orion:novo_chamado_view' notificacao.target_object_id  %}">
+                                        <a href="{% url 'orion:editar_chamado' notificacao.target_object_id  %}">
 
                                             <div class="notification-item-text">
                                                 {{ notificacao.verb }}
@@ -131,7 +131,7 @@
     </div>
 </nav>
 <script>
-    
+
     
     // marca as notificacoes como lida
     document.addEventListener('submit', async (event) => {
