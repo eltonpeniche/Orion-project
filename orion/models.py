@@ -22,7 +22,7 @@ class Endereco(models.Model):
     cep = models.CharField(max_length=8)
     uf = models.CharField(max_length=2)
     cidade = models.CharField(max_length=100)
-
+    #complemento
     def __str__(self):
         return f'{self.rua}, {self.numero} - {self.bairro}, {self.cidade}-{self.uf}, {self.cep}'
 
