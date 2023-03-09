@@ -52,13 +52,17 @@
                 <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar" name = 'q' value="{{termo_pesquisado}}" required>
                 <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
-
-            <ul class="nav navbar-nav navbar-right">
+   
+            <ul class="nav navbar-nav navbar-right">   
+                
+            
                 <li class="nav-item dropdown">
                     
                     {% if user.is_authenticated %}
                     <button class="btn btn-outline-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ user.get_username |title }}
+                        <!-- 
+                        -->
                     </button>
 
                     {% else %}
@@ -72,10 +76,112 @@
                         <li><a class="dropdown-item" href="{% url 'usuarios:logout' %}" class="navText">Sair</a> </li>
                     </ul>
                 </li>
+                
+                <!-- notificações -->
+                <li class="nav-item dropstart ms-2">
+                    <button id="notificacao-btn" class="notification btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        
+                        <!-- notificações 
+                        -->
+                            {% if numero_notificacoes_nao_lidas %}
+                            <span id='numero-notificacoes' class="badge">{{numero_notificacoes_nao_lidas}}</span>
+                            {% endif %}
+                    
+                       
+                    </button>
+                    <ul class="dropdown-menu notification-container">
+                        <div class="notification-header">Notificações</div>
+                        <div class="notification-list">
+
+                            {% for notificacao in notificacoes_nao_lidas %}
+                            
+                            <form class = "notificacao-form" method="post">{% csrf_token %}
+                                <div class="notification-item">
+                                    <div class="notification-item-content">
+                                        <a href="{% url 'orion:novo_chamado_view' notificacao.target_object_id  %}">
+
+                                            <div class="notification-item-text">
+                                                {{ notificacao.verb }}
+                                                
+                                            </div>
+                                        </a>
+                                        
+                                        <input class="hidden" type="text" name="id-notificacao" value = {{notificacao.id}}>
+                                        <button class="mark_as_read" type=submit>Marcar como Lida</button>
+                                    
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            {% endfor %}
+                            
+                            
+                        </div>
+                        <!--
+                        End notificações -->
+                    </ul>
+                
+                    
+                </li>
+        
             </ul>
 
         </div>
     </div>
 </nav>
+<script>
+    
+    
+    // marca as notificacoes como lida
+    document.addEventListener('submit', async (event) => {
+        
+        if (event.target.classList.contains('notificacao-form')) {
+            event.preventDefault(); 
+            form = event.target;
 
+            const formData = new FormData(form);
+            const response = await fetch("{% url 'orion:marcar_notificacao_como_lida' %}" , {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                form.remove()
+                const count = document.querySelector('#numero-notificacoes');
+                count.innerText = data.count
+                if (data.count ==0){
+                    count.setAttribute('class', 'hidden')
+                }
+            });
+            
+
+
+        }
+    });
+    {% comment %}     
+    {% endcomment %}
+    
+    {% comment %}     
+    const form = document.querySelector('.notificacao-form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        console.log(form)
+        const formData = new FormData(form);
+        const response = await fetch("{% url 'orion:marcar_notificacao_como_lida' %}" , {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            form.remove()
+            const count = document.querySelector('#numero-notificacoes');
+            count.innerText = data.count
+            if (data.count ==0){
+                count.setAttribute('class', 'hidden')
+            }
+        });
+    }); 
+    {% endcomment %}     
+</script>
 {% endblock content %}

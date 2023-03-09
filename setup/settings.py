@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     #'smart_selects',
     'tempus_dominus',
     'jsignature',
+    'notifications',
 ]
 
 MIDDLEWARE = [

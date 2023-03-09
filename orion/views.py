@@ -1,11 +1,15 @@
 
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from jsignature.utils import draw_signature
+from notifications.models import Notification
+from notifications.signals import notify
 
 from orion import utils
 from orion.forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
@@ -14,6 +18,9 @@ from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
                           Ordem_Servico, SignatureModel)
 from usuarios.models import Usuario
 
+from .notifications import (get_notificacoes_nao_lidas,
+                            get_numero_notificacoes_nao_lidas)
+
 
 @login_required
 def lista_home(request):
@@ -21,10 +28,17 @@ def lista_home(request):
         return redirect('usuarios:login')
 
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
+    #---------------------------
+    notificacoes_nao_lidas = get_notificacoes_nao_lidas(request.user)
+    numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
+    #----------------------------
     ordens_servico = Ordem_Servico.objects.filter(
         aberto_por=usuario, status_chamado='A').order_by('-id')
     contexto = {
+        'numero_notificacoes_nao_lidas':numero_notificacoes_nao_lidas,
+        'notificacoes_nao_lidas': notificacoes_nao_lidas,
         'ordens_servico': ordens_servico,
+        'lista': range(0,10),
         'home': 'Olá, Usuário'
     }
     return render(request, 'orion/pages/chamado.html', contexto)
@@ -163,8 +177,13 @@ def editar_chamado(request, id):
         formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
 
         if ordemForm.is_valid() and formCargaHoraria.is_valid():
-            ordemForm.save()
+            chamado = ordemForm.save()
             formCargaHoraria.save()
+            #-----------------------------------
+            if request.user != chamado.aberto_por.user:
+               hoje = datetime.now().strftime("%d/%m/%Y")
+               notify.send(request.user, recipient=chamado.aberto_por.user, verb=f"O chamado que você abriu {chamado.numero_chamado}, foi editado por {request.user.username} em {hoje}" )
+            #-----------------------------------
             request.session['OrdemServico_form_data'] = None
             return redirect('orion:lista_chamados')
         
@@ -391,7 +410,17 @@ def assinatura_popup(request):
         }
         return render(request, 'orion/partials/_assinatura-popup.html', contexto)
             
-    
+
+def marcar_notificacao_como_lida(request):
+    if request.POST:
+        notificacao_id = request.POST.get('id-notificacao')
+        notificacao = Notification.objects.get(id = notificacao_id )
+        notificacao.mark_as_read()
+        print(notificacao_id, notificacao)
+        numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
+    return JsonResponse({'count': numero_notificacoes_nao_lidas})
+
+
 
 def list_teste(request):
 

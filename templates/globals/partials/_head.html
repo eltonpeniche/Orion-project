@@ -130,8 +130,8 @@
         .topo {
             background-image: url({% static '/img/topo2.jpg' %});
             background-repeat: no-repeat;
-            background-size: 100% auto;
-            line-height: 200px;
+            background-size: cover;
+            height: 30vh;
             color: #004080;
             text-shadow: 2px 2px #c4e1ff;
             text-align: center;
@@ -223,6 +223,70 @@
             border-style: ridge;
             border-radius:2%;
         }
+        .notification {
+            position: relative;
+            display: inline-block;
+          }
+        
+        
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 350px;
+            height: 400px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-y: scroll;
+        }
+
+        .notification-header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            padding: 10px;
+        }
+
+        .notification-list {
+            height: 350px;
+            background-color: #fff;
+            padding: 10px;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            white-space: inherit;
+            text-decoration: none;
+        }
+        .notification-item a {
+            text-decoration: none;
+        }
+        .notification-item-content {
+            flex: 1;
+        }
+        .notification-item-text {
+            font-size: 14px;
+            color: #555;
+        }
+
     </style>
 </head>
 

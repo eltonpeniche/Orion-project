@@ -26,7 +26,7 @@
                     <thead>
                         <tr>
                             <th>Chamado</th>
-                            <th>Cliente</th>
+                            <th class = "dropdown-toggle">Cliente</th>
                             <th>Equipamento</th>
                             <th>Tipo</th>
                             <th>Data</th>
@@ -41,7 +41,7 @@
                             
                                 <tr>
                                     <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
-                                    <td>{{ordem.equipamento.empresa.nome}}</td>
+                                    <td>{{ordem.equipamento.empresa.nome}} </td>
                                     <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento.equipamento}}</td>
                                     <td> {{ ordem.get_tipo_chamado_display }} </td>
                                     <td>{{ordem.criado_em|date:"d/m/Y"}}</td>
