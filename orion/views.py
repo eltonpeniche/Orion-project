@@ -4,6 +4,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.http import Http404, HttpResponse, JsonResponse
@@ -35,8 +36,12 @@ def lista_home(request):
     #----------------------------
     ordens_servico = Ordem_Servico.objects.filter(
         aberto_por=usuario, status_chamado='A').order_by('-id')
+    
+    paginator = Paginator(ordens_servico, 25) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    ordens_servico_page = paginator.get_page(page_number)
     contexto = {
-        'ordens_servico': ordens_servico,
+        'ordens_servico': ordens_servico_page,
         'home': 'Olá, Usuário'
     }
     return render(request, 'orion/pages/chamado.html', contexto)
@@ -46,8 +51,13 @@ def lista_chamados(request):
     if request.method == "GET":
         ordens_servico = Ordem_Servico.objects.all().filter(
             status_chamado='A').order_by('-id')
+        
+        paginator = Paginator(ordens_servico, 25) # Show 25 contacts per page.
+        page_number = request.GET.get('page')
+        ordens_servico_page = paginator.get_page(page_number)
+
         contexto = {
-            'ordens_servico': ordens_servico,
+            'ordens_servico': ordens_servico_page,
             'titulo': 'Chamados abertos'
         }
         return render(request, 'orion/pages/chamado.html', contexto)
@@ -215,9 +225,12 @@ def deletar_chamado(request, id):
 def chamados_fechados(request):
     ordens_servico = Ordem_Servico.objects.all().filter(
         status_chamado='F').order_by('-id')
-    print(ordens_servico)
+    paginator = Paginator(ordens_servico, 25) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    ordens_servico_page = paginator.get_page(page_number)
+    
     contexto = {
-        'ordens_servico': ordens_servico,
+        'ordens_servico': ordens_servico_page,
         'titulo': 'Chamados fechados'
     }
     return render(request, 'orion/pages/chamado.html', contexto)
@@ -306,8 +319,12 @@ def deletar_equipamento(request, id):
 def clientes(request):
 
     clientes = Empresa.objects.all().order_by('-id')
+    paginator = Paginator(clientes, 25) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    clientes_page = paginator.get_page(page_number)
+
     contexto = {
-        'clientes': clientes,
+        'clientes': clientes_page,
         'titulo': 'Clientes'
     }
     return render(request, 'orion/pages/clientes.html', contexto)
