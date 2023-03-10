@@ -70,8 +70,9 @@ class EquipamentosForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['empresa'].widget.attrs.update({'class': 'form-select'})
-        self.fields['empresa'].empty_label = "Selecione uma Opção"
+        self.fields['empresa'].widget.attrs.update({'class':'select2' })
+        #self.fields['empresa'].widget.attrs.update({'class': 'form-select'})
+        #self.fields['empresa'].empty_label = "Selecione uma Opção"
 
 
 class EnderecoForm(forms.ModelForm):
