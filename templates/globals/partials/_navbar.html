@@ -48,15 +48,34 @@
 
             </ul>
 
-            <form class="d-flex me-2" role="search" action="{% url 'orion:busca_chamados'%}">
+            <form class="d-flex me-2 mt-2" role="search" action="{% url 'orion:busca_chamados'%}">
                 <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar" name = 'q' value="{{termo_pesquisado}}" required>
                 <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
    
             <ul class="nav navbar-nav navbar-right">   
                 
+                <!-- notificações -->
+                <li class="nav-item dropstart mt-2">
+                    <button id="notificacao-btn" class="notification btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        
+                        <span id='numero-notificacoes' class="badge"></span>
+                       
+                    </button>
+                    <ul class="dropdown-menu notification-container">
+                        <div class="notification-header">Notificações</div>
+                        <div id='notificacoes' class="notification-list">
+                            <!--
+                             notificações inseridas com js -->
+  
+                        </div>
+                    </ul>
+                
+                    
+                </li>
             
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown ms-2 mt-2">
                     
                     {% if user.is_authenticated %}
                     <button class="btn btn-outline-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -77,25 +96,6 @@
                     </ul>
                 </li>
                 
-                <!-- notificações -->
-                <li class="nav-item dropstart ms-2">
-                    <button id="notificacao-btn" class="notification btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-regular fa-bell"></i>
-                        
-                        <span id='numero-notificacoes' class="badge"></span>
-                       
-                    </button>
-                    <ul class="dropdown-menu notification-container">
-                        <div class="notification-header">Notificações</div>
-                        <div id='notificacoes' class="notification-list">
-                            <!--
-                             notificações inseridas com js -->
-  
-                        </div>
-                    </ul>
-                
-                    
-                </li>
         
             </ul>
 
