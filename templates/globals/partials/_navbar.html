@@ -82,44 +82,16 @@
                     <button id="notificacao-btn" class="notification btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-regular fa-bell"></i>
                         
-                        <!-- notificações 
-                        -->
-                            {% if numero_notificacoes_nao_lidas %}
-                            <span id='numero-notificacoes' class="badge">{{numero_notificacoes_nao_lidas}}</span>
-                            {% endif %}
-                    
+                        <span id='numero-notificacoes' class="badge"></span>
                        
                     </button>
                     <ul class="dropdown-menu notification-container">
                         <div class="notification-header">Notificações</div>
-                        <div class="notification-list">
-
-                            {% for notificacao in notificacoes_nao_lidas %}
-                            
-                            <form class = "notificacao-form" method="post">{% csrf_token %}
-                                <div class="notification-item">
-                                    <div class="notification-item-content">
-                                        <a href="{% url 'orion:editar_chamado' notificacao.target_object_id  %}">
-
-                                            <div class="notification-item-text">
-                                                {{ notificacao.verb }}
-                                                
-                                            </div>
-                                        </a>
-                                        
-                                        <input class="hidden" type="text" name="id-notificacao" value = {{notificacao.id}}>
-                                        <button class="mark_as_read" type=submit>Marcar como Lida</button>
-                                    
-                                    </div>
-                                </div>
-                            </form>
-                            
-                            {% endfor %}
-                            
-                            
+                        <div id='notificacoes' class="notification-list">
+                            <!--
+                             notificações inseridas com js -->
+  
                         </div>
-                        <!--
-                        End notificações -->
                     </ul>
                 
                     
@@ -131,6 +103,94 @@
     </div>
 </nav>
 <script>
+
+    $(document).ready(function(){
+        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'orion:marcar_notificacao_como_lida' %}",
+            data: {'id-notificacao': '1',  csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success: function(data) {
+              // ação a ser executada se a requisição for bem sucedida
+                
+                //console.log(data)
+                const noti =  JSON.parse(data['notificacoes']);
+                        
+                let notificacoesDiv = document.getElementById("notificacoes");
+                
+                noti.forEach((item) => {
+                    //console.log(item.fields.verb, item.pk, item.fields.target_object_id); // Imprime o valor da chave "model" de cada objeto do arquivo JSON
+
+                    // criando o formulário
+                    let form = document.createElement("form");
+                    form.classList.add("notificacao-form");
+                    form.method = "post";
+                
+                    // adicionando o csrf_token
+                    let csrf_token = document.createElement("input");
+                    csrf_token.type = "hidden";
+                    csrf_token.name = "csrfmiddlewaretoken";
+                    csrf_token.value = "{{ csrf_token }}"; 
+                    form.appendChild(csrf_token);
+                
+                    // criando o item de notificação
+                    let notificationItem = document.createElement("div");
+                    notificationItem.classList.add("notification-item");
+                
+                    let notificationItemContent = document.createElement("div");
+                    notificationItemContent.classList.add("notification-item-content");
+                    
+                    let link = document.createElement("a");
+                    link.href = "{% url 'orion:editar_chamado' 0 %}";
+                    link.href = link.href.split('/').slice(0,-2).join('/')+'/'+item.fields.target_object_id+'/'
+
+                    let notificationItemText = document.createElement("div");
+                    notificationItemText.classList.add("notification-item-text");
+                    notificationItemText.innerText = item.fields.verb; 
+                    link.appendChild(notificationItemText);
+                    notificationItemContent.appendChild(link);
+                
+                    let idNotificacao = document.createElement("input");
+                    idNotificacao.setAttribute('value', item.pk )
+                    idNotificacao.classList.add("hidden");
+                    idNotificacao.type = "text";
+                    idNotificacao.name = "id-notificacao";
+                    notificationItemContent.appendChild(idNotificacao);
+                
+                    let markAsReadButton = document.createElement("button");
+                    markAsReadButton.classList.add("mark_as_read");
+                    markAsReadButton.type = "submit";
+                    markAsReadButton.innerText = "Marcar como Lida";
+                    notificationItemContent.appendChild(markAsReadButton);
+                
+                    notificationItem.appendChild(notificationItemContent);
+                    form.appendChild(notificationItem);
+                
+                    notificacoesDiv.appendChild(form);
+                }); 
+
+
+                const count = document.querySelector('#numero-notificacoes');
+                count.innerText = data.count
+                if (data.count == 0){
+                    count.setAttribute('class', 'hidden')
+                    const notificationList  = document.querySelector('#notificacoes');
+                    notificationList.innerText = "Sem notificações"
+                }
+
+                
+                
+                //console.log(notificacoesDiv)
+
+            },
+            error: function() {
+              // ação a ser executada se a requisição falhar
+            }
+          });
+
+        
+
+    });
 
     
     // marca as notificacoes como lida
@@ -152,6 +212,8 @@
                 count.innerText = data.count
                 if (data.count ==0){
                     count.setAttribute('class', 'hidden')
+                    const notificationList  = document.querySelector('#notificacoes');
+                    notificationList.innerText = "Sem notificações"
                 }
             });
             
@@ -159,29 +221,6 @@
 
         }
     });
-    {% comment %}     
-    {% endcomment %}
     
-    {% comment %}     
-    const form = document.querySelector('.notificacao-form');
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
-        console.log(form)
-        const formData = new FormData(form);
-        const response = await fetch("{% url 'orion:marcar_notificacao_como_lida' %}" , {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            form.remove()
-            const count = document.querySelector('#numero-notificacoes');
-            count.innerText = data.count
-            if (data.count ==0){
-                count.setAttribute('class', 'hidden')
-            }
-        });
-    }); 
-    {% endcomment %}     
 </script>
 {% endblock content %}

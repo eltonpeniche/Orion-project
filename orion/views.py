@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.http import Http404, HttpResponse, JsonResponse
@@ -29,16 +30,13 @@ def lista_home(request):
 
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     #---------------------------
-    notificacoes_nao_lidas = get_notificacoes_nao_lidas(request.user)
-    numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
+    #notificacoes_nao_lidas = get_notificacoes_nao_lidas(request.user)
+    #numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
     #----------------------------
     ordens_servico = Ordem_Servico.objects.filter(
         aberto_por=usuario, status_chamado='A').order_by('-id')
     contexto = {
-        'numero_notificacoes_nao_lidas':numero_notificacoes_nao_lidas,
-        'notificacoes_nao_lidas': notificacoes_nao_lidas,
         'ordens_servico': ordens_servico,
-        'lista': range(0,10),
         'home': 'Olá, Usuário'
     }
     return render(request, 'orion/pages/chamado.html', contexto)
@@ -417,11 +415,14 @@ def assinatura_popup(request):
 def marcar_notificacao_como_lida(request):
     if request.POST:
         notificacao_id = request.POST.get('id-notificacao')
-        notificacao = Notification.objects.get(id = notificacao_id )
-        notificacao.mark_as_read()
-        print(notificacao_id, notificacao)
+        if Notification.objects.filter(id=notificacao_id).exists():
+            notificacao = Notification.objects.get(id = notificacao_id )
+            notificacao.mark_as_read()
+            print(notificacao_id, notificacao)
+        notificacoes = get_notificacoes_nao_lidas(request.user) 
+        my_json = serializers.serialize('json', notificacoes )
         numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
-    return JsonResponse({'count': numero_notificacoes_nao_lidas})
+    return JsonResponse({'count': numero_notificacoes_nao_lidas, 'notificacoes': my_json})
 
 
 

@@ -27,7 +27,7 @@
 
     {# Include jQuery #}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
      {# Include select2 #}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
@@ -243,7 +243,7 @@
             top: 80px;
             right: 20px;
             width: 350px;
-            height: 400px;
+            max-height: 400px;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -260,7 +260,7 @@
         }
 
         .notification-list {
-            height: 350px;
+            max-height: 350px;
             background-color: #fff;
             padding: 10px;
         }
