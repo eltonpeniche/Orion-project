@@ -2,6 +2,7 @@
 {% load static %}
 {% load jsignature_filters %}
 {% block content %}
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
@@ -32,79 +33,83 @@
         tabindex="0">
 
         <div class="card">
+            
+
+            
             <div class="card-dados-titulo">
                 <h5 class="card-title dados-titulo">Dados Gerais</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body justify-content-center">
+        
                 {% csrf_token %}
                 {{ ordemForm.media.js }}
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.empresa.id_for_label}}">
                             {{ordemForm.empresa.label}}</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-sm-8">
                         {{ordemForm.empresa|add_class:'form-control form-select search-ordem'}}
 
                     </div>
                 </div>
 
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.equipamento.id_for_label}}">
                             {{ordemForm.equipamento.label}}</label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         {{ordemForm.equipamento|add_class:'form-control form-select'}}
 
                     </div>
 
                 </div>
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.status.id_for_label}}">
                             {{ordemForm.status.label}}</label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         {{ordemForm.status|add_class:'form-control form-select'}}
 
                     </div>
 
                 </div>
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.numero_chamado.id_for_label}}">
                             {{ordemForm.numero_chamado.label}}</label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         {{ordemForm.numero_chamado|add_class:'form-control'|attr:'readonly'}}
 
                     </div>
 
                 </div>
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.tipo_chamado.id_for_label}}">
                             {{ordemForm.tipo_chamado.label}}</label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         {{ordemForm.tipo_chamado|add_class:'form-control form-select'}}
 
                     </div>
 
                 </div>
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.descricao_chamado.id_for_label}}">
                             {{ordemForm.descricao_chamado.label}}</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-sm-8">
                         {{ordemForm.descricao_chamado|add_class:'form-control'}}
 
                     </div>
@@ -112,10 +117,11 @@
                 </div>
 
 
-
+            
             </div>
 
-        </div>
+        
+    </div>
 
     </div>
 
@@ -128,12 +134,12 @@
             </div>
             
             <div class="card-body">
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.descricao_servico.id_for_label}}">
                             {{ordemForm.descricao_servico.label}}</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-sm-8">
                         {{ordemForm.descricao_servico|add_class:'form-control'}}
 
                     </div>
@@ -167,8 +173,8 @@
                     <div id="empty-form" class="hidden" > 
 
                         
-                        <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-4 label-class">
+                        <div class="form-group mt-3 mb-3 d-flex row ">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ form_ch.empty_form.data.id_for_label}}">
                                     {{form_ch.empty_form.data.label}}</label>
                             </div>
@@ -178,8 +184,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-4 label-class">
+                        <div class="form-group mt-3 mb-3 d-flex row ">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ form_ch.empty_form.hora_inicio.id_for_label}}">
                                     {{form_ch.empty_form.hora_inicio.label}}</label>
                             </div>
@@ -190,7 +196,7 @@
                         </div>
 
                         <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-4 label-class">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ form_ch.empty_form.hora_termino.id_for_label}}">
                                     {{form_ch.empty_form.hora_termino.label}}</label>
                             </div>
@@ -201,7 +207,7 @@
                         </div>
 
                         <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-4 label-class">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ form_ch.empty_form.status.id_for_label}}">
                                     {{form_ch.empty_form.status.label}}</label>
                             </div>
@@ -228,30 +234,30 @@
             </div>
             <div class="card-body">
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.contato.id_for_label}}">
                             {{ordemForm.contato.label}}</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-sm-8">
                         {{ordemForm.contato|add_class:'form-control form-select'}}
                 
                     </div>
                 </div>
                 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.observacoes_do_cliente.id_for_label}}">
                             {{ordemForm.observacoes_do_cliente.label}}</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-sm-8">
                         {{ordemForm.observacoes_do_cliente|add_class:'form-control'}}
                 
                     </div>
                 </div>
 
-                <div class="form-group mt-3 mb-3 row ">
-                    <div class="col-2 label-class">
+                <div class="form-group mt-3 mb-3 d-flex row ">
+                    <div class="label-class col-md-2 text-start text-md-end">
                         <label class="col-form-label" for="{{ ordemForm.assinatura.id_for_label}}">
                             {{ordemForm.assinatura.label}}</label>
                     </div>
@@ -259,9 +265,9 @@
                         {{ordemForm.media}}
                         {{ordemForm.assinatura}}
                     </div>
-                    <div class="col-8 assinatura">
-                        <img id='id-img' src="{{ ordemForm.assinatura|signature_base64 }}" alt="" />
-                        <a href="#" id="open-popup" style="position: absolute;right: 200px">Assinar</a>
+                    <div class="col-sm-8 assinatura">
+                        <img class="img-fluid" id='id-img' src="{{ ordemForm.assinatura|signature_base64 }}" alt="" />
+                        <a href="#" id="open-popup">Clique aqui para assinar</a>
                     </div>
 
                 </div>

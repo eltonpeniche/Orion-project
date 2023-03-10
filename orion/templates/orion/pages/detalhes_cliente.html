@@ -10,19 +10,19 @@
 </div>
 
 
-<div class="container col-10">
+<div class="container col-sm-10">
     <br>
 
     <form action="" id="form-cliente" method="post">
         {% csrf_token %}
         {% for field in form.visible_fields %}
 
-            <div class="form-group mt-3 mb-3 row ">
-                <div class="col-2 label-class">
-                    <label class="col-form-label" for="{{ field.id_for_label}}">
+            <div class="form-group mt-3 mb-3 d-flex row ">
+                <div class="col-sm-2 label-class text-start text-sm-end">
+                    <label class="col-form-label " for="{{ field.id_for_label}}">
                         {{field.label}}</label>
                 </div>
-                <div class="col-8">
+                <div class="col-sm-8">
                     
                     {{field|add_class:'form-control'}}
                 </div>
@@ -46,12 +46,12 @@
         
         {% if formEndereco.instance is False  %}
         <!-- Modal -->
-            <div id="div_adicionar_endereco" class="form-group mt-3 mb-3 row ">
-                <div class="col-2 label-class">
+            <div id="div_adicionar_endereco" class="form-group mt-3 mb-3 row d-flex">
+                <div class="label-class col-sm-2 text-start text-sm-end">
                 <label class="col-form-label" for="adicionar_endereco">
                     Endereço:  </label>
                 </div>
-                    <div class="col-3 d-flex">
+                    <div class="col-sm-3 d-flex">
                         <input id = "adicionar_endereco" type="text" class="form-control" placeholder ="Cadastrar Endereço" disabled>
                         <button class="btn btn-success" type="button" id="btn_adicionar_endereco" 
                         data-bs-toggle="modal" data-bs-target="#enderecoModal"><i class="fa-solid fa-plus"></i></button>
@@ -62,7 +62,7 @@
             {% include 'orion/partials/_endereco_modal.html' %}
         {% endif %}
     
-    <div class=" d-flex justify-content-center m-2">
+    <div class="d-flex justify-content-center m-2">
         <button type="submit" class="btn btn-primary m-2" form="form-cliente"> Salvar </button>
         
         {% if id %}
@@ -101,7 +101,8 @@
                 enderecoModal.remove()
                 
                 //oculta o botão de add endereço
-                div_adicionar_endereco = document.getElementById("div_adicionar_endereco")
+                const div_adicionar_endereco = document.getElementById("div_adicionar_endereco")
+                div_adicionar_endereco.classList.remove('d-flex')
                 div_adicionar_endereco.classList.add('hidden');
                 
             } 
