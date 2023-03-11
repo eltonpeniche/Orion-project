@@ -64,6 +64,115 @@
                     </tbody>
                 </table>
             </div>
+
+            
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-info">
+            <br>
+            <div class="panel-heading">
+                <h3 class="panel-title"> {{ titulo_clientes }}</h3>
+            </div>
+
+            <div class=" d-flex justify-content-end m-2">
+                <a href="{% url 'orion:cadastrar_clientes' %}">  
+                        <button type="submit" class="btn btn-primary"> Novo Cliente</button>
+                </a>
+                
+        
+            </div>
+
+            <div class="table-sortable table-responsive">
+
+                <table class="table table-bordered table-striped">
+                    <colgroup>
+                        <col class="col-xs-3">
+                        <col class="col-xs-2">
+                        <col class="col-xs-2">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-2">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CNPJ</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Observação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% if clientes  %}
+                            {% for cliente in clientes %}
+                            
+                                <tr>
+                                    <td>{{ cliente.nome}} </td>
+                                    <td>{{ cliente.cnpj}} </td>
+                                    <td>{{ cliente.telefone}} </td>
+                                    <td>{{ cliente.email }}</td>
+                                    <td>{{ cliente.observacao }} </td>
+                                    <td align="center"><a href="{% url 'orion:detalhar_cliente' cliente.id %}" title="Editar"><i
+                                        class="fa-solid fa-pen-to-square"></i></a></td>
+                                </tr>
+                                
+                            {% endfor %}
+
+
+                            
+                        {% else %}    
+                            
+                            <tr>
+                                <td colspan="8">Sem registros</td>
+                            </tr>
+                        
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% if clientes.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ clientes.previous_page_number }}"><span aria-hidden="true">&laquo;</span></a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                            {% if clientes.previous_page_number != 1 %}
+                                <li class="page-item"> 
+                                    <a class="page-link" href="?page={{ clientes.previous_page_number }}">{{ clientes.previous_page_number }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <li class="page-item active"><a class="page-link" href="#">{{ clientes.number }}</a></li>
+                    
+                        {% if clientes.has_next %}
+                            {% if clientes.next_page_number != clientes.paginator.num_pages %}
+                                <li class="page-item"><a class="page-link" href="?page={{ clientes.next_page_number }}">{{ clientes.next_page_number }}</a></li>
+                            {% endif %}
+                        
+                            <li class="page-item disabled">
+                                <a class="page-link">...</a>
+                            </li>
+        
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ clientes.paginator.num_pages }}">{{ clientes.paginator.num_pages }}</a>
+                            </li>
+                                
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ clientes.next_page_number }}"><span aria-hidden="true">&raquo;</span></a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
         </div>
     </div>
 </div>

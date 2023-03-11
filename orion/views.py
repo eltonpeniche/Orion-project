@@ -74,13 +74,24 @@ def busca_chamados(request):
                         Q(numero_chamado__icontains = termo_pesquisado) |
                         Q(empresa__nome__icontains = termo_pesquisado) |
                         Q(equipamento__equipamento__icontains = termo_pesquisado)|
+                        Q(descricao_chamado__icontains = termo_pesquisado)|
                         Q(criado_em__icontains = utils.converter_data(termo_pesquisado)),
                         status_chamado='A'
                         ).order_by('-id')
+    
+    clientes = Empresa.objects.filter( 
+                    Q(nome__icontains = termo_pesquisado) |
+                    Q(cnpj__icontains = termo_pesquisado) |
+                    Q(telefone__icontains = termo_pesquisado)|
+                    Q(email__icontains = termo_pesquisado)
+                    ).order_by('-id')
+    print(clientes)
     contexto = {
         'termo_pesquisado': termo_pesquisado,
         'ordens_servico': ordens_servico,
-        'titulo': f'Pesquisa por {termo_pesquisado}...'
+        'titulo': f'Pesquisa por "{termo_pesquisado}" em chamados...',
+        'titulo_clientes' : f'Pesquisa por "{termo_pesquisado}" em clientes...',
+        'clientes': clientes
     }
     return render(request, 'orion/pages/busca.html', contexto)
 
