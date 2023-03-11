@@ -1,0 +1,40 @@
+
+<div class="table-responsive">
+
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col class="col-sm-2">
+            <col class="col-sm-2">
+            <col class="col-sm-2">
+            <col class="col-sm-1">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>ações</th>
+            </tr>
+        </thead>
+        <tbody id = "tabela-despesas-corpo">
+
+
+        
+                {% for despesa, id, value, form in despesas %}
+                
+                    <tr id = {{ value }}>
+                        
+                        <td>{{ despesa.get_tipo_display }} </td>
+                        <td>{{ despesa.data|date:"d/m/Y" }} 
+                        <td>{{ despesa.valor }}</td>
+                                                       
+                        <td align="center"><button id = {{id}}  type="button" class="del-despesa-lista btn btn-danger" value = {{ value }} > X </button></td>
+                    </tr>
+
+
+                {% endfor %}
+                  
+            
+        </tbody>
+    </table>
+</div>
