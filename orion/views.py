@@ -14,10 +14,11 @@ from notifications.models import Notification
 from notifications.signals import notify
 
 from orion import utils
-from orion.forms import (CargaHorariaForm, EmpresaForm, EnderecoForm,
-                         EquipamentosForm, OrdemServicoForm, SignatureForm)
-from orion.models import (CargaHoraria, Empresa, Endereco, Equipamento,
-                          Ordem_Servico, SignatureModel)
+from orion.forms import (CargaHorariaForm, DespesaForm, EmpresaForm,
+                         EnderecoForm, EquipamentosForm, OrdemServicoForm,
+                         SignatureForm)
+from orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
+                          Equipamento, Ordem_Servico, SignatureModel)
 from usuarios.models import Usuario
 
 from .notifications import (get_notificacoes_nao_lidas,
@@ -105,14 +106,22 @@ def novo_chamado_view(request, id):
     #usando dados de formulario salvos na sessão quando disponiveis
     ordemServicoForm = OrdemServicoForm(OrdemServico_form_data)
 
+    #carga horaria form
     form_carga_horaria_factory = inlineformset_factory(
         Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0 )
 
     formCargaHoraria = form_carga_horaria_factory()
+    
+    #despesa form
+    form_despesa_factory = inlineformset_factory(
+        Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
+
+    formDespesa = form_despesa_factory()
 
     contexto = {
         'ordemForm': ordemServicoForm,
-        'form_ch': formCargaHoraria, #teste
+        'form_ch': formCargaHoraria, 
+        'formDespesa': formDespesa
     }
         
     return render(request, 'orion/pages/novo_chamado.html', contexto)
@@ -131,6 +140,10 @@ def novo_chamado(request):
     ordemForm = OrdemServicoForm(request.POST)
     form_carga_horaria_factory = inlineformset_factory(
         Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
+    form_despesa_factory = inlineformset_factory(
+        Ordem_Servico, Despesa, form=DespesaForm )
+
+    
 
     if ordemForm.is_valid():
         ordem_servico = ordemForm.save(commit=False)
@@ -145,10 +158,12 @@ def novo_chamado(request):
         ordem_servico.save()
         
         formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
-        if formCargaHoraria.is_valid():
-            print(formCargaHoraria)
+        formDespesa = form_despesa_factory(request.POST, instance=ordem_servico)
+        if formCargaHoraria.is_valid() and formDespesa.is_valid():
+            print(formDespesa)
             #formCargaHoraria.instance = ordem_servico
             formCargaHoraria.save()
+            formDespesa.save()
             messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
             
         request.session['OrdemServico_form_data'] = None
@@ -169,18 +184,33 @@ def editar_chamado(request, id):
 
             form_carga_horaria_factory = inlineformset_factory(
                 Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
-
+            
             formCargaHoraria = form_carga_horaria_factory(instance=ordem_servico)
+            
+            form_despesa_factory = inlineformset_factory(
+                Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
+            
+            formDespesa = form_despesa_factory(instance=ordem_servico)
+
             
             #carregando todos os horarios relacionados com a instancia de ordem_servico
             lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
             #print("form_ch" ,form_ch)
             ids = ['deletar-elemento-lista-'+str(x) for x in range(0,lista_carga_horaria.count())]
             values = [x for x in range(0,lista_carga_horaria.count())]
+
+            #carregando todas as despesas relacionados com a instancia de ordem_servico
+            lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
+            ids_despesas = ['deletar-despesa-lista-'+str(x) for x in range(0,lista_despesas.count())]
+            values_despesas = [x for x in range(0,lista_despesas.count())]
+
+            #print(ids_despesas)
             contexto = {
                 'ordemForm': ordemServicoForm,
                 'form_ch' : formCargaHoraria,
                 'carga_horaria' : zip(lista_carga_horaria,ids,values, formCargaHoraria),
+                'formDespesa': formDespesa,
+                'despesas' : zip(lista_despesas,ids_despesas,values_despesas, formDespesa),
                 'id' : id,
             }
         
@@ -190,14 +220,18 @@ def editar_chamado(request, id):
         ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
         ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico)
         
-        form_carga_horaria_factory = inlineformset_factory(
-            Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
+        form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
         
         formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
 
-        if ordemForm.is_valid() and formCargaHoraria.is_valid():
+        form_despesa_factory = inlineformset_factory(Ordem_Servico, Despesa, form=DespesaForm )
+            
+        formDespesa = form_despesa_factory(request.POST, instance=ordem_servico)
+        
+        if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
             chamado = ordemForm.save()
             formCargaHoraria.save()
+            formDespesa.save()
             #-----------------------------------
             if request.user != chamado.aberto_por.user:
                hoje = datetime.now().strftime("%d/%m/%Y")
@@ -210,15 +244,21 @@ def editar_chamado(request, id):
         
         #carregando todos os horarios relacionados com a instancia de ordem_servico
         lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
-        #print("form_ch" ,form_ch)
         ids = ['deletar-elemento-lista-'+str(x) for x in range(0,lista_carga_horaria.count())]
         values = [x for x in range(0,lista_carga_horaria.count())]
+
+        #carregando todas as despesas relacionados com a instancia de ordem_servico
+        lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
+        ids_despesas = ['deletar-despesa-lista-'+str(x) for x in range(0,lista_despesas.count())]
+        values_despesas = [x for x in range(0,lista_despesas.count())]
 
         messages.error(request, 'Informações nâo válidas')
         return render(request, 'orion/pages/editar_chamado.html', 
         {   'ordemForm': ordemForm,
             'form_ch' : formCargaHoraria,
             'carga_horaria' : zip(lista_carga_horaria,ids,values,formCargaHoraria),
+            'formDespesa': formDespesa,
+            'despesas' : zip(lista_despesas,ids_despesas,values_despesas, formDespesa),
             'id' : id,
         })
 

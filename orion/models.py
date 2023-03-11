@@ -130,5 +130,33 @@ class CargaHoraria(models.Model):
         super(CargaHoraria, self).save(*args, **kwargs)
 
 
+class TIPO_DESPESA(models.TextChoices):
+    ALIMENTACAO = 'AL', _('Alimentação')
+    BAGAGEM = 'BA', _('Bagagem')
+    ALUGUEL_CARROS = 'AC', _('Aluguel de carros')
+    COMBUSTIVEL = 'CO', _('Combustível')
+    CORREIO_FRETE = 'CF', _('Correio/Frete')
+    ESTACIONAMENTO = 'ES', _('Estacionamento')
+    FRIGOBAR = 'FR', _('Friogobar')
+    HOSPEDAGEM = 'HO', _('Hospedagem')
+    LAVANDERIA = 'LA', _('Lavanderia')
+    COMPRA_DE_MATERIAL = 'CM', _('Compra de material')
+    PAGAMENTOS = 'PG', _('Pagamentos')
+    PASSAGEM_AERIA = 'PA', _('Passagem Aéria')
+    TRANSPORTE = 'TR', _('Transporte')
+    OUTROS = 'OT', _('Outros')
+
+class Despesa(models.Model):
+    tipo = models.CharField(
+        max_length=2, choices=TIPO_DESPESA.choices, blank=False, null=False, default='AL')
+    data = models.DateField()
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    ordem_servico = models.ForeignKey(
+        Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='despesa')
+
+    def __str__(self):
+        return f'tipo = {self.tipo} -data =  {self.data} - valor =  {self.valor}'
+
+
 class SignatureModel(models.Model):
     signature = JSignatureField()

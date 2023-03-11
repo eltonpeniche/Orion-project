@@ -30,9 +30,12 @@
                 
                     <tr id = {{ value }}>
                         
-                        <td>{{ fch.data|date:"d/m/Y" }} 
-                        {% if form.data.errors  %}{% endif %}
-                            {{ form.data.errors }} </td>
+                        <td>{{ fch.data|date:"d/m/Y" }}
+                            {% if form.data.errors  %}
+                                {{ form.data.errors }} 
+                            {% endif %} 
+                                                    </td>
+                            
                         <td>{{ fch.hora_inicio }} </td>
                         <td>{{ fch.hora_termino }}</td>
                         <td>{{ fch.horas_de_trabalho }}</td>

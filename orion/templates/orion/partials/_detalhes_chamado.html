@@ -145,12 +145,13 @@
                     </div>
                 </div>
 
+                <!-- carga horaria -->
                 {% include 'orion/partials/_carga_horaria_modal.html' %}
                 {% include 'orion/partials/_carga_horaria_error_modal.html' %}
                 
-                <!-- Button trigger modal -->
+                <!-- Button trigger carga-horaria modal -->
                 <div class ="d-grid gap-2 d-flex justify-content-end mb-2" > 
-                    <button id="add-more" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button id="add-more" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generic-modal">
                         Adicionar Horas
                     </button>
                 </div>
@@ -217,9 +218,78 @@
                             </div>
                         </div>
 
+                        
                     </div>
                     
                 </div>
+                <!-- end carga horaria -->
+                <!-- despesa -->
+
+                <!-- Button trigger despesa modal -->
+                <div class ="d-grid gap-2 d-flex justify-content-end mb-2 mt-3" > 
+                    <button id="add-despesas" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generic-d-modal">
+                        Adicionar Despesas
+                    </button>
+                </div>
+                {% include 'orion/partials/_tabela_despesas.html' %}
+
+                <div class="row ">
+            
+                    <!-- Form Despesas-->
+                    <div id="lista_despesas" class="hidden">
+                        {{ formDespesa.management_form }} 
+                        
+                        {% for form in formDespesa %}
+                            <div class="repetir-despesas">
+                                {{ form }}
+                            </div>
+                        
+                        {% endfor %}
+                    </div> 
+                    
+                    <div id="empty-form-despesa" class="hidden" > 
+
+                        <div class="form-group mt-3 mb-3 d-flex row ">
+                            <div class="col-sm-4 label-class text-end">
+                                <label class="col-form-label" for="{{ formDespesa.empty_form.tipo.id_for_label}}">
+                                    {{formDespesa.empty_form.tipo.label}}</label>
+                            </div>
+                            <div class="col-sm-8">
+                                {{formDespesa.empty_form.tipo|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-3 mb-3 d-flex row ">
+                            <div class="col-sm-4 label-class text-end">
+                                <label class="col-form-label" for="{{ formDespesa.empty_form.data.id_for_label}}">
+                                    {{formDespesa.empty_form.data.label}}</label>
+                            </div>
+                            <div class="col-sm-8">
+                                {{formDespesa.empty_form.data|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
+
+                        <div class="form-group mt-3 mb-3 d-flex row ">
+                            <div class="col-sm-4 label-class text-end">
+                                <label class="col-form-label" for="{{ formDespesa.empty_form.valor.id_for_label}}">
+                                    {{formDespesa.empty_form.valor.label}}</label>
+                            </div>
+                            <div class="col-sm-8">
+                                {{formDespesa.empty_form.valor|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    
+                </div>
+
+                <!-- end despesa -->
                 
             </div>
         </div>
@@ -361,7 +431,7 @@
         }
         
         
-        const saveHoursBtn = document.getElementById("save_hours");
+        const saveHoursBtn = document.getElementById("save_form");
         saveHoursBtn.addEventListener('click', save_new_form)
         function save_new_form(event){
             if(event){
@@ -506,5 +576,123 @@
         document.getElementById("open-popup").addEventListener("click", openPopup);
 
     </script>
+
+    <script type="text/javascript">
+        
+        
+        const addMaisDespesasBtn = document.getElementById("add-despesas")
+        const totalFormsDespesas = document.getElementById("id_despesa-TOTAL_FORMS")
+        const tabelaDespesas = document.getElementById("tabela-despesas-corpo")
+        var copyEmptyFormEl = null;
+        
+        addMaisDespesasBtn.addEventListener('click', add_new_despesa)
+        
+        function add_new_despesa(event){
+            if(event){
+                event.preventDefault()   
+            }
+
+            const currentCargaHorariaForms = document.getElementsByClassName("repetir-despesas")
+            const currentFormCount = currentCargaHorariaForms.length //+  1
+            const formCopyTarget = document.getElementById("temp-d")
+            copyEmptyFormEl = document.getElementById("empty-form-despesa").cloneNode(true);
+
+            copyEmptyFormEl.setAttribute('class', 'repetir-despesas-temp' )
+            copyEmptyFormEl.setAttribute('id', `form-despesas-${currentFormCount}` )
+            const regex = new RegExp('__prefix__', 'g' )
+            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
+            formCopyTarget.append(copyEmptyFormEl)
+
+            
+        } 
+
+        
+         document.addEventListener('click', function(event) {
+
+            if (event.target.classList.contains('del-despesa-lista')) {
+                btn = event.target;
+                console.log('O botão: ' + btn.id);
+                elemForm = document.getElementById("id_despesas-"+btn.value+"-DELETE")
+                if (elemForm == null){
+                    elmPai = document.getElementById("form-despesas-"+btn.value)
+                    const input = document.createElement("input");
+                    input.setAttribute("type", "checkbox");
+                    input.checked = true;
+                    input.setAttribute("name", "despesas-"+btn.value+"-DELETE");
+                    input.setAttribute("id", "id_despesas-"+btn.value+"-DELETE");
+                    elmPai.appendChild(input);
+                }else{
+                    elemForm.checked = true
+
+                }
+
+                //---------------------------------------------
+                var tr = document.getElementById('despesa_lista-'+btn.value);
+                tr.remove()
+
+            }
+        });
+        
+        
+        const naoSalvarDespesasBtn = document.getElementById("not_save_d");
+        naoSalvarDespesasBtn.addEventListener('click', nao_salvar_despesa_form)
+        function nao_salvar_despesa_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+            console.log("nao_salvar_despesa_form")
+            const temForm = document.getElementById("temp-d");
+            while (temForm.firstChild) {
+                temForm.removeChild(temForm.firstChild);
+            }
+        }
+        
+        
+        const saveDespesasBtn = document.getElementById("save-d_form");
+        saveDespesasBtn.addEventListener('click', save_despesa_form)
+        function save_despesa_form(event){
+            if(event){
+                event.preventDefault()   
+            }
+
+            const currentDespesasForms = document.getElementsByClassName("repetir-despesas")
+            const currentDespesasCount = currentDespesasForms.length //+  1
+            const formCopyTarget = document.getElementById("lista_despesas")
+            const temForm = document.getElementsByClassName("repetir-temp")
+            
+            //variaveis que compoe a lista de despesas 
+            const varTipo = $('#id_despesa-'+currentDespesasCount+'-tipo :selected').text();
+            const varData = formatarData(document.getElementById("id_despesa-"+currentDespesasCount+"-data").value);
+            const varValor = document.getElementById("id_despesa-"+currentDespesasCount+"-valor").value;
+            
+            console.log(varTipo,varData,varValor)
+
+            let novaLinha = document.createElement("tr");
+            novaLinha.setAttribute("id", "despesa_lista-"+currentDespesasCount );
+            let valores = [varTipo, varData, varValor, '<button id="deletar-despesa-lista-'+currentDespesasCount+'" type="button" class="del-despesa-lista btn btn-danger" value='+currentDespesasCount+'> X </button>'];
+            for (var i = 0; i < 4; i++) {
+                var novaCelula = document.createElement("td");
+                if(i==3){ novaCelula.setAttribute("align", "center"); }
+                novaCelula.innerHTML = valores[i];
+                novaLinha.appendChild(novaCelula);
+            }
+            
+            novaLinha.appendChild(novaCelula);
+            tabelaDespesas.append(novaLinha);
+            
+            
+            copyEmptyFormEl.setAttribute('class', 'repetir-despesas' )
+            console.log(currentDespesasCount)
+            totalFormsDespesas.setAttribute('value', currentDespesasCount + 1)
+            
+            formCopyTarget.append(copyEmptyFormEl)
+
+
+            
+        }    
+        //--------------------------------------------------------------------
+
+    </script>
+    
 
     {% endblock content %}

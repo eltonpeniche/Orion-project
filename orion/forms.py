@@ -4,7 +4,7 @@ from datetime import datetime
 from django import forms
 from validate_docbr import CNPJ
 
-from .models import (CargaHoraria, Empresa, Endereco, Equipamento,
+from .models import (CargaHoraria, Despesa, Empresa, Endereco, Equipamento,
                      Ordem_Servico, SignatureModel)
 
 
@@ -121,6 +121,22 @@ class EnderecoForm(forms.ModelForm):
 
         } """
         
+
+class DespesaForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(DespesaForm, self).__init__(*args, **kwargs)
+        self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
+
+    class Meta:
+        model = Despesa
+        fields = '__all__'
+        
+        widgets = {
+            'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control datetimefield' }),
+        }
+
+
 class CargaHorariaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):

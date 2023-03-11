@@ -2,12 +2,11 @@
 
 {% block content %}
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="generic-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar Horas</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar</h1>
         </div>
         <div class="modal-body">
             <div id="temp">
@@ -16,11 +15,29 @@
         </div>
         <div class="modal-footer">
         <button id ="not_save_hours" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button id ="save_hours" type="button" class="btn btn-success" data-bs-dismiss="modal">Salvar hora</button>
-        
-{% comment %} <div class=" d-flex justify-content-center m-2">
-            <button id ="save_hours" type="button" class="btn btn-primary" > Salvar hora </button>
-        </div> {% endcomment %}
+        <button id ="save_form" type="button" class="btn btn-success" data-bs-dismiss="modal">Salvar</button>
+
+        </div>
+    </div>
+    </div>
+</div>
+<!-- End Modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="generic-d-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="">Adicionar</h1>
+        </div>
+        <div class="modal-body">
+            <div id="temp-d">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button id ="not_save_d" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button id ="save-d_form" type="button" class="btn btn-success" data-bs-dismiss="modal">Salvar</button>
 
         </div>
     </div>
