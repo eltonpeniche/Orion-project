@@ -20,15 +20,15 @@
 
 
         
-                {% for despesa, id, value, form in despesas %}
+                {% for despesa, _, value, form in despesas %}
                 
-                    <tr id = {{ value }}>
+                    <tr id = tr-despesa-{{ value }}>
                         
                         <td>{{ despesa.get_tipo_display }} </td>
                         <td>{{ despesa.data|date:"d/m/Y" }} 
                         <td>{{ despesa.valor }}</td>
                                                        
-                        <td align="center"><button id = {{id}}  type="button" class="del-despesa-lista btn btn-danger" value = {{ value }} > X </button></td>
+                        <td align="center"><button id = deletar-despesa-lista-{{value}}  type="button" class="del-despesa-lista btn btn-danger" value = {{ value }} > X </button></td>
                     </tr>
 
 

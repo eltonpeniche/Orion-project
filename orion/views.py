@@ -202,7 +202,7 @@ def editar_chamado(request, id):
             #carregando todas as despesas relacionados com a instancia de ordem_servico
             lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
             ids_despesas = ['deletar-despesa-lista-'+str(x) for x in range(0,lista_despesas.count())]
-            values_despesas = [x for x in range(0,lista_despesas.count())]
+            values_despesas = [ x for x in range(0,lista_despesas.count())]
 
             #print(ids_despesas)
             contexto = {
@@ -228,6 +228,10 @@ def editar_chamado(request, id):
             
         formDespesa = form_despesa_factory(request.POST, instance=ordem_servico)
         
+
+        print("despesa: ", formDespesa.is_valid())
+        print("despesa: ", formDespesa)
+
         if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
             chamado = ordemForm.save()
             formCargaHoraria.save()

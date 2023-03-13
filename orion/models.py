@@ -3,6 +3,7 @@ from datetime import datetime, time
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from djmoney.models.fields import MoneyField
 from jsignature.fields import JSignatureField
 
 from usuarios.models import Usuario

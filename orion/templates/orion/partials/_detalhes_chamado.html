@@ -2,7 +2,7 @@
 {% load static %}
 {% load jsignature_filters %}
 {% block content %}
-
+{% load djmoney %}
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
@@ -250,34 +250,34 @@
                     <div id="empty-form-despesa" class="hidden" > 
 
                         <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-sm-4 label-class text-end">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ formDespesa.empty_form.tipo.id_for_label}}">
                                     {{formDespesa.empty_form.tipo.label}}</label>
                             </div>
-                            <div class="col-sm-8">
-                                {{formDespesa.empty_form.tipo|add_class:'form-control'}}
-        
+                            <div class="col-6">
+                                {{formDespesa.empty_form.tipo|add_class:'form-control form-select'}}
+                                
                             </div>
                         </div>
                         
                         <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-sm-4 label-class text-end">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ formDespesa.empty_form.data.id_for_label}}">
                                     {{formDespesa.empty_form.data.label}}</label>
                             </div>
-                            <div class="col-sm-8">
-                                {{formDespesa.empty_form.data|add_class:'form-control'}}
+                            <div class="col-6">
+                                {{formDespesa.empty_form.data}}
         
                             </div>
                         </div>
 
 
                         <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-sm-4 label-class text-end">
+                            <div class="col-4 label-class text-end">
                                 <label class="col-form-label" for="{{ formDespesa.empty_form.valor.id_for_label}}">
                                     {{formDespesa.empty_form.valor.label}}</label>
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-4">
                                 {{formDespesa.empty_form.valor|add_class:'form-control'}}
         
                             </div>
@@ -356,13 +356,56 @@
 
 </div>
 
-    
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<!-- Adicionando JQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>    
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script type="text/javascript">
+<script src="{% static 'js/jSignature.min.js' %}"></script>
+<script src="{% static 'js/django_jsignature.js' %}"></script>
+
+<script type="text/javascript">
+        
+        //pega dos dados da assinatura que estão no formulario e 
+        // coloca os dados na tag img para ser redenrizado como imagem
+        $(document).ready(function() {
+
+            var canvas = document.getElementsByClassName('jSignature');
+            var dataURL = canvas[0].toDataURL();
+            const assinatura_img = document.getElementById('id-img')
+            assinatura_img.src = dataURL
+
+
+            //carrega os equipamentos após escolher a empresa
+            if ($('#id_equipamento').val() == ''){
+                $('#id_equipamento').html('<option value=""> </option>');
+            }
+
+            $('#id_empresa').on('change', function() {
+                var selectedValue = $(this).val();
+                $.ajax({
+                    url: '/equipamentos_select2/' + selectedValue,
+                    dataType: 'json',
+                    success: function(data) {
+                        var options = '';
+                        for (var i = 0; i < data.length; i++) {
+                            options += '<option value="' + data[i].id + '">' + data[i].nome + '</option>';
+                        }
+                        $('#id_equipamento').html(options);
+                        $('#id_equipamento').trigger('change');
+                    }
+                });
+            });
+
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                placeholder: 'Selecione uma opção'
+            });
+        
+        })
+
         
         
+        // carga horaria
         const addMoreBtn = document.getElementById("add-more")
         const totalNewForms = document.getElementById("id_carga_horaria-TOTAL_FORMS")
         const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
@@ -457,14 +500,11 @@
 
             }
             
-            
             copyEmptyFormEl.setAttribute('class', 'repetir' )
             totalNewForms.setAttribute('value', currentFormCount + 1)
             
             formCopyTarget.append(copyEmptyFormEl)
             
-            
-            //--------------------------------------------------------------------
             
             const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
             
@@ -491,51 +531,6 @@
         
         } 
 
-    
-        $('.select2').select2({
-            theme: 'bootstrap4',
-            placeholder: 'Selecione uma opção'
-        });
-
-
-        
-        $(document).ready(function() {
-            if ($('#id_equipamento').val() == ''){
-                $('#id_equipamento').html('<option value=""> </option>');
-            }
-
-            $('#id_empresa').on('change', function() {
-                var selectedValue = $(this).val();
-                $.ajax({
-                    url: '/equipamentos_select2/' + selectedValue,
-                    dataType: 'json',
-                    success: function(data) {
-                        var options = '';
-                        for (var i = 0; i < data.length; i++) {
-                            options += '<option value="' + data[i].id + '">' + data[i].nome + '</option>';
-                        }
-                        $('#id_equipamento').html(options);
-                        $('#id_equipamento').trigger('change');
-                    }
-                });
-            });
-        });
-
-    </script>
-    
-    <script src="{% static 'js/jSignature.min.js' %}"></script>
-    <script src="{% static 'js/django_jsignature.js' %}"></script>
-
-
-    <script>
-        //pega dos dados da assinatura que estão no formulario e 
-        // coloca os dados na tag img para ser redenrizado como imagem
-        $(document).ready(function() {
-            var canvas = document.getElementsByClassName('jSignature');
-            var dataURL = canvas[0].toDataURL();
-            const assinatura_img = document.getElementById('id-img')
-            assinatura_img.src = dataURL
-        })
         
         // função para abrir a janela popup
         function openPopup() {
@@ -575,11 +570,8 @@
         // adiciona um ouvinte de eventos para o clique no botão de assinar
         document.getElementById("open-popup").addEventListener("click", openPopup);
 
-    </script>
-
-    <script type="text/javascript">
         
-        
+        // funções de despesas 
         const addMaisDespesasBtn = document.getElementById("add-despesas")
         const totalFormsDespesas = document.getElementById("id_despesa-TOTAL_FORMS")
         const tabelaDespesas = document.getElementById("tabela-despesas-corpo")
@@ -588,6 +580,7 @@
         addMaisDespesasBtn.addEventListener('click', add_new_despesa)
         
         function add_new_despesa(event){
+           
             if(event){
                 event.preventDefault()   
             }
@@ -603,18 +596,18 @@
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             formCopyTarget.append(copyEmptyFormEl)
 
-            
+    
         } 
 
         
          document.addEventListener('click', function(event) {
 
             if (event.target.classList.contains('del-despesa-lista')) {
-                btn = event.target;
+                const btn = event.target;
                 console.log('O botão: ' + btn.id);
-                elemForm = document.getElementById("id_despesas-"+btn.value+"-DELETE")
+                const elemForm = document.getElementById("id_despesa-"+btn.value+"-DELETE")
                 if (elemForm == null){
-                    elmPai = document.getElementById("form-despesas-"+btn.value)
+                    const elmPai = document.getElementById("form-despesas-"+btn.value)
                     const input = document.createElement("input");
                     input.setAttribute("type", "checkbox");
                     input.checked = true;
@@ -627,7 +620,7 @@
                 }
 
                 //---------------------------------------------
-                var tr = document.getElementById('despesa_lista-'+btn.value);
+                var tr = document.getElementById('tr-despesa-'+btn.value);
                 tr.remove()
 
             }
@@ -668,7 +661,7 @@
             console.log(varTipo,varData,varValor)
 
             let novaLinha = document.createElement("tr");
-            novaLinha.setAttribute("id", "despesa_lista-"+currentDespesasCount );
+            novaLinha.setAttribute("id", "tr-despesa-"+currentDespesasCount );
             let valores = [varTipo, varData, varValor, '<button id="deletar-despesa-lista-'+currentDespesasCount+'" type="button" class="del-despesa-lista btn btn-danger" value='+currentDespesasCount+'> X </button>'];
             for (var i = 0; i < 4; i++) {
                 var novaCelula = document.createElement("td");
@@ -690,9 +683,9 @@
 
             
         }    
-        //--------------------------------------------------------------------
 
     </script>
+
     
 
     {% endblock content %}

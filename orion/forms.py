@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+from decimal import Decimal
 
 from django import forms
 from validate_docbr import CNPJ
@@ -81,7 +82,6 @@ class EnderecoForm(forms.ModelForm):
     
     class Meta:
         model = Endereco
-        # exclude = ['status_chamado']
         fields = ['cep','rua','bairro','uf','cidade', 'numero', 'complemento'] 
     
     def __init__(self, *args, **kwargs):
@@ -127,14 +127,17 @@ class DespesaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DespesaForm, self).__init__(*args, **kwargs)
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
+        self.fields['valor'].widget.attrs.update({'class':'money', })
+    
 
     class Meta:
         model = Despesa
         fields = '__all__'
         
         widgets = {
-            'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control datetimefield' }),
+            'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control' }),       
         }
+
 
 
 class CargaHorariaForm(forms.ModelForm):

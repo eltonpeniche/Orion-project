@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'tempus_dominus',
     'jsignature',
     'notifications',
+    'djmoney',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,5 @@ JSIGNATURE_JQUERY = 'admin'
 JSIGNATURE_WIDTH = 800
 JSIGNATURE_HEIGHT = 300
 JSIGNATURE_RESET_BUTTON = False
+
+USE_L10N = True
