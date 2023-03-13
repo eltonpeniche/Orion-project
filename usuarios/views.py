@@ -41,7 +41,7 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            login = form['login'].value()
+            login = form['login'].value().lower()
             senha = form['senha'].value()
             usuario = auth.authenticate(
                 request,
@@ -85,7 +85,7 @@ def cadastro_usuario(request):
             tipo_usuario = form['tipo_usuario'].value()
            
             if User.objects.filter(username=login).exists():
-                messages.error(request, "Técnico já cadastrado anteriormente")
+                messages.error(request, f"O nome {login} já foi cadastrado.")
                 return render(request, 'usuarios/pages/cadastro_usuario.html',  {'form': form})
 
             user = User.objects.create_user(
@@ -97,7 +97,7 @@ def cadastro_usuario(request):
 
             usuario = Usuario.objects.create(user=user, tipo=tipo_usuario)
             usuario.save()
-            messages.success(request, f"Técnico {login} salvo com sucesso.")
+            messages.success(request, f"Usuário {login} salvo com sucesso.")
 
             return redirect('usuarios:lista_usuarios')
 
@@ -135,17 +135,19 @@ def dados_usuario(request):
     if not request.user.is_authenticated:
         return redirect('usuarios:login')
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
+    
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=request.user)
-        usuarioForm = UsuarioForm(request.POST, instance = usuario)
-        
+        form = UserUpdateForm(request.POST, instance =request.user)
+        usuarioForm = UsuarioForm(request.POST)
         if form.is_valid():
             form.save()
+            print("é valido")
             # Atualiza a sessão do usuário para evitar que ele seja desconectado após alterar a senha
             update_session_auth_hash(request, request.user)
             messages.success(request, "Editado com sucesso")
             return redirect('usuarios:lista_usuarios')
         
+        print("não é valido")
         return render(request, 'usuarios/pages/dados_usuario.html', 
                 {  'title':' Meus Dados',
                     'form': form,

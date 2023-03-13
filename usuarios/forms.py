@@ -24,14 +24,6 @@ class LoginForm(forms.Form):
     )
 
 class UserUpdateForm(UserChangeForm):
-    password = forms.CharField( label='Senha', help_text= '* Ao deixar este campo vazio, a senha atual será mantida', required=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-    )
-    
-    password2 = forms.CharField( label='Confirmar Senha', required=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-    )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
@@ -39,6 +31,14 @@ class UserUpdateForm(UserChangeForm):
         
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['email'].widget.attrs.update({'class': 'form-control'})
+
+    password = forms.CharField( label='Senha', help_text= '* Ao deixar este campo vazio, a senha atual será mantida', required=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
+    
+    password2 = forms.CharField( label='Confirmar Senha', required=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
 
     class Meta:
         model = User
@@ -50,13 +50,17 @@ class UserUpdateForm(UserChangeForm):
             'email': 'E-mail',
         }
     
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        password2 = self.cleaned_data.get('password2')
+    def clean_password2(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+        print("password2 = ",password2)
+        print("cleaned_data = ",self.cleaned_data)
         
         if not password and not password2:
             # Mantém a senha atual se o campo de senha estiver vazio
-            return self.instance.password
+            #print(self.instance.password)
+            return None
         
         if password != password2:
             raise forms.ValidationError("As senhas não podem ser diferentes")

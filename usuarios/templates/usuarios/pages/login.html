@@ -5,10 +5,10 @@
 
     <div class="container text-center">
 
-        <!-- ** head ** -->
+        <!-- head -->
 
         {% include 'orion/partials/_header.html' %}
-        <!-- ** end head ** -->
+        <!-- end head -->
 
 
         <!-- ?> -->
@@ -21,8 +21,8 @@
         </div>  
 
                 
-        <div class="row d-flex justify-content-center">
-            <div class="col-3">
+        <div class="row d-flex justify-content-center m-3">
+            <div class="col-sm-3 ">
                 <form method='post'>
                     {% csrf_token %}
                     {{ form.as_p}}
@@ -34,10 +34,7 @@
         </div>
 
  
-   
-
-        <!-- ?> -->
-        <!-- ** conteudo ** -->
+        <!--  conteudo  -->
             
         {% block content %}
         {% endblock %}

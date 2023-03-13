@@ -9,7 +9,7 @@
     <h3 class="panel-title">{{ title }}</h3>
 </div>
 
-<div class="container col-10">
+<div class="container col-sm-10">
     <br>
 
     <form action="{% url 'usuarios:dados_usuario' %}" method="post">
@@ -19,7 +19,7 @@
             {% include 'usuarios/partials/_detalhes_usuario.html' %}
         {% endif %}
 
-        <div class="col-8 d-flex justify-content-end m-2">
+        <div class="col d-flex justify-content-center">
             <button type="submit" class="btn btn-primary m-2" > Salvar </button>
         </div>
 

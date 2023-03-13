@@ -337,7 +337,7 @@ def detalhar_equipamento(request, id):
         if form.is_valid():
             form.save()
 
-        return redirect('orion:lista_home')
+        return redirect('orion:equipamentos')
 
 
 @login_required
@@ -353,7 +353,7 @@ def cadastrar_equipamentos(request):
         form.save()
         messages.success(request, 'Novo equipamento cadastrado com sucesso')
 
-        return redirect('equipamentos')
+        return redirect('orion:equipamentos')
 
 
 def equipamentos_select2(request, id):
@@ -367,7 +367,7 @@ def deletar_equipamento(request, id):
         equipamento = get_object_or_404(Equipamento, pk=id)
         print('deletar = ', equipamento)
         equipamento.delete()
-        return redirect('equipamentos')
+        return redirect('orion:equipamentos')
 
 
 @login_required
