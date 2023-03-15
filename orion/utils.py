@@ -67,14 +67,17 @@ def gerar_relatorio(funcionario, mes_referencia):
     
     wb = load_workbook(filename=MODELO_PONTO)
     sh = wb.active
+    sh['A9'] = f"{funcionario.user.first_name} {funcionario.user.last_name}"
+    sh['A11'] = f"{funcionario.get_tipo_display()}"
+    sh['I1'] = "Em "+ datetime.now().strftime("%d/%m/%Y")
+    sh['A6'] = f"REFERÊNCIA {mes}/{ano}"
     
     mes_trabalhado = date(int(ano), int(mes), 1)
 
-    query_carga_horaria = CargaHoraria.objects.select_related('tecnico').filter(data__month=mes, data__year=ano).filter(tecnico=1).order_by('data')
+    query_carga_horaria = CargaHoraria.objects.select_related('tecnico').filter(data__month=mes, data__year=ano).filter(tecnico=funcionario.id).order_by('data')
     
     
-    
-    cont =1
+    cont = 1
     for i in range(LINHA_INICIAL, LINHA_INICIAL + num_dias_mes(mes_referencia)):
         sh['A' + str(i)] = cont 
         cont+=1

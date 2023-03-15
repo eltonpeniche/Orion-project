@@ -513,9 +513,10 @@ def download_file(request):
     return response
 
 def relatorio_ponto(request):
-    usuario = Usuario.objects.filter(id = request.user.id)
+    usuario = Usuario.objects.filter(user_id = request.user.id)
     
     if request.method == 'GET':
+        print(usuario)
         if usuario.first().tipo == 'A':
             usuarioslist = Usuario.objects.all()
         else:
