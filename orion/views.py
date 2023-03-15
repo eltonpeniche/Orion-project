@@ -7,7 +7,7 @@ from django.core import serializers
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from jsignature.utils import draw_signature
 from notifications.models import Notification
@@ -236,11 +236,12 @@ def editar_chamado(request, id):
 
         if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
             chamado = ordemForm.save()
-            list_ch = formCargaHoraria.save(commit= False)
-            for ch in list_ch: 
+            chs = formCargaHoraria.save(commit = False)
+            for ch in chs:
                 ch.tecnico = usuario_logado
                 ch.save()
-            formDespesa.save()
+            formCargaHoraria.save_m2m()
+            formCargaHoraria.save()
             #-----------------------------------
             if request.user != chamado.aberto_por.user:
                hoje = datetime.now().strftime("%d/%m/%Y")
@@ -249,6 +250,7 @@ def editar_chamado(request, id):
                            target = chamado)
             #-----------------------------------
             request.session['OrdemServico_form_data'] = None
+            messages.success(request, "Chamado editado com sucesso")
             return redirect('orion:lista_chamados')
         
         #carregando todos os horarios relacionados com a instancia de ordem_servico
@@ -500,6 +502,38 @@ def marcar_notificacao_como_lida(request):
         my_json = serializers.serialize('json', notificacoes )
         numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
     return JsonResponse({'count': numero_notificacoes_nao_lidas, 'notificacoes': my_json})
+
+
+def download_file(request):
+    file_path = 'media/ponto.pdf'
+    with open(file_path, 'rb') as f:
+        file_content = f.read()
+    response = HttpResponse(file_content, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="meu_ponto.pdf"'
+    return response
+
+def relatorio_ponto(request):
+    usuario = Usuario.objects.filter(id = request.user.id)
+    
+    if request.method == 'GET':
+        if usuario.first().tipo == 'A':
+            usuarioslist = Usuario.objects.all()
+        else:
+            usuarioslist = usuario
+        
+        contexto = {
+            'title': 'Relatório de Ponto',
+            'usuarios': usuarioslist,
+        }
+
+        return render(request, "orion/pages/relatorio_ponto.html", contexto)
+    if request.method =="POST":
+        funcionario_id = request.POST['funcionario']
+        funcionario = get_object_or_404(Usuario,id = funcionario_id)
+        mes_referencia = request.POST['mes_referencia']
+        utils.gerar_relatorio(funcionario, mes_referencia)
+        print(funcionario.user.username, mes_referencia)
+        return redirect('orion:download_file')
 
 
 

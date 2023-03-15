@@ -30,6 +30,8 @@ urlpatterns = [
      path('cadastrar_clientes/', views.cadastrar_clientes, name='cadastrar_clientes'),
      path('assinatura_popup', views.assinatura_popup, name='assinatura_popup'),
      path('marcar_notificacao_como_lida', views.marcar_notificacao_como_lida, name = "marcar_notificacao_como_lida"),
+     path('relatorio_ponto', views.relatorio_ponto, name = "relatorio_ponto"),
+     path('download/', views.download_file, name='download_file'),
      path('teste', views.teste, name='teste'),
      path('list_teste', views.list_teste, name='list_teste'),
 

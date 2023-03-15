@@ -188,7 +188,20 @@ class CargaHorariaForm(forms.ModelForm):
                             raise forms.ValidationError({'hora_inicio':"As datas não podem ser iguais"})
                     
 
- 
+""" class RelatorioPonto(forms.Form):
+    funcionario = forms.CharField( label= "Usuário",
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Digite o nome de usuário', 'class':'form-control' })
+        )
+    email = forms.CharField( label= "Email",
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Digite o email', 'class':'form-control' })
+        )
+
+    tipo_usuario = forms.ChoiceField(choices = TIPO_USUARIO.choices, label="Tipo de Usuário", initial='T', widget=forms.Select(attrs={'class':'form-select'}), required=True)
+    """  
 
 
 def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):
