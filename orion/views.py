@@ -160,9 +160,10 @@ def novo_chamado(request):
         formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
         formDespesa = form_despesa_factory(request.POST, instance=ordem_servico)
         if formCargaHoraria.is_valid() and formDespesa.is_valid():
-            print(formDespesa)
-            #formCargaHoraria.instance = ordem_servico
-            formCargaHoraria.save()
+            list_ch = formCargaHoraria.save(commit= False)
+            for ch in list_ch: 
+                ch.tecnico = usuario_logado
+                ch.save()
             formDespesa.save()
             messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
             
@@ -174,6 +175,7 @@ def novo_chamado(request):
 
 @login_required
 def editar_chamado(request, id):
+    
     if request.method == 'GET':
     
         if id != 0:
@@ -219,7 +221,7 @@ def editar_chamado(request, id):
         request.session['OrdemServico_form_data'] = request.POST
         ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
         ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico)
-        
+        usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
         form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
         
         formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico)
@@ -234,7 +236,10 @@ def editar_chamado(request, id):
 
         if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
             chamado = ordemForm.save()
-            formCargaHoraria.save()
+            list_ch = formCargaHoraria.save(commit= False)
+            for ch in list_ch: 
+                ch.tecnico = usuario_logado
+                ch.save()
             formDespesa.save()
             #-----------------------------------
             if request.user != chamado.aberto_por.user:

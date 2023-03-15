@@ -3,7 +3,6 @@ from datetime import datetime, time
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from djmoney.models.fields import MoneyField
 from jsignature.fields import JSignatureField
 
 from usuarios.models import Usuario
@@ -109,7 +108,8 @@ class CargaHoraria(models.Model):
     horas_de_trabalho = models.TimeField()
     status = models.CharField(
         max_length=1, choices=TIPO_STATUS.choices, blank=False, null=False, default='N')
-    # técnico
+    tecnico = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, related_name='carga_horaria')
+
     ordem_servico = models.ForeignKey(
         Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='carga_horaria')
 
