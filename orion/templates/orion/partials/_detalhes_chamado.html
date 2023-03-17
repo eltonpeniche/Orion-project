@@ -2,7 +2,6 @@
 {% load static %}
 {% load jsignature_filters %}
 {% block content %}
-{% load djmoney %}
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
@@ -399,14 +398,13 @@
                 placeholder: 'Selecione uma opção'
             });
 
-            //exibe os erros form de carga horaria e remove
+            //exibe os erroslist de carga horaria e remove
             var errorlist = document.querySelectorAll(".errorlist li");
             for (var i = 0; i < errorlist.length; i++) {
                alert(errorlist[i].textContent);
+               numberForm = errorlist[i].parentElement.nextElementSibling.valueOf('input').name.split('-')[1]
+               document.getElementById("id_carga_horaria-"+numberForm+"-DELETE").checked = true
             }
-            let numberForm = $(".errorlist").next().valueOf('input')[0].name.split('-')[1]
-            elemForm = document.getElementById("id_carga_horaria-"+numberForm+"-DELETE")
-            elemForm.checked = true
         })
 
         

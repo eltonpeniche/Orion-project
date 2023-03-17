@@ -165,6 +165,10 @@ def novo_chamado(request):
             for ch in list_ch: 
                 ch.tecnico = usuario_logado
                 ch.save()
+            formCargaHoraria.save_m2m()
+            formCargaHoraria.save()
+            #-----------------------------------
+            
             formDespesa.save()
             messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
             
@@ -240,6 +244,8 @@ def editar_chamado(request, id):
                 ch.save()
             formCargaHoraria.save_m2m()
             formCargaHoraria.save()
+
+            formDespesa.save()
             #-----------------------------------
             if request.user != chamado.aberto_por.user:
                hoje = datetime.now().strftime("%d/%m/%Y")

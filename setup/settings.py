@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'tempus_dominus',
     'jsignature',
     'notifications',
-    'djmoney',
 ]
 
 MIDDLEWARE = [
