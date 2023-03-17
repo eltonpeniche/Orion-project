@@ -4,7 +4,6 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
 
 # Backup files #
 *.bak
@@ -127,7 +126,6 @@ _local_settings.py
 gunicorn-error-log
 db.sqlite3
 db copy.sqlite3
-static/
 
 Sistema_de_Atendimento_ao_Cliente.mdj
 anotacoes.txt
