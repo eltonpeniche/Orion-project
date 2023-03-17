@@ -1,4 +1,3 @@
-{% load jsignature_filters %}
 {% load static %}
 {% load widget_tweaks %}
 <!DOCTYPE html>
@@ -176,18 +175,11 @@
     <body>    
         <h1>Hello World</h1>
         
-        
-        <div class="container col-8 justify-content-center p-5 mb-5">
-
-
-            <img id='id-img' src="{{ obj.signature|signature_base64 }}" alt="{{ obj }}" />
-            <a href="#" id="open-popup">Abrir Popup</a>
-        </div>
-
-        <form  action="" method="post">
-            <div id='assinatura-form'> </div>
+        <form action="" method="post">
             {% csrf_token %}
-            <button type="submit"> salvar </button>
+            {{ form.management_form }}
+            {{ form }}
+            <button type="submit">salvar</button>
         </form>
 
         
@@ -195,51 +187,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         
         
-    </body>
+    </body
 
     
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>
-        
-        // função para abrir a janela popup
-        function openPopup() {
-            var url = "{% url 'orion:list_teste' %}"; 
-            //var width = window.innerWidth; // largura da janela atual
-            //var height = window.innerHeight; // altura da janela atual
-            
-            var width = 800; // largura da janela atual
-            var height = 300;
-            
-            //var features = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=" + width + ",height=" + height;
-            var features = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=" + width + ",height=" + height;
-            var popup = window.open(url, 'popupWindow' , 'width=800,height=300'); // abrir nova janela em tela cheia
-            
-            // Aguarda o popup ser fechado para pegar os valores atualizados
-            popup.onunload = function () {
-                const inputAssinatura = popup.document.getElementById('id_signature').value 
-                //testa se a assinatura não está vazia
-                if( inputAssinatura != '[]' ){
-                    var canvas = popup.document.getElementsByClassName('jSignature');
-                    var dataURL = canvas[0].toDataURL();
-                    const assinatura_img = document.getElementById('id-img')
-                    assinatura_img.src = dataURL
-                    
-                    var assinatura_form_popup = popup.document.getElementById('assinatura')
-                    const formTarget = document.getElementById('assinatura-form')
-                    formTarget.innerHTML = '';
-                    formTarget.append(assinatura_form_popup)
-                }
-
-            };
-            
-        }
-        
-
-        // adiciona um ouvinte de eventos para o clique no botão
-        document.getElementById("open-popup").addEventListener("click", openPopup);
-
-    </script>
-
-    <script src="{% static 'js/jSignature.min.js' %}"></script>
-    <script src="{% static 'js/django_jsignature.js' %}"></script>
 </html>

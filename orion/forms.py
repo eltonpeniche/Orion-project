@@ -3,6 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from django import forms
+from django.contrib.auth.models import User
 from validate_docbr import CNPJ
 
 from .models import (CargaHoraria, Despesa, Empresa, Endereco, Equipamento,
@@ -18,8 +19,7 @@ class SignatureForm(forms.ModelForm):
 class OrdemServicoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OrdemServicoForm, self).__init__(*args, **kwargs)
-        self.fields['numero_chamado'].initial = datetime.now().strftime(
-            "%Y%m%d%H%M%S")
+        self.fields['numero_chamado'].initial = datetime.now().strftime("%Y%m%d%H%M%S")
         #self.fields['equipamento'].empty_label = "Selecione uma Opção"
         #self.fields['empresa'].empty_label = "Selecione uma Opção"
         self.fields['empresa'].widget.attrs.update({'class':'select2' })
@@ -142,17 +142,18 @@ class DespesaForm(forms.ModelForm):
 
 class CargaHorariaForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user,**kwargs):
+        # user = kwargs.get('user')
         super(CargaHorariaForm, self).__init__(*args, **kwargs)
-        #self.fields['data'].initial = datetime.now()
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
+        self.user = user
         self.fields['status'].widget.attrs['class'] = 'form-control form-select datetimefield'
+
         #self.fields['status'].widget.attrs.update({'class':''})
 
     class Meta:
         model = CargaHoraria
         # exclude = ['status_chamado']
-        # '__all__'#['status', 'tipo_chamado']
         fields = ['data', 'hora_inicio', 'hora_termino', 'status']
         
         widgets = {
@@ -164,44 +165,25 @@ class CargaHorariaForm(forms.ModelForm):
 
             'hora_termino': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '12:00', 'class': 'timefield form-control'}),           
 
-            
-        }
     
+        }
+         
     def clean(self):
         cleaned_data = super().clean()
         
         data = cleaned_data.get('data')
         hora_inicio = cleaned_data.get('hora_inicio')
         hora_termino = cleaned_data.get('hora_termino')
-
-        if self.instance.ordem_servico:
-            #carregando todos os horarios relacionados com a instancia de ordem_servico
-            lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=self.instance.ordem_servico.pk).filter(data=data)
-
-            for ch in lista_carga_horaria:
-                if ch.data == data:
-                    if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino):
-                        if self.instance.pk:    
-                            if ch.id != self.instance.pk:
-                                raise forms.ValidationError({'hora_inicio':"As datas não podem ser iguais"})
-                        else:
-                            raise forms.ValidationError({'hora_inicio':"As datas não podem ser iguais"})
-                    
-
-""" class RelatorioPonto(forms.Form):
-    funcionario = forms.CharField( label= "Usuário",
-        max_length=100,
-        required=True,
-        widget= forms.TextInput(attrs={'placeholder':'Digite o nome de usuário', 'class':'form-control' })
-        )
-    email = forms.CharField( label= "Email",
-        max_length=100,
-        required=True,
-        widget= forms.TextInput(attrs={'placeholder':'Digite o email', 'class':'form-control' })
-        )
-
-    tipo_usuario = forms.ChoiceField(choices = TIPO_USUARIO.choices, label="Tipo de Usuário", initial='T', widget=forms.Select(attrs={'class':'form-select'}), required=True)
-    """  
+        
+        #carregando todos os horarios relacionados com a instancia de ordem_servico
+        #lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=self.instance.ordem_servico.pk).filter(data=data)
+        lista_carga_horaria = CargaHoraria.objects.filter(tecnico = self.user.id ).filter(data=data)
+        for ch in lista_carga_horaria:
+            #print("1 - ", horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino), ch.tecnico.user.id == self.user.id, ch.id != self.instance.pk)
+            if ch.data == data :
+                if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino) and (ch.tecnico.user.id == self.user.id) and (ch.id != self.instance.pk):
+                    raise forms.ValidationError({'hora_inicio':"O Horário já foi preenchido anteriomente.."})
+                      
 
 
 def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):

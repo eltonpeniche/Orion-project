@@ -167,7 +167,6 @@
                             <div class="repetir">
                                 {{ form }}
                             </div>
-                        
                         {% endfor %}
                     </div> 
                     
@@ -217,7 +216,6 @@
         
                             </div>
                         </div>
-
                         
                     </div>
                     
@@ -400,7 +398,15 @@
                 theme: 'bootstrap4',
                 placeholder: 'Selecione uma opção'
             });
-        
+
+            //exibe os erros form de carga horaria e remove
+            var errorlist = document.querySelectorAll(".errorlist li");
+            for (var i = 0; i < errorlist.length; i++) {
+               alert(errorlist[i].textContent);
+            }
+            let numberForm = $(".errorlist").next().valueOf('input')[0].name.split('-')[1]
+            elemForm = document.getElementById("id_carga_horaria-"+numberForm+"-DELETE")
+            elemForm.checked = true
         })
 
         
@@ -491,9 +497,10 @@
             const varHoraInicio = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_inicio").value;
             const varHoraTermino = document.getElementById("id_carga_horaria-"+currentFormCount+"-hora_termino").value;
             const varStatus = $('#id_carga_horaria-'+currentFormCount+'-status :selected').text();
-            
+            const varTecnico = "{{ request.user }}"
             //verifica se horaro já existe
-            if (verificaHorario(varData, varHoraInicio, varHoraTermino,tabelaCargaHoraria)){
+            
+            if (verificaHorario(varData, varHoraInicio, varHoraTermino,tabelaCargaHoraria, varTecnico)){
                 not_save_new_form()
                 $('#error_ch_Modal').modal('show');
                 return; // interrompe a execução da função
@@ -518,10 +525,10 @@
 
             var novaLinha = document.createElement("tr");
             novaLinha.setAttribute("id", currentFormCount );
-            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varStatus, '<button id="deletar-elemento-lista-'+currentFormCount+'" type="button" class="del-el-lista btn btn-danger" value='+currentFormCount+'> X </button>'];
-            for (var i = 0; i < 6; i++) {
+            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), "{{request.user}}", varStatus, '<button id="deletar-elemento-lista-'+currentFormCount+'" type="button" class="del-el-lista btn btn-danger" value='+currentFormCount+'> X </button>'];
+            for (var i = 0; i < 7; i++) {
                 var novaCelula = document.createElement("td");
-                if(i==5){ novaCelula.setAttribute("align", "center"); }
+                if(i==6){ novaCelula.setAttribute("align", "center"); }
                 novaCelula.innerHTML = valores[i];
                 novaLinha.appendChild(novaCelula);
             }
