@@ -37,7 +37,9 @@ def logout(request):
 
 
 def login(request):
-
+    if request.user.is_authenticated:
+        return redirect('orion:lista_home')
+    
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -118,7 +120,7 @@ def cadastro_usuario(request):
 
 def deletar_usuario(request, id):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('usuarios:login')
     usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
     
     if usuario_logado.tipo != 'A':
