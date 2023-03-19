@@ -7,8 +7,8 @@ from django.core import serializers
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
-from django.http import FileResponse, Http404, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from jsignature.utils import draw_signature
 from notifications.models import Notification
 from notifications.signals import notify
@@ -110,7 +110,7 @@ def novo_chamado_view(request, id):
         Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0 )
 
     user = get_object_or_404(Usuario, user_id = request.user.id)
-    formCargaHoraria = form_carga_horaria_factory(form_kwargs={'user':user})
+    formCargaHoraria = form_carga_horaria_factory()
     
     #despesa form
     form_despesa_factory = inlineformset_factory(
@@ -138,13 +138,9 @@ def novo_chamado(request):
     usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
 
     ordemForm = OrdemServicoForm(request.POST)
-    form_carga_horaria_factory = inlineformset_factory(
-        Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
-    form_despesa_factory = inlineformset_factory(
-        Ordem_Servico, Despesa, form=DespesaForm )
-
+    form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
+    form_despesa_factory = inlineformset_factory( Ordem_Servico, Despesa, form=DespesaForm )
     
-
     if ordemForm.is_valid():
         ordem_servico = ordemForm.save(commit=False)
         ordem_servico.aberto_por = usuario_logado
@@ -157,7 +153,7 @@ def novo_chamado(request):
 
         ordem_servico.save()
         
-        formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico, form_kwargs={'user':usuario_logado})
+        formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico )
         formDespesa = form_despesa_factory(request.POST, instance=ordem_servico)
         if formCargaHoraria.is_valid() and formDespesa.is_valid():
             list_ch = formCargaHoraria.save(commit= False)
@@ -179,23 +175,18 @@ def novo_chamado(request):
 
 @login_required
 def editar_chamado(request, id):
-    user = get_object_or_404(Usuario, user_id = request.user.id)
+    usuario = get_object_or_404(Usuario, user_id = request.user.id)
     if request.method == 'GET':
     
         if id != 0:
             print("editar_chamado")
             ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
-            
             ordemServicoForm = OrdemServicoForm(instance=ordem_servico) 
 
-            form_carga_horaria_factory = inlineformset_factory(
-                Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
+            form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
+            formCargaHoraria = form_carga_horaria_factory(instance=ordem_servico, initial =[{'tecnico': usuario }])
             
-            formCargaHoraria = form_carga_horaria_factory(instance=ordem_servico, form_kwargs={'user':user})
-            
-            form_despesa_factory = inlineformset_factory(
-                Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
-            
+            form_despesa_factory = inlineformset_factory(Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
             formDespesa = form_despesa_factory(instance=ordem_servico)
 
             
@@ -225,26 +216,18 @@ def editar_chamado(request, id):
         request.session['OrdemServico_form_data'] = request.POST
         ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
         ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico)
-        usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
+    
         form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
-        
-        formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico, form_kwargs={'user':user})
+        formCargaHoraria = form_carga_horaria_factory(request.POST, instance=ordem_servico )
 
         form_despesa_factory = inlineformset_factory(Ordem_Servico, Despesa, form=DespesaForm )
-            
         formDespesa = form_despesa_factory(request.POST, instance=ordem_servico)
         
-
         if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
             chamado = ordemForm.save()
-            chs = formCargaHoraria.save(commit = False)
-            for ch in chs:
-                ch.tecnico = usuario_logado
-                ch.save()
-            formCargaHoraria.save_m2m()
             formCargaHoraria.save()
-
             formDespesa.save()
+            
             #-----------------------------------
             if request.user != chamado.aberto_por.user:
                hoje = datetime.now().strftime("%d/%m/%Y")
@@ -567,22 +550,25 @@ def list_teste(request):
 
 def teste(request):
     usuario = get_object_or_404(Usuario, user_id = request.user.id)
-    user = usuario
     if request.method == 'GET':
+        #formCargaHoraria = CargaHorariaForm(initial ={'tecnico': usuario })
         
         form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=1)
         formCargaHoraria = form_carga_horaria_factory()
+            
         
-        #form = CargaHorariaForm(user=user)
         contexto = {
           'form': formCargaHoraria
         }
         return render(request, 'orion/pages/teste.html', contexto)
     
     else: 
+        #formCargaHoraria = CargaHorariaForm(request.POST )
+        
         form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
-        formCargaHoraria = form_carga_horaria_factory(request.POST, form_kwargs={'user': user})
-        #form = CargaHorariaForm(request.POST, user=user)
+        formCargaHoraria = form_carga_horaria_factory()
+            
+        print(formCargaHoraria)
         if formCargaHoraria.is_valid():
             formCargaHoraria.save()
         return redirect('orion:teste')

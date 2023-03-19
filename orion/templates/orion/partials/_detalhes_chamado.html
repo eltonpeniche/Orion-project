@@ -18,10 +18,6 @@
             data-bs-target="#assinatura-tab-pane" type="button" role="tab" aria-controls="assinatura-tab-pane"
             aria-selected="false">Assinatura</button>
     </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link nav2" id="time-tab" data-bs-toggle="tab" data-bs-target="#time-tab-pane"
-            type="button" role="tab" aria-controls="time-tab-pane" aria-selected="false">Tempos</button>
-    </li>
 </ul>
 
 
@@ -215,6 +211,17 @@
         
                             </div>
                         </div>
+
+                        <div class="form-group mt-3 mb-3 row hidden">
+                            <div class="col-4 label-class text-end">
+                                <label class="col-form-label" for="{{ form_ch.empty_form.tecnico.id_for_label}}">
+                                    {{form_ch.empty_form.tecnico.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{form_ch.empty_form.tecnico|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
                         
                     </div>
                     
@@ -347,10 +354,6 @@
     </div>
     
 
-    <div class="tab-pane fade" id="time-tab-pane" role="tabpanel" aria-labelledby="time-tab" tabindex="0">
-
-    </div>
-
 </div>
 
 <!-- Adicionando JQuery -->
@@ -432,7 +435,7 @@
             const regex = new RegExp('__prefix__', 'g' )
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             formCopyTarget.append(copyEmptyFormEl)
-
+            document.getElementById("id_carga_horaria-"+currentFormCount+"-tecnico").value = "{{ request.user.id}}"          
             
         } 
 
@@ -509,6 +512,7 @@
             totalNewForms.setAttribute('value', currentFormCount + 1)
             
             formCopyTarget.append(copyEmptyFormEl)
+
             
             
             const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 

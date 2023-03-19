@@ -142,48 +142,46 @@ class DespesaForm(forms.ModelForm):
 
 class CargaHorariaForm(forms.ModelForm):
 
-    def __init__(self, *args, user,**kwargs):
+    def __init__(self, *args,**kwargs):
         # user = kwargs.get('user')
         super(CargaHorariaForm, self).__init__(*args, **kwargs)
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
-        self.user = user
+        #self.user = user
         self.fields['status'].widget.attrs['class'] = 'form-control form-select datetimefield'
-
-        #self.fields['status'].widget.attrs.update({'class':''})
+        #self.fields['tecnico'].widget.attrs.update({'class':'hidden'})
 
     class Meta:
         model = CargaHoraria
         # exclude = ['status_chamado']
-        fields = ['data', 'hora_inicio', 'hora_termino', 'status']
-        
+        fields = ['data', 'hora_inicio', 'hora_termino', 'status', 'tecnico']
+        labels = {'tecnico': ''}
         widgets = {
             'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control datetimefield' }),
 
-
             'hora_inicio': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '08:00', 'class': 'timefield form-control' }),
-
 
             'hora_termino': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '12:00', 'class': 'timefield form-control'}),           
 
-    
+            'tecnico': forms.TextInput(attrs={'value': ''})
         }
-         
+
     def clean(self):
         cleaned_data = super().clean()
         
         data = cleaned_data.get('data')
         hora_inicio = cleaned_data.get('hora_inicio')
         hora_termino = cleaned_data.get('hora_termino')
+        tecnico = cleaned_data.get('tecnico')
         
         #carregando todos os horarios relacionados com a instancia de ordem_servico
-        #lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=self.instance.ordem_servico.pk).filter(data=data)
-        lista_carga_horaria = CargaHoraria.objects.filter(tecnico = self.user.id ).filter(data=data)
+        lista_carga_horaria = CargaHoraria.objects.filter(tecnico = tecnico.id ).filter(data=data)
+        print(lista_carga_horaria)
         for ch in lista_carga_horaria:
-            #print("1 - ", horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino), ch.tecnico.user.id == self.user.id, ch.id != self.instance.pk)
+            #print (horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino), ch.tecnico.id, self.user.id, (ch.id != self.instance.pk))
+            #print("1 - ", ch.id , self.instance.pk)
             if ch.data == data :
-                if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino) and (ch.tecnico.user.id == self.user.id) and (ch.id != self.instance.pk):
+                if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino) and (ch.tecnico.id == tecnico.id) and (ch.id != self.instance.pk):
                     raise forms.ValidationError({'hora_inicio':"O Horário já foi preenchido anteriomente.."})
-                      
 
 
 def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):
