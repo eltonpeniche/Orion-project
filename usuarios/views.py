@@ -79,9 +79,12 @@ def cadastro_usuario(request):
         form = CadastroUsuarioForm(request.POST)
         if form.is_valid():
 
-            login = form['login'].value()
-            email = form['email'].value()
-            senha = form['senha'].value()
+            login     = form['login'].value()
+            nome      = form['nome'].value()
+            sobrenome = form['sobrenome'].value()
+            email     = form['email'].value()
+            senha     = form['senha'].value()
+
             tipo_usuario = form['tipo_usuario'].value()
            
             if User.objects.filter(username=login).exists():
@@ -90,6 +93,8 @@ def cadastro_usuario(request):
 
             user = User.objects.create_user(
                 username=login,
+                first_name = nome,
+                last_name= sobrenome,
                 password=senha,
                 email=email
             )

@@ -24,14 +24,6 @@ class LoginForm(forms.Form):
     )
 
 class UserUpdateForm(UserChangeForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
-        #self.fields['first_name'].widget.attrs['disabled'] = True
-        
-        self.fields['username'].widget.attrs.update({'class': 'form-control'})
-        self.fields['email'].widget.attrs.update({'class': 'form-control'})
-
     password = forms.CharField( label='Senha', help_text= '* Ao deixar este campo vazio, a senha atual será mantida', required=False,
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
@@ -39,14 +31,23 @@ class UserUpdateForm(UserChangeForm):
     password2 = forms.CharField( label='Confirmar Senha', required=False,
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
     )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+
 
     class Meta:
         model = User
-        fields = ['first_name','email', 'username']
+        fields = ['username','first_name', 'last_name', 'email']
         readonly_fields = ('first_name', )
         labels = {
             'username': 'Login',  # Alterar o label do campo 
             'first_name': 'Nome',
+            'last_name': 'Sobrenome',
             'email': 'E-mail',
         }
     
@@ -92,10 +93,22 @@ class UsuarioForm(forms.ModelForm):
 
 
 class CadastroUsuarioForm(forms.Form):
-    login = forms.CharField( label= "Usuário",
+    nome = forms.CharField( label= "Nome",
         max_length=100,
         required=True,
-        widget= forms.TextInput(attrs={'placeholder':'Digite o nome de usuário', 'class':'form-control' })
+        widget= forms.TextInput(attrs={'placeholder':'Digite o nome', 'class':'form-control' })
+    )
+
+    sobrenome = forms.CharField( label= "Sobrenome",
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Digite o sobrenome', 'class':'form-control' })
+    )
+    
+    login = forms.CharField( label= "Login",
+        max_length=100,
+        required=True,
+        widget= forms.TextInput(attrs={'placeholder':'Digite o login', 'class':'form-control' })
         )
     email = forms.CharField( label= "Email",
         max_length=100,
