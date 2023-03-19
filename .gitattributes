@@ -1,2 +1,5 @@
-static/* linguist-vendored
-orion/static/* linguist-vendored
+#static/* linguist-vendored
+#orion/static/* linguist-vendored
+
+* linguist-vendored
+*.py linguist-vendored=false
