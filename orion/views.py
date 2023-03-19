@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 from jsignature.utils import draw_signature
 from notifications.models import Notification
 from notifications.signals import notify
@@ -25,10 +25,9 @@ from .notifications import (get_notificacoes_nao_lidas,
                             get_numero_notificacoes_nao_lidas)
 
 
-@login_required
 def lista_home(request):
     if not request.user.is_authenticated:
-        return redirect('usuarios:login')
+        return redirect(reverse('usuarios:login'))
 
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     #---------------------------
