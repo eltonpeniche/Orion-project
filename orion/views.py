@@ -183,8 +183,8 @@ def editar_chamado(request, id):
             ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
             ordemServicoForm = OrdemServicoForm(instance=ordem_servico) 
 
-            form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=0)
-            formCargaHoraria = form_carga_horaria_factory(instance=ordem_servico, initial =[{'tecnico': usuario }])
+            form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm ,extra=0)
+            formCargaHoraria = form_carga_horaria_factory(instance=ordem_servico, queryset=CargaHoraria.objects.order_by('data'), initial =[{'tecnico': usuario }])
             
             form_despesa_factory = inlineformset_factory(Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
             formDespesa = form_despesa_factory(instance=ordem_servico)

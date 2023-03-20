@@ -46,7 +46,12 @@
             const varStatus = $('#id_carga_horaria-'+i+'-status :selected').text();
             const varTecnico = $('#id_carga_horaria-'+i+'-tecnico :selected').text();
             
-            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varTecnico, varStatus, '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+'> X </button>'];
+            let botaoRemover = '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+'> X </button>'
+            if(varTecnico != "{{request.user}}"){
+                botaoRemover = '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+' disabled> X </button>'
+                
+            }
+            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varTecnico, varStatus, botaoRemover];
             
             var novaLinha = document.createElement("tr");
             novaLinha.setAttribute("id", i );

@@ -43,7 +43,14 @@
 
             let novaLinha = document.createElement("tr");
             novaLinha.setAttribute("tr-despesa-", i );
-            let valores = [varTipo, varData, varValor, varTecnico ,'<button id="deletar-despesa-lista-'+i+'" type="button" class="del-despesa-lista btn btn-danger" value='+i+'> X </button>'];
+
+            let botaoRemover = '<button id="deletar-despesa-lista-'+i+'" type="button" class="del-despesa-lista btn btn-danger" value='+i+'> X </button>'
+            if(varTecnico != "{{request.user}}"){
+                botaoRemover = '<button id="deletar-despesa-lista-'+i+'" type="button" class="del-despesa-lista btn btn-danger" value='+i+' disabled> X </button>'
+                
+            }
+
+            let valores = [varTipo, varData, varValor, varTecnico, botaoRemover];
             
             for (let j = 0; j < 5; j++) {
                 var novaCelula = document.createElement("td");
