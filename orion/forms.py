@@ -162,7 +162,7 @@ class CargaHorariaForm(forms.ModelForm):
 
             'hora_termino': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '12:00', 'class': 'timefield form-control'}),           
 
-            'tecnico': forms.TextInput(attrs={'value': ''})
+            #'tecnico': forms.TextInput(attrs={'value': ''})
         }
 
     def clean(self):

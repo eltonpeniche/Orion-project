@@ -25,32 +25,43 @@
         <tbody id = "tabela-carga_horaria-corpo">
 
 
-            {% if carga_horaria  %}
-            
-                
-                {% for fch, id, value, form in carga_horaria %}
-                
-                    <tr id = {{ value }}>
-                        
-                        <td>{{ fch.data|date:"d/m/Y" }}
-                            {% if form.data.errors  %}
-                                {{ form.data.errors }} 
-                            {% endif %} 
-                                                    </td>
-                            
-                        <td>{{ fch.hora_inicio }} </td>
-                        <td>{{ fch.hora_termino }}</td>
-                        <td>{{ fch.horas_de_trabalho }}</td>
-                        <td>{{ fch.tecnico }}</td>
-                        <td>{{ fch.get_status_display }} </td>
-                                                       
-                        <td align="center"><button id = {{id}}  type="button" class="del-el-lista btn btn-danger" value = {{ value }} > X </button></td>
-                    </tr>
-
-
-                {% endfor %}
-                  
-            {% endif %}
         </tbody>
     </table>
 </div>
+
+<script>
+
+    $(document).ready(function() {
+
+        const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
+        const numCargaHoraria = document.getElementsByClassName("repetir")
+        
+        for (var i = 0; i < numCargaHoraria.length; i++){
+            
+            //variaveis que compoe a lista de horarios trabalhados
+            const varData = formatarData(document.getElementById("id_carga_horaria-"+i+"-data").value);
+            const varHoraInicio = document.getElementById("id_carga_horaria-"+i+"-hora_inicio").value;
+            const varHoraTermino = document.getElementById("id_carga_horaria-"+i+"-hora_termino").value;
+            const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
+            const varStatus = $('#id_carga_horaria-'+i+'-status :selected').text();
+            const varTecnico = $('#id_carga_horaria-'+i+'-tecnico :selected').text();
+            
+            var novaLinha = document.createElement("tr");
+        novaLinha.setAttribute("id", i );
+        var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varTecnico, varStatus, '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+'> X </button>'];
+        for (var j = 0; j < 7; j++) {
+            var novaCelula = document.createElement("td");
+            if(j==6){ novaCelula.setAttribute("align", "center"); }
+            novaCelula.innerHTML = valores[j];
+            novaLinha.appendChild(novaCelula);
+        }
+        
+        novaLinha.appendChild(novaCelula);
+        tabelaCargaHoraria.append(novaLinha); 
+        
+        } 
+    
+    })
+         
+
+</script>

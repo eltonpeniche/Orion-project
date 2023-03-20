@@ -435,9 +435,14 @@
             const regex = new RegExp('__prefix__', 'g' )
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             formCopyTarget.append(copyEmptyFormEl)
-            document.getElementById("id_carga_horaria-"+currentFormCount+"-tecnico").value = "{{ request.user.id}}"          
             
-        } 
+            // Acessando o elemento select pelo ID
+            
+            const selectTecnico = document.getElementById("id_carga_horaria-"+currentFormCount+"-tecnico");
+            selectTecnico.querySelector("option[selected]").removeAttribute("selected");
+            selectTecnico.value = "{{ request.user.id}}"          
+           
+            } 
 
 
         document.addEventListener('click', function(event) {

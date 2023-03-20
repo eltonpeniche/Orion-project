@@ -189,13 +189,6 @@ def editar_chamado(request, id):
             form_despesa_factory = inlineformset_factory(Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
             formDespesa = form_despesa_factory(instance=ordem_servico)
 
-            
-            #carregando todos os horarios relacionados com a instancia de ordem_servico
-            lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
-            #print("form_ch" ,form_ch)
-            ids = ['deletar-elemento-lista-'+str(x) for x in range(0,lista_carga_horaria.count())]
-            values = [x for x in range(0,lista_carga_horaria.count())]
-
             #carregando todas as despesas relacionados com a instancia de ordem_servico
             lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
             ids_despesas = ['deletar-despesa-lista-'+str(x) for x in range(0,lista_despesas.count())]
@@ -205,7 +198,6 @@ def editar_chamado(request, id):
             contexto = {
                 'ordemForm': ordemServicoForm,
                 'form_ch' : formCargaHoraria,
-                'carga_horaria' : zip(lista_carga_horaria,ids,values, formCargaHoraria),
                 'formDespesa': formDespesa,
                 'despesas' : zip(lista_despesas,ids_despesas,values_despesas, formDespesa),
                 'id' : id,
@@ -239,10 +231,6 @@ def editar_chamado(request, id):
             messages.success(request, "Chamado editado com sucesso")
             return redirect('orion:lista_chamados')
         
-        #carregando todos os horarios relacionados com a instancia de ordem_servico
-        lista_carga_horaria = CargaHoraria.objects.select_related('ordem_servico').filter(ordem_servico=id)
-        ids = ['deletar-elemento-lista-'+str(x) for x in range(0,lista_carga_horaria.count())]
-        values = [x for x in range(0,lista_carga_horaria.count())]
 
         #carregando todas as despesas relacionados com a instancia de ordem_servico
         lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
@@ -253,7 +241,6 @@ def editar_chamado(request, id):
         return render(request, 'orion/pages/editar_chamado.html', 
         {   'ordemForm': ordemForm,
             'form_ch' : formCargaHoraria,
-            'carga_horaria' : zip(lista_carga_horaria,ids,values,formCargaHoraria),
             'formDespesa': formDespesa,
             'despesas' : zip(lista_despesas,ids_despesas,values_despesas, formDespesa),
             'id' : id,
