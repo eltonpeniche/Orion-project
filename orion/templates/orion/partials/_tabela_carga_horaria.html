@@ -46,22 +46,21 @@
             const varStatus = $('#id_carga_horaria-'+i+'-status :selected').text();
             const varTecnico = $('#id_carga_horaria-'+i+'-tecnico :selected').text();
             
+            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varTecnico, varStatus, '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+'> X </button>'];
+            
             var novaLinha = document.createElement("tr");
-        novaLinha.setAttribute("id", i );
-        var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varTecnico, varStatus, '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+'> X </button>'];
-        for (var j = 0; j < 7; j++) {
-            var novaCelula = document.createElement("td");
-            if(j==6){ novaCelula.setAttribute("align", "center"); }
-            novaCelula.innerHTML = valores[j];
-            novaLinha.appendChild(novaCelula);
-        }
+            novaLinha.setAttribute("id", i );
+            for (var j = 0; j < 7; j++) {
+                var novaCelula = document.createElement("td");
+                if(j==6){ novaCelula.setAttribute("align", "center"); }
+                novaCelula.innerHTML = valores[j];
+                novaLinha.appendChild(novaCelula);
+            }
+            
+            tabelaCargaHoraria.append(novaLinha); 
         
-        novaLinha.appendChild(novaCelula);
-        tabelaCargaHoraria.append(novaLinha); 
-        
-        } 
-    
-    })
-         
+    } 
+})
 
+         
 </script>

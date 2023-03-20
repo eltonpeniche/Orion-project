@@ -287,6 +287,17 @@
                             </div>
                         </div>
 
+                        <div class="form-group mt-3 mb-3 row hidden">
+                            <div class="col-4 label-class text-end">
+                                <label class="col-form-label" for="{{ formDespesa.empty_form.tecnico.id_for_label}}">
+                                    {{formDespesa.empty_form.tecnico.label}}</label>
+                            </div>
+                            <div class="col-8">
+                                {{formDespesa.empty_form.tecnico|add_class:'form-control'}}
+        
+                            </div>
+                        </div>
+
 
 
                     </div>
@@ -436,8 +447,7 @@
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             formCopyTarget.append(copyEmptyFormEl)
             
-            // Acessando o elemento select pelo ID
-            
+            //Adicionando o tecnico na lista de carga horaria 
             const selectTecnico = document.getElementById("id_carga_horaria-"+currentFormCount+"-tecnico");
             selectTecnico.querySelector("option[selected]").removeAttribute("selected");
             selectTecnico.value = "{{ request.user.id}}"          
@@ -610,6 +620,10 @@
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
             formCopyTarget.append(copyEmptyFormEl)
 
+            const selectTecnico = document.getElementById("id_despesa-"+currentFormCount+"-tecnico");
+            selectTecnico.querySelector("option[selected]").removeAttribute("selected");
+            selectTecnico.value = "{{ request.user.id}}"  
+
     
         } 
 
@@ -676,7 +690,7 @@
 
             let novaLinha = document.createElement("tr");
             novaLinha.setAttribute("id", "tr-despesa-"+currentDespesasCount );
-            let valores = [varTipo, varData, varValor, '<button id="deletar-despesa-lista-'+currentDespesasCount+'" type="button" class="del-despesa-lista btn btn-danger" value='+currentDespesasCount+'> X </button>'];
+            let valores = [varTipo, varData, varValor, "{{request.user}}" ,'<button id="deletar-despesa-lista-'+currentDespesasCount+'" type="button" class="del-despesa-lista btn btn-danger" value='+currentDespesasCount+'> X </button>'];
             for (var i = 0; i < 4; i++) {
                 var novaCelula = document.createElement("td");
                 if(i==3){ novaCelula.setAttribute("align", "center"); }

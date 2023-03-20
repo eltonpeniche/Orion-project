@@ -132,8 +132,8 @@ class DespesaForm(forms.ModelForm):
 
     class Meta:
         model = Despesa
-        fields = '__all__'
-        
+        fields = ['tipo', 'data', 'valor', 'tecnico']
+        labels = {'tecnico': ''}
         widgets = {
             'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control' }),       
         }
@@ -143,26 +143,19 @@ class DespesaForm(forms.ModelForm):
 class CargaHorariaForm(forms.ModelForm):
 
     def __init__(self, *args,**kwargs):
-        # user = kwargs.get('user')
         super(CargaHorariaForm, self).__init__(*args, **kwargs)
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
-        #self.user = user
         self.fields['status'].widget.attrs['class'] = 'form-control form-select datetimefield'
-        #self.fields['tecnico'].widget.attrs.update({'class':'hidden'})
 
     class Meta:
         model = CargaHoraria
-        # exclude = ['status_chamado']
         fields = ['data', 'hora_inicio', 'hora_termino', 'status', 'tecnico']
         labels = {'tecnico': ''}
         widgets = {
             'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control datetimefield' }),
-
             'hora_inicio': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '08:00', 'class': 'timefield form-control' }),
-
             'hora_termino': forms.TimeInput(format='%H:%M', attrs={'type': 'time', 'value': '12:00', 'class': 'timefield form-control'}),           
 
-            #'tecnico': forms.TextInput(attrs={'value': ''})
         }
 
     def clean(self):

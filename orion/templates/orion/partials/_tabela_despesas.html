@@ -6,6 +6,7 @@
             <col class="col-sm-2">
             <col class="col-sm-2">
             <col class="col-sm-2">
+            <col class="col-sm-2">
             <col class="col-sm-1">
         </colgroup>
         <thead>
@@ -13,28 +14,48 @@
                 <th>Tipo</th>
                 <th>Data</th>
                 <th>Valor</th>
+                <th>tecnico</th>
                 <th>ações</th>
             </tr>
         </thead>
-        <tbody id = "tabela-despesas-corpo">
-
-
-        
-                {% for despesa, _, value, form in despesas %}
-                
-                    <tr id = tr-despesa-{{ value }}>
-                        
-                        <td>{{ despesa.get_tipo_display }} </td>
-                        <td>{{ despesa.data|date:"d/m/Y" }} 
-                        <td>{{ despesa.valor }}</td>
-                                                       
-                        <td align="center"><button id = deletar-despesa-lista-{{value}}  type="button" class="del-despesa-lista btn btn-danger" value = {{ value }} > X </button></td>
-                    </tr>
-
-
-                {% endfor %}
+        <tbody id="tabela-despesas-corpo">
                   
             
         </tbody>
     </table>
 </div>
+
+<script>
+
+    $(document).ready(function() {
+
+        const tabelaDespesas = document.getElementById("tabela-despesas-corpo")
+        const numDespesas = document.getElementsByClassName("repetir-despesas")
+        
+        for (let i = 0; i < numDespesas.length; i++){
+            
+            
+            //variaveis que compoe a lista de despesas 
+            let varTipo = $('#id_despesa-'+i+'-tipo :selected').text();
+            let varData = formatarData(document.getElementById("id_despesa-"+i+"-data").value);
+            let varValor = document.getElementById("id_despesa-"+i+"-valor").value;
+            let varTecnico = $('#id_carga_horaria-'+i+'-tecnico :selected').text();
+
+            let novaLinha = document.createElement("tr");
+            novaLinha.setAttribute("tr-despesa-", i );
+            let valores = [varTipo, varData, varValor, varTecnico ,'<button id="deletar-despesa-lista-'+i+'" type="button" class="del-despesa-lista btn btn-danger" value='+i+'> X </button>'];
+            
+            for (let j = 0; j < 5; j++) {
+                var novaCelula = document.createElement("td");
+                if(j==4){ novaCelula.setAttribute("align", "center"); }
+                novaCelula.innerHTML = valores[j];
+                novaLinha.appendChild(novaCelula);
+            }
+            tabelaDespesas.append(novaLinha); 
+        
+        } 
+    
+    })
+         
+
+</script>

@@ -153,8 +153,8 @@ class Despesa(models.Model):
         max_length=2, choices=TIPO_DESPESA.choices, blank=False, null=False, default='AL')
     data = models.DateField()
     valor = models.DecimalField(max_digits=10, decimal_places=2)
-    ordem_servico = models.ForeignKey(
-        Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='despesa')
+    tecnico = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='despesa')
+    ordem_servico = models.ForeignKey(Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='despesa')
 
     def __str__(self):
         return f'tipo = {self.tipo} -data =  {self.data} - valor =  {self.valor}'

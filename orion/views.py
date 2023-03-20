@@ -189,17 +189,11 @@ def editar_chamado(request, id):
             form_despesa_factory = inlineformset_factory(Ordem_Servico, Despesa, form=DespesaForm, extra=0 )
             formDespesa = form_despesa_factory(instance=ordem_servico)
 
-            #carregando todas as despesas relacionados com a instancia de ordem_servico
-            lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
-            ids_despesas = ['deletar-despesa-lista-'+str(x) for x in range(0,lista_despesas.count())]
-            values_despesas = [ x for x in range(0,lista_despesas.count())]
-
             #print(ids_despesas)
             contexto = {
                 'ordemForm': ordemServicoForm,
                 'form_ch' : formCargaHoraria,
                 'formDespesa': formDespesa,
-                'despesas' : zip(lista_despesas,ids_despesas,values_despesas, formDespesa),
                 'id' : id,
             }
         
@@ -230,19 +224,12 @@ def editar_chamado(request, id):
             request.session['OrdemServico_form_data'] = None
             messages.success(request, "Chamado editado com sucesso")
             return redirect('orion:lista_chamados')
-        
-
-        #carregando todas as despesas relacionados com a instancia de ordem_servico
-        lista_despesas = Despesa.objects.select_related('ordem_servico').filter(ordem_servico=id)
-        ids_despesas = ['deletar-despesa-lista-'+str(x) for x in range(0,lista_despesas.count())]
-        values_despesas = [x for x in range(0,lista_despesas.count())]
 
         messages.error(request, 'Informações nâo válidas')
         return render(request, 'orion/pages/editar_chamado.html', 
         {   'ordemForm': ordemForm,
             'form_ch' : formCargaHoraria,
             'formDespesa': formDespesa,
-            'despesas' : zip(lista_despesas,ids_despesas,values_despesas, formDespesa),
             'id' : id,
         })
 
