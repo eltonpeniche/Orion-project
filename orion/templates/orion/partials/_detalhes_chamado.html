@@ -691,9 +691,9 @@
             let novaLinha = document.createElement("tr");
             novaLinha.setAttribute("id", "tr-despesa-"+currentDespesasCount );
             let valores = [varTipo, varData, varValor, "{{request.user}}" ,'<button id="deletar-despesa-lista-'+currentDespesasCount+'" type="button" class="del-despesa-lista btn btn-danger" value='+currentDespesasCount+'> X </button>'];
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < 5; i++) {
                 var novaCelula = document.createElement("td");
-                if(i==3){ novaCelula.setAttribute("align", "center"); }
+                if(i==4){ novaCelula.setAttribute("align", "center"); }
                 novaCelula.innerHTML = valores[i];
                 novaLinha.appendChild(novaCelula);
             }
