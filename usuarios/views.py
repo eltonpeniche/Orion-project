@@ -1,10 +1,12 @@
 
 from django.contrib import auth, messages
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.forms import inlineformset_factory
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from usuarios.forms import (CadastroUsuarioForm, LoginForm, UserUpdateForm,
                             UsuarioForm)
@@ -19,7 +21,7 @@ def isUserAdmin(user):
         return True
     return False
 
-# autenticação de usuários
+@login_required
 def lista_usuarios(request):
     usuarios = Usuario.objects.all()
     contexto = {
@@ -28,17 +30,17 @@ def lista_usuarios(request):
     }
     return render(request, 'usuarios/pages/lista_usuarios.html', contexto)
 
-
+@login_required
 def logout(request):
     auth.logout(request)
     messages.success(request, "Logout realizado com sucesso")
     print("Logout realizado com sucesso")
-    return redirect('usuarios:login')
+    return redirect(reverse('usuarios:login'))
 
 
 def login(request):
     if request.user.is_authenticated:
-        return redirect('orion:lista_home')
+        return redirect(reverse('orion:lista_home'))
     
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -52,8 +54,9 @@ def login(request):
             )
             if usuario is not None:
                 auth.login(request, usuario)
-                messages.success(request, f"Bem-vindo, {login} ")
-                print("LOGOU")
+                next = request.GET.get("next", None)
+                if next is not None:
+                    return redirect(next)
                 return redirect('orion:lista_home')
 
             else:
@@ -66,7 +69,7 @@ def login(request):
         }
         return render(request, 'usuarios/pages/login.html', contexto)
 
-
+@login_required
 def cadastro_usuario(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -117,7 +120,7 @@ def cadastro_usuario(request):
         }
         return render(request, 'usuarios/pages/cadastro_usuario.html', contexto)
 
-
+@login_required
 def deletar_usuario(request, id):
     if not request.user.is_authenticated:
         return redirect('usuarios:login')
@@ -138,6 +141,7 @@ def deletar_usuario(request, id):
     messages.success(request, f"Usuário {nome} excluido com sucesso")
     return redirect('usuarios:lista_usuarios')
 
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def dados_usuario(request):
     if not request.user.is_authenticated:
         return redirect('usuarios:login')
@@ -176,7 +180,7 @@ def dados_usuario(request):
         }
     return render(request, 'usuarios/pages/dados_usuario.html', contexto)
 
-
+@login_required
 def editar_usuario(request, id):
     if not request.user.is_authenticated:
         return redirect('login')
