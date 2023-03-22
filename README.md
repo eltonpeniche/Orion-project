@@ -3,6 +3,7 @@
 O sistema é construído em cima do framework Django, o que significa que é altamente personalizável e escalável. Além disso, o sistema possui uma interface de usuário amigável e responsiva, o que o torna fácil de usar em qualquer dispositivo.
 
 Com o Sistema de Gerenciamento de Ordens de Serviço, empresas de diferentes segmentos podem melhorar a qualidade do seu suporte técnico e garantir a satisfação de seus clientes.
+> Status: Em desenvolvimento..
 
 ## Instalação
 1. Clone o repositório do projeto.
