@@ -25,10 +25,8 @@ from .notifications import (get_notificacoes_nao_lidas,
                             get_numero_notificacoes_nao_lidas)
 
 
+@login_required(login_url="usuarios:login", redirect_field_name="orion:lista_home")
 def lista_home(request):
-    if not request.user.is_authenticated:
-        return redirect(reverse('usuarios:login'))
-
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     #---------------------------
     #notificacoes_nao_lidas = get_notificacoes_nao_lidas(request.user)
