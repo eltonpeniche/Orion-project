@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q44$h%cc-^q87+$xd_1#@zw!wx0ntk0teu2p9ot0t#xlx#zjz_'
+SECRET_KEY =  os.environ.get('SECRET_KEY', 'INSECURE') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -162,7 +162,3 @@ JSIGNATURE_JQUERY = 'admin'
 JSIGNATURE_WIDTH = 800
 JSIGNATURE_HEIGHT = 300
 JSIGNATURE_RESET_BUTTON = False
-
-USE_L10N = True
-
-SELENIUM_HEADLESS = 0

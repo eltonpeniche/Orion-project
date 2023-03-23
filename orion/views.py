@@ -1,4 +1,5 @@
 
+import os
 from datetime import datetime
 
 from django.contrib import messages
@@ -24,6 +25,7 @@ from usuarios.models import Usuario
 from .notifications import (get_notificacoes_nao_lidas,
                             get_numero_notificacoes_nao_lidas)
 
+PER_PAGE = os.environ.get('PER_PAGE', 10)
 
 @login_required(login_url="usuarios:login", redirect_field_name="orion:lista_home")
 def lista_home(request):
@@ -35,7 +37,7 @@ def lista_home(request):
     ordens_servico = Ordem_Servico.objects.filter(
         aberto_por=usuario, status_chamado='A').order_by('-id')
     
-    paginator = Paginator(ordens_servico, 25) # Show 25 contacts per page.
+    paginator = Paginator(ordens_servico, PER_PAGE) # Show 25 contacts per page.
     page_number = request.GET.get('page')
     ordens_servico_page = paginator.get_page(page_number)
     contexto = {
@@ -50,7 +52,7 @@ def lista_chamados(request):
         ordens_servico = Ordem_Servico.objects.all().filter(
             status_chamado='A').order_by('-id')
         
-        paginator = Paginator(ordens_servico, 25) # Show 25 contacts per page.
+        paginator = Paginator(ordens_servico, PER_PAGE) # Show 25 contacts per page.
         page_number = request.GET.get('page')
         ordens_servico_page = paginator.get_page(page_number)
 
