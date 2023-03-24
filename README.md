@@ -68,11 +68,3 @@ python manage.py runserver
 
 **Bootstrap**: O Bootstrap é um framework front-end de código aberto, desenvolvido pelo Twitter, que oferece diversos componentes e estilos CSS pré-definidos para construção de páginas web responsivas e amigáveis ao usuário. No projeto de gerenciamento de ordens de serviço, o Bootstrap foi utilizado para construir a interface do usuário, garantindo uma experiência consistente e de alta qualidade.
 
-## Contribuição
-Se você quiser contribuir com o projeto, siga os seguintes passos:
-1. Faça um fork deste repositório.
-2. Crie uma nova branch com a sua feature: git checkout -b my-feature.
-3. Faça as alterações necessárias no código.
-4. Faça commit das suas alterações: git commit -m "feat: My new feature".
-5. Faça push para a sua branch: git push origin my-feature.
-6. Abra um pull request no repositório original.
