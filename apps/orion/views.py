@@ -14,13 +14,13 @@ from jsignature.utils import draw_signature
 from notifications.models import Notification
 from notifications.signals import notify
 
-from orion import utils
-from orion.forms import (CargaHorariaForm, DespesaForm, EmpresaForm,
-                         EnderecoForm, EquipamentosForm, OrdemServicoForm,
-                         SignatureForm)
-from orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
-                          Equipamento, Ordem_Servico, SignatureModel)
-from usuarios.models import Usuario
+from apps.orion import utils
+from apps.orion.forms import (CargaHorariaForm, DespesaForm, EmpresaForm,
+                              EnderecoForm, EquipamentosForm, OrdemServicoForm,
+                              SignatureForm)
+from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
+                               Equipamento, Ordem_Servico, SignatureModel)
+from apps.usuarios.models import Usuario
 
 from .notifications import (get_notificacoes_nao_lidas,
                             get_numero_notificacoes_nao_lidas)

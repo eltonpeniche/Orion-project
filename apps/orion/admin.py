@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
-                          Equipamento, Ordem_Servico)
+from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
+                               Equipamento, Ordem_Servico)
 
 # Register your models here.
 

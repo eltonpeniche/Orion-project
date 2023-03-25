@@ -1,7 +1,7 @@
 
 from django.urls import path
 
-from orion import views
+from apps.orion import views
 
 app_name = 'orion'
 

@@ -34,8 +34,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'orion',
-    'usuarios',
+    'apps.orion',
+    'apps.usuarios',
     'django.forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,8 +69,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
                     os.path.join(BASE_DIR, 'templates'),
-                    os.path.join(BASE_DIR, 'orion/templates'),
-                    os.path.join(BASE_DIR, 'usuarios/templates'),
+                    os.path.join(BASE_DIR, 'apps/orion/templates'),
+                    os.path.join(BASE_DIR, 'apps/usuarios/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -135,7 +135,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'orion/static')
+    os.path.join(BASE_DIR, 'apps/orion/static')
 ]
 
 MEDIA_URL = '/media/'

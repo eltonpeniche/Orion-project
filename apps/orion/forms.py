@@ -4,7 +4,7 @@ from datetime import datetime
 from django import forms
 from validate_docbr import CNPJ
 
-from orion.utils import horarios_se_sobrepoe
+from apps.orion.utils import horarios_se_sobrepoe
 
 from .models import (CargaHoraria, Despesa, Empresa, Endereco, Equipamento,
                      Ordem_Servico, SignatureModel)

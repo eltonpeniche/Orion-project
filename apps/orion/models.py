@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from jsignature.fields import JSignatureField
 
-from usuarios.models import Usuario
+from apps.usuarios.models import Usuario
 
 #from smart_selects.db_fields import ChainedForeignKey
 

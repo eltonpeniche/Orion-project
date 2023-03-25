@@ -6,7 +6,7 @@ import convertapi
 from openpyxl import load_workbook
 from openpyxl.styles import Border, PatternFill, Side
 
-from orion.models import CargaHoraria
+from apps.orion.models import CargaHoraria
 
 
 #verifica se dois horarios de inicio e fim se sobrepoe
