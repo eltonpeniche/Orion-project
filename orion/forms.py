@@ -28,6 +28,16 @@ class OrdemServicoForm(forms.ModelForm):
         model = Ordem_Servico
         exclude = ['status_chamado', 'aberto_por']
         # fields = '__all__'#['status', 'tipo_chamado']
+        labels = {
+            'empresa': 'Empresa',
+            'equipamento': 'Equipamento',
+            'status': 'Status',
+            'numero_chamado': 'Número do Chamado',
+            'tipo_chamado': 'Tipo de Chamado',
+            'descricao_chamado': 'Descrição do Chamado',
+            'descricao_servico': 'Descrição do Serviço',
+            'observacoes_do_cliente': 'Observações do Cliente',
+        }
 
 
 class EmpresaForm(forms.ModelForm):
@@ -39,6 +49,11 @@ class EmpresaForm(forms.ModelForm):
         model = Empresa
         exclude = ['contato', 'endereco']
         fields = '__all__'
+        labels = {
+            'cnpj': 'CNPJ',
+            'email': 'E-mail',
+            'observacao': 'Observação',
+        }
      
     def __init__(self, *args, **kwargs):
         super(EmpresaForm, self).__init__(*args, **kwargs)
@@ -68,6 +83,11 @@ class EquipamentosForm(forms.ModelForm):
         model = Equipamento
         # exclude = ['status_chamado']
         fields = '__all__'  # ['status', 'tipo_chamado']
+        labels = {
+            'numero_serie': 'Número de Série',
+            'tipo_equipamento': 'Tipo de Equipamento',
+            'descricao': 'Descrição',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
