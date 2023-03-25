@@ -1,13 +1,19 @@
 import calendar
 import string
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 import convertapi
 from openpyxl import load_workbook
-from openpyxl.styles import Border, Color, PatternFill, Side
+from openpyxl.styles import Border, PatternFill, Side
 
 from orion.models import CargaHoraria
 
+
+#verifica se dois horarios de inicio e fim se sobrepoe
+def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):
+    if h1_inicio <= h2_inicio < h1_fim or h2_inicio <= h1_inicio < h2_fim:
+        return True
+    return False
 
 def converter_data(data):
     if len(data.split('/')) == 3:

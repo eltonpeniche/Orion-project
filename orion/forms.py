@@ -1,10 +1,10 @@
 import re
 from datetime import datetime
-from decimal import Decimal
 
 from django import forms
-from django.contrib.auth.models import User
 from validate_docbr import CNPJ
+
+from orion.utils import horarios_se_sobrepoe
 
 from .models import (CargaHoraria, Despesa, Empresa, Endereco, Equipamento,
                      Ordem_Servico, SignatureModel)
@@ -98,11 +98,15 @@ class EquipamentosForm(forms.ModelForm):
 
 class EnderecoForm(forms.ModelForm):
 
-    cep  = forms.CharField(max_length=9)
+    cep  = forms.CharField(max_length=9, label='CEP')
     
     class Meta:
         model = Endereco
         fields = ['cep','rua','bairro','uf','cidade', 'numero', 'complemento'] 
+        labels = {
+            'uf': 'UF',
+            'numero': 'Número',
+        }
     
     def __init__(self, *args, **kwargs):
         super(EnderecoForm, self).__init__(*args, **kwargs)
@@ -111,7 +115,6 @@ class EnderecoForm(forms.ModelForm):
     def clean_cep(self):
         cep = self.cleaned_data.get('cep')
         cep = re.sub(r"\D", "", cep)
-        print(cep, len(cep))
         if len(cep) == 8:
             return cep
 
@@ -197,8 +200,5 @@ class CargaHorariaForm(forms.ModelForm):
                     raise forms.ValidationError({'hora_inicio':"O Horário já foi preenchido anteriomente.."})
 
 
-def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):
-    if h1_inicio <= h2_inicio < h1_fim or h2_inicio <= h1_inicio < h2_fim:
-        return True
-    return False
+
 
