@@ -27,7 +27,7 @@ from .notifications import (get_notificacoes_nao_lidas,
 
 PER_PAGE = os.environ.get('PER_PAGE', 10)
 
-@login_required(login_url="usuarios:login", redirect_field_name="orion:lista_home")
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def lista_home(request):
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     #---------------------------
@@ -46,13 +46,13 @@ def lista_home(request):
     }
     return render(request, 'orion/pages/chamado.html', contexto)
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def lista_chamados(request):
     if request.method == "GET":
         ordens_servico = Ordem_Servico.objects.all().filter(
             status_chamado='A').order_by('-id')
         
-        paginator = Paginator(ordens_servico, PER_PAGE) # Show 25 contacts per page.
+        paginator = Paginator(ordens_servico, PER_PAGE)
         page_number = request.GET.get('page')
         ordens_servico_page = paginator.get_page(page_number)
 
@@ -272,7 +272,7 @@ def fechar_chamado(request, id):
         return redirect('orion:lista_chamados')
 
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def equipamentos(request):
 
     equipamentos = Equipamento.objects.all().order_by('-id')
@@ -283,7 +283,7 @@ def equipamentos(request):
 
 
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def detalhar_equipamento(request, id):
     equipamento = get_object_or_404(Equipamento, pk=id)
     print(equipamento)
@@ -307,7 +307,7 @@ def detalhar_equipamento(request, id):
         return redirect('orion:equipamentos')
 
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def cadastrar_equipamentos(request):
     if request.method == 'GET':
         form = EquipamentosForm()
@@ -337,7 +337,7 @@ def deletar_equipamento(request, id):
         return redirect('orion:equipamentos')
 
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def clientes(request):
 
     clientes = Empresa.objects.all().order_by('-id')
@@ -352,7 +352,7 @@ def clientes(request):
     return render(request, 'orion/pages/clientes.html', contexto)
 
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def cadastrar_clientes(request):
     
     if request.method == 'POST':
@@ -393,7 +393,7 @@ def cadastrar_clientes(request):
         return render(request, 'orion/pages/detalhes_cliente.html', contexto)
     
 
-@login_required
+@login_required(login_url="usuarios:login", redirect_field_name="next")
 def detalhar_cliente(request, id):
     cliente = get_object_or_404(Empresa, pk=id)
     if request.method =='POST':

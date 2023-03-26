@@ -1,8 +1,14 @@
+import pytest
 from django.test import TestCase
 from django.urls import reverse
 
+from apps.orion.models import Empresa, Endereco, Equipamento
 
-class OrionURLsTest(TestCase):
+from .test_orion_base import OrionMixin
+
+
+class OrionURLsTest(TestCase, OrionMixin):
+    @pytest.mark.fast
     def test_orion_home_url_esta_correta(self):
         url = reverse('orion:lista_home')
         self.assertEqual(url, '/')
