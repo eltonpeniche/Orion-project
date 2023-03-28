@@ -286,25 +286,26 @@ def equipamentos(request):
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def detalhar_equipamento(request, id):
     equipamento = get_object_or_404(Equipamento, pk=id)
-    print(equipamento)
     if request.method == 'GET':
-
         equipamentoForm = EquipamentosForm(instance=equipamento)
-
         contexto = {
             'form': equipamentoForm,
             'id': id
         }
-
         return render(request, 'orion/pages/detalhes_equipamentos.html', contexto)
 
     else:
-        form = EquipamentosForm(request.POST, instance=equipamento)
-        print(form)
-        if form.is_valid():
-            form.save()
+        equipamentoForm = EquipamentosForm(request.POST, instance=equipamento)
+        
+        if equipamentoForm.is_valid():
+            equipamentoForm.save()
+            return redirect('orion:equipamentos')
+        else:
+            contexto = {
+                'form': equipamentoForm,
+                'id': id }
+            return render(request, 'orion/pages/detalhes_equipamentos.html', contexto)
 
-        return redirect('orion:equipamentos')
 
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
@@ -317,10 +318,18 @@ def cadastrar_equipamentos(request):
         return render(request, 'orion/pages/detalhes_equipamentos.html', contexto)
     else:
         form = EquipamentosForm(request.POST)
-        form.save()
-        messages.success(request, 'Novo equipamento cadastrado com sucesso')
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Novo equipamento cadastrado com sucesso')
+            return redirect('orion:equipamentos')
+        else:
 
-        return redirect('orion:equipamentos')
+            contexto = {
+                'form': form,
+
+            }
+            return render(request, 'orion/pages/detalhes_equipamentos.html', contexto)
 
 
 def equipamentos_select2(request, id):

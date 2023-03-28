@@ -23,6 +23,12 @@
                 <div class="col-md-8">
                     
                     {{field|add_class:'form-control'}}
+
+                    {% if field.errors %}
+                    <span style="color: red;" role="alert">
+                        {{field.errors}}   
+                    </span>
+                    {% endif %}
                         
 
                 </div>

@@ -26,12 +26,13 @@
                         <div class="col-sm-8">
                             {{form.login}}
                             
+                            {% if form.login.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.login.errors}}   
+                            </span>
+                            {% endif %}
                         </div>
-                        {% if form.login.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{form.login.errors}}   
-                        </div>
-                        {% endif %}
+
                     </div>
                     
                     <div class="form-group mt-1 mb-3 d-flex row ">
@@ -42,12 +43,12 @@
                         <div class="col-sm-8">
                             {{form.nome}}
                             
+                            {% if form.nome.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.nome.errors}}   
+                            </span>
+                            {% endif %}
                         </div>
-                        {% if form.nome.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{form.nome.errors}}   
-                        </div>
-                        {% endif %}
                     </div>
 
                     <div class="form-group mt-1 mb-3 d-flex row ">
@@ -58,12 +59,12 @@
                         <div class="col-sm-8">
                             {{form.sobrenome}}
                             
+                            {% if form.sobrenome.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.sobrenome.errors}}   
+                            </span>
+                            {% endif %}
                         </div>
-                        {% if form.sobrenome.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{form.sobrenome.errors}}   
-                        </div>
-                        {% endif %}
                     </div>
                     
 
@@ -74,12 +75,12 @@
                         </div>
                         <div class="col-sm-8">
                             {{form.email}}
+                            {% if form.email.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.email.errors}}   
+                            </span>
+                            {% endif %}
                         </div>
-                        {% if form.email.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{form.email.errors}}   
-                        </div>
-                        {% endif %}
                     </div>
 
                     <div class="form-group mt-3 mb-3 d-flex row ">
@@ -89,6 +90,11 @@
                         </div>
                         <div class="col-sm-8">
                             {{form.senha}}
+                            {% if form.senha.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.senha.errors}}   
+                            </span>
+                            {% endif %}
                             
                         </div>
 
@@ -101,13 +107,13 @@
                         </div>
                         <div class="col-sm-8">
                             {{form.confirmacao_senha}}
+                            {% if form.confirmacao_senha.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.confirmacao_senha.errors}}   
+                            </span>
+                            {% endif %}
                         </div>
                         
-                        {% if form.confirmacao_senha.errors %}
-                        <div class="alert alert-danger mt-3" role="alert">
-                            {{form.confirmacao_senha.errors}}   
-                        </div>
-                        {% endif %}
                     </div>
 
                     
@@ -118,13 +124,13 @@
                         </div>
                         <div class="col-sm-8">
                             {{form.tipo_usuario}}
+                            {% if form.tipo_usuario.errors %}
+                            <span style="color: red;" role="alert">
+                                {{form.tipo_usuario.errors}}   
+                            </span>
+                            {% endif %}
                         </div>
                         
-                        {% if form.tipo_usuario.errors %}
-                        <div class="alert alert-danger mt-3" role="alert">
-                            {{form.tipo_usuario.errors}}   
-                        </div>
-                        {% endif %}
                     </div>
                     
                     
