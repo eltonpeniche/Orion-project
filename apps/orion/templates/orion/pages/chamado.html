@@ -43,7 +43,6 @@
                     </thead>
                     <tbody>
 
-                        {% if ordens_servico  %}
                             {% for ordem in ordens_servico %}
                             
                                 <tr>
@@ -58,16 +57,14 @@
                                     <td align="center"><a href="{% url 'orion:editar_chamado' ordem.id %}" title="Editar"><i
                                         class="fa-solid fa-pen-to-square"></i></a></td>
                                 </tr>
+                            {% empty %}
+                                
+                                <tr>
+                                    <td colspan="8">Sem registros</td>
+                                </tr>
                                 
                             {% endfor %}
                             
-                        {% else %}    
-                            
-                            <tr>
-                                <td colspan="8">Sem registros</td>
-                            </tr>
-                        
-                        {% endif %}
                     </tbody>
                 </table>
                

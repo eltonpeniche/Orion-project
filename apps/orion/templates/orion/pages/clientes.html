@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
 
-                        {% if clientes  %}
+
                             {% for cliente in clientes %}
                             
                                 <tr>
@@ -57,17 +57,12 @@
                                         class="fa-solid fa-pen-to-square"></i></a></td>
                                 </tr>
                                 
+                            {% empty %}    
+                                    
+                                <tr>
+                                    <td colspan="8">Sem registros</td>
+                                </tr>
                             {% endfor %}
-
-
-                            
-                        {% else %}    
-                            
-                            <tr>
-                                <td colspan="8">Sem registros</td>
-                            </tr>
-                        
-                        {% endif %}
                     </tbody>
                 </table>
 

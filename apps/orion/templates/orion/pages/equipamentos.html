@@ -45,28 +45,25 @@
                     </thead>
                     <tbody>
 
-                        {% if equipamentos  %}
-                            {% for equipamento in equipamentos %}
+                        {% for equipamento in equipamentos %}
+                        
+                            <tr>
+                                <td>{{ equipamento.equipamento}} </td>
+                                <td>{{ equipamento.tipo_equipamento }}</td>
+                                <td>{{ equipamento.descricao }} </td>
+                                <td>{{ equipamento.numero_serie}} </td>
+                                <td>{{ equipamento.empresa}} </td>
+                                <td align="center"><a href="{% url 'orion:detalhar_equipamento' equipamento.id %}" title="Editar"><i
+                                    class="fa-solid fa-pen-to-square"></i></a></td>
+                            </tr>
                             
-                                <tr>
-                                    <td>{{ equipamento.equipamento}} </td>
-                                    <td>{{ equipamento.tipo_equipamento }}</td>
-                                    <td>{{ equipamento.descricao }} </td>
-                                    <td>{{ equipamento.numero_serie}} </td>
-                                    <td>{{ equipamento.empresa}} </td>
-                                    <td align="center"><a href="{% url 'orion:detalhar_equipamento' equipamento.id %}" title="Editar"><i
-                                        class="fa-solid fa-pen-to-square"></i></a></td>
-                                </tr>
-                                
-                            {% endfor %}
-                            
-                        {% else %}    
+                        {% empty %}    
                             
                             <tr>
                                 <td colspan="8">Sem registros</td>
                             </tr>
-                        
-                        {% endif %}
+                        {% endfor %}
+                            
                     </tbody>
                 </table>
             </div>
