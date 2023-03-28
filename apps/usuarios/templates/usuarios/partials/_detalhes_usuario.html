@@ -14,15 +14,16 @@
         <div class="col-sm-6">
             {{field}}
             <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% if field.errors %}
+                <span style="color: red;" role="alert">
+                    {{field.errors}}   
+                </span>
+            {% endif %}
         </div>
 
-        {% if field.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{field.errors}}   
-            </div>
-        {% endif %}
 
     </div>
+
             
 {% endfor %}
             
@@ -40,6 +41,11 @@
                 
             <div class="col-sm-6">
                 {{field}}
+                {% if field.errors %}
+                <span style="color: red;" role="alert">
+                    {{field.errors}}   
+                </span>
+                {% endif %}
             </div>
         </div>
         
