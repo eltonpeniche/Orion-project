@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from .base import OrionBaseFunctionalTest
 
 
-class OrionHomePageFunctionalTest(OrionBaseFunctionalTest):
+class OrionFunctionalTest(OrionBaseFunctionalTest):
 
     @pytest.mark.functional_test
     def test_the_test(self):

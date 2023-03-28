@@ -45,7 +45,7 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            login = form['login'].value().lower()
+            login = form['login'].value().lower().strip()
             senha = form['senha'].value()
             usuario = auth.authenticate(
                 request,
@@ -59,9 +59,9 @@ def login(request):
                     return redirect(next)
                 return redirect('orion:lista_home')
 
-            else:
-                messages.error(request, "Login ou Senha incorretos")
-                return redirect('usuarios:login')
+            
+        messages.error(request, "Login ou Senha incorretos")
+        return render(request, 'usuarios/pages/login.html', {'form': form})
     else:
         formLogin = LoginForm()
         contexto = {
@@ -143,8 +143,6 @@ def deletar_usuario(request, id):
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def dados_usuario(request):
-    if not request.user.is_authenticated:
-        return redirect('usuarios:login')
     usuario = get_object_or_404(Usuario, user_id=request.user.id)
     
     if request.method == 'POST':
@@ -165,7 +163,6 @@ def dados_usuario(request):
                     'usuarioForm': usuarioForm  })
     else:
         userForm = UserUpdateForm(instance = request.user)
-       
         usuarioForm = UsuarioForm(instance = usuario)
         
         if not isUserAdmin(request.user):

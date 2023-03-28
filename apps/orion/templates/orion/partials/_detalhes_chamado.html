@@ -46,6 +46,12 @@
                     </div>
                     <div class="col-sm-8">
                         {{ordemForm.empresa|add_class:'form-control form-select search-ordem'}}
+                        
+                        {% if ordemForm.empresa.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.empresa.errors}}   
+                        </span>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -58,6 +64,11 @@
                     </div>
                     <div class="col-sm-6">
                         {{ordemForm.equipamento|add_class:'form-control form-select'}}
+                        {% if ordemForm.equipamento.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.equipamento.errors}}   
+                        </span>
+                        {% endif %}
 
                     </div>
 
@@ -70,6 +81,11 @@
                     </div>
                     <div class="col-sm-6">
                         {{ordemForm.status|add_class:'form-control form-select'}}
+                        {% if ordemForm.status.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.status.errors}}   
+                        </span>
+                        {% endif %}
 
                     </div>
 
@@ -83,6 +99,12 @@
                     <div class="col-sm-6">
                         {{ordemForm.numero_chamado|add_class:'form-control'|attr:'readonly'}}
 
+                        {% if ordemForm.numero_chamado.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.numero_chamado.errors}}   
+                        </span>
+                        {% endif %}
+
                     </div>
 
                 </div>
@@ -95,6 +117,12 @@
                     <div class="col-sm-6">
                         {{ordemForm.tipo_chamado|add_class:'form-control form-select'}}
 
+                        {% if ordemForm.tipo_chamado.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.tipo_chamado.errors}}   
+                        </span>
+                        {% endif %}
+
                     </div>
 
                 </div>
@@ -106,7 +134,12 @@
                     </div>
                     <div class="col-sm-8">
                         {{ordemForm.descricao_chamado|add_class:'form-control'}}
-
+                        
+                        {% if ordemForm.descricao_chamado.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.descricao_chamado.errors}}   
+                        </span>
+                        {% endif %}
                     </div>
 
                 </div>
@@ -136,6 +169,12 @@
                     </div>
                     <div class="col-sm-8">
                         {{ordemForm.descricao_servico|add_class:'form-control'}}
+
+                        {% if ordemForm.descricao_servico.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.descricao_servico.errors}}   
+                        </span>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -326,6 +365,12 @@
                     </div>
                     <div class="col-sm-8">
                         {{ordemForm.contato|add_class:'form-control form-select'}}
+                        
+                        {% if ordemForm.contato.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.contato.errors}}   
+                        </span>
+                        {% endif %}
                 
                     </div>
                 </div>
@@ -337,6 +382,12 @@
                     </div>
                     <div class="col-sm-8">
                         {{ordemForm.observacoes_do_cliente|add_class:'form-control'}}
+
+                        {% if ordemForm.observacoes_do_cliente.errors %}
+                        <span style="color: red;" role="alert">
+                            {{ordemForm.observacoes_do_cliente.errors}}   
+                        </span>
+                        {% endif %}
                 
                     </div>
                 </div>
