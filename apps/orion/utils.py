@@ -1,12 +1,22 @@
 import calendar
+import os
 import string
 from datetime import date, datetime
 
 import convertapi
+from django.core.paginator import Paginator
 from openpyxl import load_workbook
 from openpyxl.styles import Border, PatternFill, Side
 
 from apps.orion.models import CargaHoraria
+
+PER_PAGE = os.environ.get('PER_PAGE', 10)
+
+def paginacao(request, object_list):
+    paginator = Paginator(object_list, PER_PAGE) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    return paginator.get_page(page_number)
+
 
 
 #verifica se dois horarios de inicio e fim se sobrepoe
@@ -25,6 +35,7 @@ def converter_data(data):
         #raise Exception("Data inserida Invalida")
     
     return f"{ano}-{mes}-{dia}"
+
  
 
 MODELO_PONTO = "media/ponto_modelo.xlsx"

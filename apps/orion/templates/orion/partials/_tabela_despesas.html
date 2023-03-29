@@ -39,7 +39,7 @@
             let varTipo = $('#id_despesa-'+i+'-tipo :selected').text();
             let varData = formatarData(document.getElementById("id_despesa-"+i+"-data").value);
             let varValor = document.getElementById("id_despesa-"+i+"-valor").value;
-            let varTecnico = $('#id_carga_horaria-'+i+'-tecnico :selected').text();
+            let varTecnico = $('#id_despesa-'+i+'-tecnico :selected').text();
 
             let novaLinha = document.createElement("tr");
             novaLinha.setAttribute("tr-despesa-", i );

@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 
 from django import forms
+from django.forms.models import inlineformset_factory
 from validate_docbr import CNPJ
 
 from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
@@ -63,7 +64,6 @@ class EmpresaForm(forms.ModelForm):
         valida_cnpj = CNPJ()
         cnpj = self.cleaned_data.get('cnpj')
         cnpj = re.sub(r"\D", "", cnpj)
-        print(cnpj, len(cnpj))
         if valida_cnpj.validate(cnpj):
             return cnpj
         raise forms.ValidationError("CNPJ informado não é válido")
@@ -190,14 +190,18 @@ class CargaHorariaForm(forms.ModelForm):
         
         #carregando todos os horarios relacionados com a instancia de ordem_servico
         lista_carga_horaria = CargaHoraria.objects.filter(tecnico = tecnico.id ).filter(data=data)
-        print(lista_carga_horaria)
         for ch in lista_carga_horaria:
             #print (horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino), ch.tecnico.id, self.user.id, (ch.id != self.instance.pk))
             #print("1 - ", ch.id , self.instance.pk)
             if ch.data == data :
                 if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino) and (ch.tecnico.id == tecnico.id) and (ch.id != self.instance.pk):
-                    raise forms.ValidationError({'hora_inicio':"O Horário já foi preenchido anteriomente.."})
+                    raise forms.ValidationError({'hora_inicio':f" O horário {hora_inicio.strftime('%H:%M')} - {hora_termino.strftime('%H:%M')} do dia {data.strftime('%d/%m/%Y')} já foi preenchido anteriomente.."})
 
+
+def form_model_factory(requestPOST, parent_model, model, form, instance=None, queryset=None ):
+    
+    form_model = inlineformset_factory(parent_model, model, form, extra=0 )
+    return form_model(requestPOST or None, instance=instance, queryset = queryset )
 
 
 

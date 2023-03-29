@@ -22,16 +22,9 @@
             <!-- InstanceBeginEditable name="conteudo" -->
             
             {% if home %}
-                <h4> {{ titulo }} </h4>
-                
-                {% if user.is_authenticated %}
-                <h4> Olá, {{ user.get_username|title }} </h4>
-                {% endif %}
+                <h4> {{ home }} </h4>
             {% endif %}      
 
-                
-                
-        
             {% block content %}
             {% endblock %}
         
