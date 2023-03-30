@@ -11,6 +11,7 @@ from openpyxl.styles import Border, PatternFill, Side
 from apps.orion.models import CargaHoraria
 
 PER_PAGE = os.environ.get('PER_PAGE', 10)
+CONVERTEAPI_SECRET_KEY = os.environ.get('CONVERTEAPI_SECRET_KEY')
 
 def paginacao(request, object_list):
     paginator = Paginator(object_list, PER_PAGE) # Show 25 contacts per page.
@@ -91,8 +92,7 @@ def gerar_relatorio(funcionario, mes_referencia):
     
     mes_trabalhado = date(int(ano), int(mes), 1)
 
-    query_carga_horaria = CargaHoraria.objects.select_related('tecnico').filter(data__month=mes, data__year=ano).filter(tecnico=funcionario.id).order_by('data')
-    
+    query_carga_horaria = CargaHoraria.objects.select_related('tecnico').filter(data__month=mes, data__year=ano).filter(tecnico=funcionario.user_id).order_by('data')
     
     cont = 1
     for i in range(LINHA_INICIAL, LINHA_INICIAL + num_dias_mes(mes_referencia)):
@@ -131,7 +131,7 @@ def gerar_relatorio(funcionario, mes_referencia):
 
 
     #Code snippet is using the ConvertAPI Python Client: https://github.com/ConvertAPI/convertapi-python
-    convertapi.api_secret = 'jhCYpFuWz63F2hae'
+    convertapi.api_secret = CONVERTEAPI_SECRET_KEY
     convertapi.convert('pdf', {
         'File': PONTO
     }, from_format = 'xlsx').save_files(CAMINHO)

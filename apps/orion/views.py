@@ -255,8 +255,9 @@ def fechar_chamado(request, id):
 def equipamentos(request):
 
     equipamentos = Equipamento.objects.all().order_by('-id')
+    equipamentos_page= utils.paginacao(request, equipamentos)
     contexto = {
-        'equipamentos': equipamentos,
+        'equipamentos': equipamentos_page,
     }
     return render(request, 'orion/pages/equipamentos.html', contexto)
 
@@ -311,6 +312,7 @@ def cadastrar_equipamentos(request):
             return render(request, 'orion/pages/detalhes_equipamentos.html', contexto)
 
 
+@login_required
 def equipamentos_select2(request, id):
     dados = Equipamento.objects.filter(empresa=id)
     dados_json = [{'id': d.id, 'nome': d.equipamento} for d in dados]
@@ -329,10 +331,7 @@ def deletar_equipamento(request, id):
 def clientes(request):
 
     clientes = Empresa.objects.all().order_by('-id')
-    paginator = Paginator(clientes, 25) # Show 25 contacts per page.
-    page_number = request.GET.get('page')
-    clientes_page = paginator.get_page(page_number)
-
+    clientes_page = utils.paginacao(request, clientes)
     contexto = {
         'clientes': clientes_page,
         'titulo': 'Clientes'
@@ -429,6 +428,7 @@ def deletar_cliente(request):
         messages.success(request, f"Cliente {nome} deletado com sucesso")
     return redirect('orion:clientes')
 
+@login_required
 def assinatura_popup(request):
 
     if request.method == 'GET':
@@ -439,19 +439,19 @@ def assinatura_popup(request):
         return render(request, 'orion/partials/_assinatura-popup.html', contexto)
             
 
+@login_required
 def marcar_notificacao_como_lida(request):
     if request.POST:
         notificacao_id = request.POST.get('id-notificacao')
         if Notification.objects.filter(id=notificacao_id).exists():
             notificacao = Notification.objects.get(id = notificacao_id )
             notificacao.mark_as_read()
-            print(notificacao_id, notificacao)
         notificacoes = get_notificacoes_nao_lidas(request.user) 
-        my_json = serializers.serialize('json', notificacoes )
+        notificacoes_json = serializers.serialize('json', notificacoes )
         numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
-    return JsonResponse({'count': numero_notificacoes_nao_lidas, 'notificacoes': my_json})
+    return JsonResponse({'count': numero_notificacoes_nao_lidas, 'notificacoes': notificacoes_json})
 
-
+@login_required
 def download_file(request):
     file_path = 'media/ponto.pdf'
     with open(file_path, 'rb') as f:
@@ -460,6 +460,7 @@ def download_file(request):
     response['Content-Disposition'] = 'attachment; filename="meu_ponto.pdf"'
     return response
 
+@login_required
 def relatorio_ponto(request):
     usuario = Usuario.objects.filter(user_id = request.user.id)
     
@@ -481,7 +482,6 @@ def relatorio_ponto(request):
         funcionario = get_object_or_404(Usuario,id = funcionario_id)
         mes_referencia = request.POST['mes_referencia']
         utils.gerar_relatorio(funcionario, mes_referencia)
-        print(funcionario.user.username, mes_referencia)
         return redirect('orion:download_file')
 
 
