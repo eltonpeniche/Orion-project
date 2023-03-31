@@ -5,7 +5,6 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.http import Http404, HttpResponse, JsonResponse
@@ -21,10 +20,9 @@ from apps.orion.forms import (CargaHorariaForm, DespesaForm, EmpresaForm,
                               SignatureForm, form_model_factory)
 from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
                                Equipamento, Ordem_Servico, SignatureModel)
+from apps.orion.notifications import (get_notificacoes_nao_lidas,
+                                      get_numero_notificacoes_nao_lidas)
 from apps.usuarios.models import Usuario
-
-from .notifications import (get_notificacoes_nao_lidas,
-                            get_numero_notificacoes_nao_lidas)
 
 PER_PAGE = os.environ.get('PER_PAGE', 10)
 
@@ -139,7 +137,7 @@ def novo_chamado(request):
         if Ordem_Servico.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
             messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
             request.session['OrdemServico_form_data'] = None
-            return redirect('orion:lista_chamados')
+            return redirect(reverse('orion:lista_chamados'))
 
         ordem_servico.save()
         

@@ -50,11 +50,11 @@
                 <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar" name = 'q' value="{{termo_pesquisado}}" required>
                 <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
-   
+
             <ul class="nav navbar-nav navbar-right">   
                 
                 <!-- notificações -->
-                <li class="nav-item dropstart mt-2">
+                <li class="nav-item dropstart mt-2 me-2">
                     <button id="notificacao-btn" class="notification btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-regular fa-bell"></i>
                         
@@ -73,7 +73,7 @@
                     
                 </li>
             
-                <li class="nav-item dropdown ms-2 mt-2">
+                <li class="nav-item dropdown mt-2">
                     
                     {% if user.is_authenticated %}
                     <button class="btn btn-outline-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -96,7 +96,6 @@
                 
         
             </ul>
-
         </div>
     </div>
 </nav>
