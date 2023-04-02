@@ -23,7 +23,7 @@ def isUserAdmin(user):
 
 @login_required
 def lista_usuarios(request):
-    usuarios = Usuario.objects.all()
+    usuarios = Usuario.objects.select_related('user').all()
     contexto = {
         'forms': usuarios,
         'titulo': 'Lista de Usuários'

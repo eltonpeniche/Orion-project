@@ -47,8 +47,8 @@
                             
                                 <tr>
                                     <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
-                                    <td>{{ordem.equipamento.empresa.nome}} </td>
-                                    <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento.equipamento}}</td>
+                                    <td>{{ordem.empresa}} </td>
+                                    <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento}}</td>
                                     <td> {{ ordem.get_tipo_chamado_display }} </td>
                                     <td>{{ordem.criado_em|date:"d/m/Y"}}</td>
                                     <td>{{ ordem.get_status_display }} - {{ ordem.get_status_chamado_display }}

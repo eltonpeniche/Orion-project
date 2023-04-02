@@ -36,7 +36,7 @@ def lista_home(request):
         #notificacoes_nao_lidas = get_notificacoes_nao_lidas(request.user)
         #numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
         #----------------------------
-        ordens_servico = Ordem_Servico.objects.filter(
+        ordens_servico = Ordem_Servico.objects.select_related('empresa', 'equipamento').filter(
             aberto_por=usuario, status_chamado='A').order_by('-id')
         
         ordens_servico_page = utils.paginacao(request, ordens_servico)
@@ -50,7 +50,7 @@ def lista_home(request):
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def lista_chamados(request):
     if request.method == "GET":
-        ordens_servico = Ordem_Servico.objects.all().filter(
+        ordens_servico = Ordem_Servico.objects.select_related('empresa', 'equipamento').all().filter(
             status_chamado='A').order_by('-id')
 
         ordens_servico_page = utils.paginacao(request, ordens_servico )
@@ -252,7 +252,7 @@ def fechar_chamado(request, id):
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def equipamentos(request):
 
-    equipamentos = Equipamento.objects.all().order_by('-id')
+    equipamentos = Equipamento.objects.select_related('empresa').all().order_by('-id')
     equipamentos_page= utils.paginacao(request, equipamentos)
     contexto = {
         'equipamentos': equipamentos_page,
@@ -328,7 +328,7 @@ def deletar_equipamento(request, id):
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def clientes(request):
 
-    clientes = Empresa.objects.all().order_by('-id')
+    clientes = Empresa.objects.select_related('endereco').all().order_by('-id')
     clientes_page = utils.paginacao(request, clientes)
     contexto = {
         'clientes': clientes_page,
@@ -460,12 +460,12 @@ def download_file(request):
 
 @login_required
 def relatorio_ponto(request):
-    usuario = Usuario.objects.filter(user_id = request.user.id)
+    usuario = Usuario.objects.select_related('user').filter(user_id = request.user.id)
     
     if request.method == 'GET':
         print(usuario)
         if usuario.first().tipo == 'A':
-            usuarioslist = Usuario.objects.all()
+            usuarioslist = Usuario.objects.select_related('user').all()
         else:
             usuarioslist = usuario
         

@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     #apps de terceiros
+    'debug_toolbar',
     'widget_tweaks',
     #'smart_selects',
     'tempus_dominus',
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -167,3 +168,6 @@ JSIGNATURE_JQUERY = 'admin'
 JSIGNATURE_WIDTH = 800
 JSIGNATURE_HEIGHT = 300
 JSIGNATURE_RESET_BUTTON = False
+
+#Debug Toolbar 
+INTERNAL_IPS = ["127.0.0.1",]
