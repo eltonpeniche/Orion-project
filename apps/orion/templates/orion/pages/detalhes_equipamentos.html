@@ -13,28 +13,9 @@
 
     <form action="" id="form-equipamento" method="post">
         {% csrf_token %}
-        {% for field in form.visible_fields %}
-
-            <div class="form-group mt-3 mb-3 d-flex row ">
-                <div class="label-class col-md-2 text-start text-md-end">
-                    <label class="col-form-label" for="{{ field.id_for_label}}">
-                        {{field.label}}</label>
-                </div>
-                <div class="col-md-8">
-                    
-                    {{field|add_class:'form-control'}}
-
-                    {% if field.errors %}
-                    <span style="color: red;" role="alert">
-                        {{field.errors}}   
-                    </span>
-                    {% endif %}
-                        
-
-                </div>
-            </div>
-
-        {% endfor %}
+        
+        {% include 'orion/partials/_form.html' with form=form %}
+        
     </form>    
     
     <div class=" d-flex justify-content-center m-2">

@@ -15,32 +15,13 @@
 
     <form action="" id="form-cliente" method="post">
         {% csrf_token %}
-        {% for field in form.visible_fields %}
 
-            <div class="form-group mt-3 mb-3 d-flex row ">
-                <div class="col-sm-2 label-class text-start text-sm-end">
-                    <label class="col-form-label " for="{{ field.id_for_label}}">
-                        {{field.label}}</label>
-                </div>
-                <div class="col-sm-8">
-                    
-                    {{field|add_class:'form-control'}}
-
-                    {% if field.errors %}
-                    <span style="color: red;" role="alert">
-                        {{field.errors}}   
-                    </span>
-                    {% endif %}
-                </div>
-
-            </div>
-        {% endfor %}
+        {% include 'orion/partials/_form.html' with form=form %}
         
         <div id="targetEndereco">
         {% if formEndereco.instance  %}
-            {% for field in formEndereco.visible_fields %}
-                {% include 'orion/partials/_endereco_form.html' %}    
-            {% endfor %}
+            {% include 'orion/partials/_form.html' with form=formEndereco %}
+ 
         {% endif %}    
         </div>
     

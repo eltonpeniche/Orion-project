@@ -12,9 +12,7 @@
 
             <div id="endereco-modal">
                 
-                {% for field in formEndereco.visible_fields %}
-                    {% include 'orion/partials/_endereco_form.html' %} 
-                {% endfor %}
+                {% include 'orion/partials/_form.html' with form=formEndereco %}
             </div>
         </div>
         <div class="modal-footer">
