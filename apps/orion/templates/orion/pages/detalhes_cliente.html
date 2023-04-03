@@ -16,11 +16,11 @@
     <form action="" id="form-cliente" method="post">
         {% csrf_token %}
 
-        {% include 'orion/partials/_form.html' with form=form %}
+        {% include 'globals/partials/_form.html' with form=form %}
         
         <div id="targetEndereco">
         {% if formEndereco.instance  %}
-            {% include 'orion/partials/_form.html' with form=formEndereco %}
+            {% include 'globals/partials/_form.html' with form=formEndereco %}
  
         {% endif %}    
         </div>

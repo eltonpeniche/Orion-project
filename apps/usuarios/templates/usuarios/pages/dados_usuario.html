@@ -16,7 +16,7 @@
         {% csrf_token %}
         
         {% if form %}
-            {% include 'usuarios/partials/_detalhes_usuario.html' %}
+            {% include 'globals/partials/_form.html' with form=form %}
         {% endif %}
 
         <div class="col d-flex justify-content-center">

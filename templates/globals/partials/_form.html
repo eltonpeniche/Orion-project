@@ -10,7 +10,8 @@
         <div class="d-inline-flex flex-row col-sm-8">
             
             {{field|add_class:'form-control'}}
-
+            
+            
             {% if field.name == 'cep' %}
                 <button id='buscaCep' name="buscaCepModal" class='btn btn-outline-secondary flex-shrink-0 pe-1 ms-1'>Buscar <i class="fa-solid fa-magnifying-glass"></i> </button>
             {% endif %}
@@ -21,6 +22,6 @@
             </span>
             {% endif %}
         </div>
-
+        <small class="form-text text-muted d-flex justify-content-center">{{ field.help_text }}</small>
     </div>
 {% endfor %}
