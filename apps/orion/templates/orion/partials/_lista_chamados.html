@@ -1,0 +1,47 @@
+<table class="table-sortable table table-bordered table-striped">
+    <colgroup>
+        <col class="col-xs-3">
+        <col class="col-xs-2">
+        <col class="col-xs-2">
+        <col class="col-xs-1">
+        <col class="col-xs-1">
+        <col class="col-xs-1">
+        <col class="col-xs-1">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Chamado</th>
+            <th>Cliente</th>
+            <th>Equipamento</th>
+            <th>Tipo</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+
+            {% for ordem in ordens_servico %}
+            
+                <tr>
+                    <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
+                    <td>{{ordem.empresa}} </td>
+                    <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento}}</td>
+                    <td> {{ ordem.get_tipo_chamado_display }} </td>
+                    <td>{{ordem.criado_em|date:"d/m/Y"}}</td>
+                    <td>{{ ordem.get_status_display }} - {{ ordem.get_status_chamado_display }}
+
+                    </td>
+                    <td align="center"><a href="{% url 'orion:editar_chamado' ordem.id %}" title="Editar"><i
+                        class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+            {% empty %}
+                
+                <tr>
+                    <td colspan="8">Sem registros</td>
+                </tr>
+                
+            {% endfor %}
+            
+    </tbody>
+</table>

@@ -20,53 +20,7 @@
 
             <div class="table-responsive">
 
-                <table class="table-sortable table table-bordered table-striped">
-                    <colgroup>
-                        <col class="col-xs-3">
-                        <col class="col-xs-2">
-                        <col class="col-xs-2">
-                        <col class="col-xs-1">
-                        <col class="col-xs-1">
-                        <col class="col-xs-1">
-                        <col class="col-xs-1">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Chamado</th>
-                            <th>Cliente</th>
-                            <th>Equipamento</th>
-                            <th>Tipo</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                            {% for ordem in ordens_servico %}
-                            
-                                <tr>
-                                    <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
-                                    <td>{{ordem.empresa}} </td>
-                                    <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento}}</td>
-                                    <td> {{ ordem.get_tipo_chamado_display }} </td>
-                                    <td>{{ordem.criado_em|date:"d/m/Y"}}</td>
-                                    <td>{{ ordem.get_status_display }} - {{ ordem.get_status_chamado_display }}
-
-                                    </td>
-                                    <td align="center"><a href="{% url 'orion:editar_chamado' ordem.id %}" title="Editar"><i
-                                        class="fa-solid fa-pen-to-square"></i></a></td>
-                                </tr>
-                            {% empty %}
-                                
-                                <tr>
-                                    <td colspan="8">Sem registros</td>
-                                </tr>
-                                
-                            {% endfor %}
-                            
-                    </tbody>
-                </table>
+                {% include 'orion/partials/_lista_chamados.html' %}   
                
                 {% include 'orion/partials/_paginacao.html' with form=ordens_servico %}
                 
@@ -75,46 +29,4 @@
     </div>
 </div>
 
-<script>
-
-    //ordena tabela
-    function sortTableByColumn(table, column, asc = true) {
-        const dirModifier = asc ? 1 : -1;
-        const tBody = table.tBodies[0];
-        const rows = Array.from(tBody.querySelectorAll("tr"));
-    
-        // Sort each row
-        const sortedRows = rows.sort((a, b) => {
-            const aColText = a.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
-            const bColText = b.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
-    
-            return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
-        });
-    
-        // Remove all existing TRs from the table
-        while (tBody.firstChild) {
-            tBody.removeChild(tBody.firstChild);
-        }
-    
-        // Re-add the newly sorted rows
-        tBody.append(...sortedRows);
-    
-        // Remember how the column is currently sorted
-        table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-        table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
-        table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
-    }
-    
-    document.querySelectorAll(".table-sortable th").forEach(headerCell => {
-        headerCell.addEventListener("click", () => {
-            const tableElement = headerCell.parentElement.parentElement.parentElement;
-            const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
-            const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-    
-            sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
-        });
-    });
-    
-
-</script>
 {% endblock %}
