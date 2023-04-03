@@ -68,7 +68,7 @@ def busca_chamados(request):
         return redirect(request.META.get('HTTP_REFERER'))
     
     
-    ordens_servico = Ordem_Servico.objects.filter( 
+    ordens_servico = Ordem_Servico.objects.select_related('empresa', 'equipamento').filter( 
                         Q(numero_chamado__icontains = termo_pesquisado) |
                         Q(empresa__nome__icontains = termo_pesquisado) |
                         Q(equipamento__equipamento__icontains = termo_pesquisado)|
@@ -83,12 +83,17 @@ def busca_chamados(request):
                     Q(telefone__icontains = termo_pesquisado)|
                     Q(email__icontains = termo_pesquisado)
                     ).order_by('-id')
+    
+    ordens_servico_page =  utils.paginacao(request, ordens_servico)
+
+    clientes_page = utils.paginacao(request, clientes) 
+
     contexto = {
         'termo_pesquisado': termo_pesquisado,
-        'ordens_servico': ordens_servico,
+        'ordens_servico': ordens_servico_page,
         'titulo': f'Pesquisa por "{termo_pesquisado}" em chamados...',
         'titulo_clientes' : f'Pesquisa por "{termo_pesquisado}" em clientes...',
-        'clientes': clientes
+        'clientes': clientes_page
     }
     return render(request, 'orion/pages/busca.html', contexto)
 

@@ -67,42 +67,7 @@
                     </tbody>
                 </table>
 
-                <nav role="navigation" aria-label="Pagination">
-                    <ul class="pagination justify-content-center">
-                        {% if equipamentos.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ equipamentos.previous_page_number }}"><span aria-hidden="true">&laquo;</span></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-                            {% if equipamentos.previous_page_number != 1 %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ equipamentos.previous_page_number }}">{{ equipamentos.previous_page_number }}</a>
-                                </li>
-                            {% endif %}
-                        {% endif %}
-                        
-                        
-                        <li class="page-item active"><a class="page-link" href="#">{{ equipamentos.number }}</a></li>
-                    
-                        {% if equipamentos.has_next %}
-                            {% if equipamentos.next_page_number != equipamentos.paginator.num_pages %}
-                                <li class="page-item"><a class="page-link" href="?page={{ equipamentos.next_page_number }}">{{ equipamentos.next_page_number }}</a></li>
-                            {% endif %}
-                        
-                            <li class="page-item disabled">
-                                <a class="page-link">...</a>
-                            </li>
-    
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ equipamentos.paginator.num_pages }}">{{ equipamentos.paginator.num_pages }}</a>
-                            </li>
-                                
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ equipamentos.next_page_number }}"><span aria-hidden="true">&raquo;</span></a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                {% include 'orion/partials/_paginacao.html' with form=equipamentos %}
 
             </div>
         </div>
