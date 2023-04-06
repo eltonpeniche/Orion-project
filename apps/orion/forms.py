@@ -5,8 +5,8 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from validate_docbr import CNPJ
 
-from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
-                               Equipamento, Ordem_Servico, SignatureModel)
+from apps.orion.models import (CargaHoraria, Chamado, Despesa, Empresa,
+                               Endereco, Equipamento, SignatureModel)
 from apps.orion.utils import horarios_se_sobrepoe
 
 
@@ -25,7 +25,7 @@ class OrdemServicoForm(forms.ModelForm):
         self.fields['empresa'].widget.attrs.update({'class':'select2' })
         self.fields['equipamento'].widget.attrs.update({'class':'select2' })
     class Meta:
-        model = Ordem_Servico
+        model = Chamado
         exclude = ['status_chamado', 'aberto_por']
         # fields = '__all__'#['status', 'tipo_chamado']
         labels = {

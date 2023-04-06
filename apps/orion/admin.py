@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
-                               Equipamento, Ordem_Servico)
+from apps.orion.models import (CargaHoraria, Chamado, Despesa, Empresa,
+                               Endereco, Equipamento)
 
 # Register your models here.
 
@@ -30,7 +30,7 @@ class DespesaInline(admin.StackedInline):
     model = Despesa
     extra = 0
 
-@admin.register(Ordem_Servico)
+@admin.register(Chamado)
 class Ordem_ServicoAdmin(admin.ModelAdmin):
     inlines = [CargaHorariaInline, DespesaInline]
     list_display = ('id', 'numero_chamado', 'descricao_chamado',

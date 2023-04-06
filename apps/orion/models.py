@@ -3,6 +3,7 @@ from datetime import datetime, time
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from jsignature.fields import JSignatureField
 
@@ -60,15 +61,14 @@ class TIPO_STATUS(models.TextChoices):
     OUTROS = 'O', _('Outros')
 
 
-class Ordem_Servico(models.Model):
-    #    STATUS = (('P', 'PARADO'), ('R', 'RESTRITO'),
-    #              ('N', 'NORMAL'), ('O', 'OUTROS'))
+class Chamado(models.Model):
     TIPO_DE_CHAMADO = (('C', 'Contrato'), ('A', 'Avulso'))
+    
     STATUS_CHAMADO = (('A', 'Aberto'), ('F', 'Fechado'))
-
+    
     status = models.CharField(
         max_length=1, choices=TIPO_STATUS.choices, blank=False, null=False, default='P')
-
+    
     tipo_chamado = models.CharField(
         max_length=1, choices=TIPO_DE_CHAMADO, blank=False, null=False, default='C')
 
@@ -78,11 +78,7 @@ class Ordem_Servico(models.Model):
     numero_chamado = models.CharField(max_length=14)  # YYYY DD MM HHHH SS
     descricao_chamado = models.CharField(max_length=150, blank=False)
     descricao_servico = models.TextField(null=True, blank=True)
-    # horas_atendimento
-    # despesas
     observacoes_do_cliente = models.TextField(blank=True, null = True)
-    
-    
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 
@@ -101,6 +97,9 @@ class Ordem_Servico(models.Model):
     def __str__(self):
         return f'Status = {self.status}, Tipo de chamado - {self.tipo_chamado}, - Criado em {self.criado_em}'
 
+    def get_absolute_url(self):
+        return reverse("orion:editar_chamado", args=(self.pk,))
+    
 
 class CargaHoraria(models.Model):
     data = models.DateField()
@@ -112,7 +111,7 @@ class CargaHoraria(models.Model):
     tecnico = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='carga_horaria')
 
     ordem_servico = models.ForeignKey(
-        Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='carga_horaria')
+        Chamado, on_delete=models.SET_NULL, null=True, related_name='carga_horaria')
 
     def __str__(self):
         return f'dia = {self.data} -Entrada =  {self.hora_inicio} -Saida =  {self.hora_termino}'
@@ -154,7 +153,7 @@ class Despesa(models.Model):
     data = models.DateField()
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     tecnico = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='despesa')
-    ordem_servico = models.ForeignKey(Ordem_Servico, on_delete=models.SET_NULL, null=True, related_name='despesa')
+    ordem_servico = models.ForeignKey(Chamado, on_delete=models.SET_NULL, null=True, related_name='despesa')
 
     def __str__(self):
         return f'tipo = {self.tipo} -data =  {self.data} - valor =  {self.valor}'

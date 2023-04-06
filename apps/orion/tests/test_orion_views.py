@@ -13,11 +13,11 @@ class OrionViewsTest(TestCase):
      
      def test_orion_lista_home_view_function_is_correct(self):
           view =  resolve(reverse('orion:lista_home'))  
-          self.assertIs(view.func, views.lista_home)
+          self.assertIs(view.func.view_class, views.ChamadoHomeList)
 
      def test_orion_lista_chamados_view_function_is_correct(self):
           view =  resolve(reverse('orion:lista_chamados'))  
-          self.assertIs(view.func, views.lista_chamados)
+          self.assertIs(view.func.view_class, views.ChamadoList)
 
      def test_orion_novo_chamado_view_view_function_is_correct(self):
           view = resolve(reverse('orion:novo_chamado_view', kwargs = { 'id':1 }))  
@@ -37,7 +37,7 @@ class OrionViewsTest(TestCase):
 
      def test_orion_chamados_fechados_view_function_is_correct(self):
           view = resolve(reverse('orion:chamados_fechados'))  
-          self.assertIs(view.func, views.chamados_fechados)
+          self.assertIs(view.func.view_class, views.ChamadosFechadosList)
 
 
      def test_orion_fechar_chamado_view_function_is_correct(self):

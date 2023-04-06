@@ -9,7 +9,9 @@ class OrionFunctionalTest(OrionBaseFunctionalTest):
 
     @pytest.mark.functional_test
     def test_the_test(self):
+        print(self.live_server_url)
         self.browser.get(self.live_server_url)
+        self.sleep(10)
         body = self.browser.find_element(By.TAG_NAME,  'body')
         self.assertIn('Entre com o seu Login e Senha', body.text)
     

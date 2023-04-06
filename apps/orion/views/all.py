@@ -18,8 +18,8 @@ from apps.orion import utils
 from apps.orion.forms import (CargaHorariaForm, DespesaForm, EmpresaForm,
                               EnderecoForm, EquipamentosForm, OrdemServicoForm,
                               SignatureForm, form_model_factory)
-from apps.orion.models import (CargaHoraria, Despesa, Empresa, Endereco,
-                               Equipamento, Ordem_Servico, SignatureModel)
+from apps.orion.models import (CargaHoraria, Chamado, Despesa, Empresa,
+                               Endereco, Equipamento, SignatureModel)
 from apps.orion.notifications import (get_notificacoes_nao_lidas,
                                       get_numero_notificacoes_nao_lidas)
 from apps.usuarios.models import Usuario
@@ -29,38 +29,6 @@ PER_PAGE = os.environ.get('PER_PAGE', 10)
 
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
-def lista_home(request):
-    if request.method == "GET":
-        usuario = get_object_or_404(Usuario, user_id=request.user.id)
-        #---------------------------
-        #notificacoes_nao_lidas = get_notificacoes_nao_lidas(request.user)
-        #numero_notificacoes_nao_lidas = get_numero_notificacoes_nao_lidas(request.user)
-        #----------------------------
-        ordens_servico = Ordem_Servico.objects.select_related('empresa', 'equipamento').filter(
-            aberto_por=usuario, status_chamado='A').order_by('-id')
-        
-        ordens_servico_page = utils.paginacao(request, ordens_servico)
-        
-        contexto = {
-            'ordens_servico': ordens_servico_page,
-            'home': f'Olá, {request.user.username.title()}'
-        }
-        return render(request, 'orion/pages/chamado.html', contexto)
-
-@login_required(login_url="usuarios:login", redirect_field_name="next")
-def lista_chamados(request):
-    if request.method == "GET":
-        ordens_servico = Ordem_Servico.objects.select_related('empresa', 'equipamento').all().filter(
-            status_chamado='A').order_by('-id')
-
-        ordens_servico_page = utils.paginacao(request, ordens_servico )
-        contexto = {
-            'ordens_servico': ordens_servico_page,
-            'titulo': 'Chamados abertos'
-        }
-        return render(request, 'orion/pages/chamado.html', contexto)
-
-@login_required(login_url="usuarios:login", redirect_field_name="next")
 def busca_chamados(request):
     termo_pesquisado = request.GET.get('q', '').strip()
     if not termo_pesquisado:
@@ -68,7 +36,7 @@ def busca_chamados(request):
         return redirect(request.META.get('HTTP_REFERER'))
     
     
-    ordens_servico = Ordem_Servico.objects.select_related('empresa', 'equipamento').filter( 
+    ordens_servico = Chamado.objects.select_related('empresa', 'equipamento').filter( 
                         Q(numero_chamado__icontains = termo_pesquisado) |
                         Q(empresa__nome__icontains = termo_pesquisado) |
                         Q(equipamento__equipamento__icontains = termo_pesquisado)|
@@ -107,10 +75,10 @@ def novo_chamado_view(request, id):
     #usando dados de formulario salvos na sessão quando disponiveis
     ordemServicoForm = OrdemServicoForm(OrdemServico_form_data)
     #carga horaria form
-    formCargaHoraria = form_model_factory(OrdemServico_form_data, Ordem_Servico, CargaHoraria, CargaHorariaForm )
+    formCargaHoraria = form_model_factory(OrdemServico_form_data, Chamado, CargaHoraria, CargaHorariaForm )
     
     #despesa form
-    formDespesa = form_model_factory(OrdemServico_form_data, Ordem_Servico, Despesa, DespesaForm)
+    formDespesa = form_model_factory(OrdemServico_form_data, Chamado, Despesa, DespesaForm)
 
     contexto = {
         'ordemForm': ordemServicoForm,
@@ -139,16 +107,16 @@ def novo_chamado(request):
         ordem_servico.aberto_por = usuario_logado
         
         #verificando se numero de chamado gerado já existe.
-        if Ordem_Servico.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
+        if Chamado.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
             messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
             request.session['OrdemServico_form_data'] = None
             return redirect(reverse('orion:lista_chamados'))
 
         ordem_servico.save()
         
-        formCargaHoraria = form_model_factory(request.POST, Ordem_Servico, CargaHoraria, CargaHorariaForm, ordem_servico )
+        formCargaHoraria = form_model_factory(request.POST, Chamado, CargaHoraria, CargaHorariaForm, ordem_servico )
 
-        formDespesa = form_model_factory(request.POST, Ordem_Servico, Despesa, DespesaForm, ordem_servico)
+        formDespesa = form_model_factory(request.POST, Chamado, Despesa, DespesaForm, ordem_servico)
         
         if formCargaHoraria.is_valid() and formDespesa.is_valid():
         
@@ -170,12 +138,12 @@ def editar_chamado(request, id):
     
         if id != 0:
             print("editar_chamado")
-            ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
+            ordem_servico = get_object_or_404(Chamado, pk=id)
             ordemServicoForm = OrdemServicoForm(instance=ordem_servico) 
 
-            formCargaHoraria = form_model_factory(None, Ordem_Servico, CargaHoraria, CargaHorariaForm, ordem_servico, queryset=CargaHoraria.objects.order_by('data') )
+            formCargaHoraria = form_model_factory(None, Chamado, CargaHoraria, CargaHorariaForm, ordem_servico, queryset=CargaHoraria.objects.order_by('data') )
 
-            formDespesa = form_model_factory(None, Ordem_Servico, Despesa, DespesaForm, ordem_servico, None)
+            formDespesa = form_model_factory(None, Chamado, Despesa, DespesaForm, ordem_servico, None)
 
             contexto = {
                 'ordemForm': ordemServicoForm,
@@ -187,11 +155,11 @@ def editar_chamado(request, id):
         return render(request, 'orion/pages/editar_chamado.html', contexto)
     else:
         request.session['OrdemServico_form_data'] = request.POST
-        ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
+        ordem_servico = get_object_or_404(Chamado, pk=id)
         ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico)
     
-        formCargaHoraria = form_model_factory(request.POST, Ordem_Servico, CargaHoraria, CargaHorariaForm, ordem_servico)
-        formDespesa = form_model_factory(request.POST, Ordem_Servico, Despesa, DespesaForm, ordem_servico)
+        formCargaHoraria = form_model_factory(request.POST, Chamado, CargaHoraria, CargaHorariaForm, ordem_servico)
+        formDespesa = form_model_factory(request.POST, Chamado, Despesa, DespesaForm, ordem_servico)
         
         if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
             chamado = ordemForm.save()
@@ -220,32 +188,18 @@ def editar_chamado(request, id):
 @login_required
 def deletar_chamado(request, id):
     if request.method == 'POST':
-        chamado = get_object_or_404(Ordem_Servico, pk=id)
+        chamado = get_object_or_404(Chamado, pk=id)
         chamado.delete()
         messages.success(request, f"Chamado deletado com sucesso")
         return redirect('orion:lista_chamados')
 
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
-def chamados_fechados(request):
-    ordens_servico = Ordem_Servico.objects.all().filter(
-        status_chamado='F').order_by('-id')
-
-    ordens_servico_page = utils.paginacao(request, ordens_servico)
-    
-    contexto = {
-        'ordens_servico': ordens_servico_page,
-        'titulo': 'Chamados fechados'
-    }
-    return render(request, 'orion/pages/chamado.html', contexto)
-
-
-@login_required(login_url="usuarios:login", redirect_field_name="next")
 def fechar_chamado(request, id):
     if request.method == 'POST':
         try:
-            ordem_servico = get_object_or_404(Ordem_Servico, pk=id)
-        except Ordem_Servico.DoesNotExist:
+            ordem_servico = get_object_or_404(Chamado, pk=id)
+        except Chamado.DoesNotExist:
             raise Http404("No Model matches the given query.")
         
         ordem_servico.status_chamado = 'F'
@@ -518,7 +472,7 @@ def teste(request):
     if request.method == 'GET':
         #formCargaHoraria = CargaHorariaForm(initial ={'tecnico': usuario })
         
-        form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm, extra=1)
+        form_carga_horaria_factory = inlineformset_factory(Chamado, CargaHoraria, form=CargaHorariaForm, extra=1)
         formCargaHoraria = form_carga_horaria_factory()
             
         
@@ -530,7 +484,7 @@ def teste(request):
     else: 
         #formCargaHoraria = CargaHorariaForm(request.POST )
         
-        form_carga_horaria_factory = inlineformset_factory(Ordem_Servico, CargaHoraria, form=CargaHorariaForm)
+        form_carga_horaria_factory = inlineformset_factory(Chamado, CargaHoraria, form=CargaHorariaForm)
         formCargaHoraria = form_carga_horaria_factory()
             
         print(formCargaHoraria)

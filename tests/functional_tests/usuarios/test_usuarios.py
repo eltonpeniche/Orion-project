@@ -14,7 +14,7 @@ class UsuariosFunctionalTest(UsuariosBaseFunctionalTest):
         password = " "
         
         self.browser.get(self.live_server_url)
-        
+        self.sleep(5)
         self.browser.find_element(By.ID, "id_login" ).send_keys(username)
         self.browser.find_element(By.ID, "id_senha" ).send_keys(password)
         self.browser.find_element(By.NAME, "btn_login").click()

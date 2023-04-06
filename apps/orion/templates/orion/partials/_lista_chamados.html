@@ -21,18 +21,18 @@
     </thead>
     <tbody>
 
-            {% for ordem in ordens_servico %}
+            {% for chamado in chamados %}
             
                 <tr>
-                    <td>{{ordem.numero_chamado}} - {{ ordem.descricao_chamado }} </td>
-                    <td>{{ordem.empresa}} </td>
-                    <td>{{ordem.equipamento.numero_serie}} - {{ordem.equipamento}}</td>
-                    <td> {{ ordem.get_tipo_chamado_display }} </td>
-                    <td>{{ordem.criado_em|date:"d/m/Y"}}</td>
-                    <td>{{ ordem.get_status_display }} - {{ ordem.get_status_chamado_display }}
+                    <td>{{chamado.numero_chamado}} - {{ chamado.descricao_chamado }} </td>
+                    <td>{{chamado.empresa}} </td>
+                    <td>{{chamado.equipamento.numero_serie}} - {{chamado.equipamento}}</td>
+                    <td> {{ chamado.get_tipo_chamado_display }} </td>
+                    <td>{{chamado.criado_em|date:"d/m/Y"}}</td>
+                    <td>{{ chamado.get_status_display }} - {{ chamado.get_status_chamado_display }}
 
                     </td>
-                    <td align="center"><a href="{% url 'orion:editar_chamado' ordem.id %}" title="Editar"><i
+                    <td align="center"><a href="{% url 'orion:editar_chamado' chamado.id %}" title="Editar"><i
                         class="fa-solid fa-pen-to-square"></i></a></td>
                 </tr>
             {% empty %}
