@@ -16,16 +16,18 @@
 
         <button type="button" class="btn btn-warning b_cancelar_chamado_modal"
         data-bs-toggle="modal"
-        data-bs-target="#cancelar_chamado_modal"
-        data-id="{{ id }}"
-        data-number="{{ ordemForm.numero_chamado.value}}">
-    
+        data-bs-target="#cancelar_chamado_modal">
             Cancelar 
         </button>
 
     </div>
+    
+    <form id="form-cancelar-chamado-modal"  action="{% url 'orion:lista_chamados' %}" method="get">
+        {% include 'orion/partials/_confirmacao_modal.html' with id_modal="cancelar_chamado_modal" acao="Cancelar criação do" %}
 
-    {% include 'orion/partials/_cancelar_chamado_modal.html' %}
+    </form>
+
 </div>
+
 
 {% endblock content %}

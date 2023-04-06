@@ -38,5 +38,5 @@ class UsuariosFunctionalTest(UsuariosBaseFunctionalTest):
     @pytest.mark.functional_test
     def test_usuario_consegue_fazer_login_com_sucesso(self):
         self.fazer_login()
-        termo = self.browser.find_element(By.XPATH, '//*[@id="conteudo"]/h4[2]')
-        self.assertIn('Olá, Elton', termo.text)
+        body = self.browser.find_element(By.TAG_NAME, 'body')
+        self.assertIn('Olá, Elton', body.text)

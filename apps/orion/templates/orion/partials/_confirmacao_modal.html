@@ -1,5 +1,8 @@
 {% load static %}
 
+{% comment %}
+{% include 'orion/partials/_confirmacao_modal.html' with id_modal="cancelar-modal" acao="Cancelar Edição do" %}
+{% endcomment %}
 <div class="modal" tabindex="-1" id={{ id_modal }}>
     <div class="modal-dialog">
         <div class="modal-content">
