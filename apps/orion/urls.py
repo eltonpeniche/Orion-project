@@ -22,10 +22,12 @@ urlpatterns = [
      path('equipamentos/novo', views.EquipamentoDetail.as_view(), name='cadastrar_equipamentos'),
      
      path('deletar_equipamento/<int:id>/', views.EquipamentoDelete.as_view(), name='deletar_equipamento'),
-     path('clientes/', views.clientes, name='clientes'),
-     path('clientes/<int:id>/', views.detalhar_cliente, name='detalhar_cliente'),
-     path('deletar_cliente/', views.deletar_cliente, name='deletar_cliente'),
-     path('cadastrar_clientes/', views.cadastrar_clientes, name='cadastrar_clientes'),
+     
+     path('empresas/', views.empresas, name='empresas'),
+     path('empresas/<int:id>/', views.detalhar_empresa, name='detalhar_empresa'),
+     path('empresas/deletar/', views.deletar_empresa, name='deletar_empresa'),
+     path('empresas/novo/', views.cadastrar_empresa, name='cadastrar_empresa'),
+     
      path('assinatura_popup', views.assinatura_popup, name='assinatura_popup'),
      path('marcar_notificacao_como_lida', views.marcar_notificacao_como_lida, name = "marcar_notificacao_como_lida"),
      path('relatorio_ponto', views.relatorio_ponto, name = "relatorio_ponto"),

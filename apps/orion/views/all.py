@@ -210,44 +210,45 @@ def fechar_chamado(request, id):
 
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
-def clientes(request):
+def empresas(request):
 
-    clientes = Empresa.objects.select_related('endereco').all().order_by('-id')
-    clientes_page = utils.paginacao(request, clientes)
+    empresas = Empresa.objects.select_related('endereco').all().order_by('-id')
+    empresas_page = utils.paginacao(request, empresas)
     contexto = {
-        'clientes': clientes_page,
-        'titulo': 'Clientes'
+        'empresas': empresas_page,
+        'titulo': 'Empresas'
     }
-    return render(request, 'orion/pages/clientes.html', contexto)
+    return render(request, 'orion/pages/empresas_list.html', contexto)
 
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
-def cadastrar_clientes(request):
+def cadastrar_empresa(request):
     
     if request.method == 'POST':
         form = EmpresaForm(request.POST)
         enderecoForm = EnderecoForm(request.POST)
-        
+
         if form.is_valid():
             empresa = form.save(commit=False)
             if enderecoForm.is_valid():
                 endereco = enderecoForm.save()
                 empresa.endereco = endereco
             else:
-                messages.error(request, "Endereço informando não válido.")
+                if not enderecoForm.instance: 
+                    messages.error(request, "Endereço informando não válido.")
             
             empresa.save()
-            messages.success(request, "Novo Cliente cadastrado com sucesso.")
-            return redirect('orion:clientes')
+            messages.success(request, "Novo empresa cadastrada com sucesso.")
+            return redirect('orion:empresas')
         else:
             if not enderecoForm.is_valid(): 
                 enderecoForm.instance = False
             contexto = {
                 'form': form,
                 'formEndereco': enderecoForm,
-                'titulo':'Novo Cliente'
+                'titulo':'Nova Empresa'
             }
-            return render(request, 'orion/pages/detalhes_cliente.html', contexto)
+            return render(request, 'orion/pages/detalhes_empresa.html', contexto)
 
     else:
         form = EmpresaForm()
@@ -256,59 +257,59 @@ def cadastrar_clientes(request):
         contexto = {
             'form': form,
             'formEndereco': formEndereco,
-            'titulo':'Novo Cliente'
+            'titulo':'Nova Empresa'
             
         }
-        return render(request, 'orion/pages/detalhes_cliente.html', contexto)
+        return render(request, 'orion/pages/detalhes_empresa.html', contexto)
     
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
-def detalhar_cliente(request, id):
-    cliente = get_object_or_404(Empresa, pk=id)
+def detalhar_empresa(request, id):
+    empresa = get_object_or_404(Empresa, pk=id)
     if request.method =='POST':
-        form = EmpresaForm(request.POST, instance=cliente)
+        form = EmpresaForm(request.POST, instance=empresa)
         enderecoForm = EnderecoForm(request.POST )
-        if form.is_valid() and enderecoForm.is_valid() :
+        if form.is_valid() and enderecoForm.is_valid():
             empresa = form.save(commit=False)
             endereco = enderecoForm.save()
             empresa.endereco = endereco
             empresa.save()
         elif form.is_valid():
             form.save()
-            messages.success(request, "Cliente salvo com sucesso.")
+            messages.success(request, "Empresa salva com sucesso.")
             if enderecoForm.is_bound:
                 messages.error(request, "Endereço informando não válido.")
             
-        return redirect('orion:clientes')
+        return redirect('orion:empresas')
     
     else:
 
-        clienteForm = EmpresaForm(instance=cliente)
-        enderecoForm = EnderecoForm(instance=cliente.endereco or None) 
+        empresaForm = EmpresaForm(instance=empresa)
+        enderecoForm = EnderecoForm(instance=empresa.endereco or None) 
         
-        if cliente.endereco is None :
+        if empresa.endereco is None :
             enderecoForm.instance= False
 
         contexto = {
-            'form': clienteForm,
+            'form': empresaForm,
             'formEndereco': enderecoForm,
             'id': id,
-            'titulo':'Detalhes Cliente'
+            'titulo':'Detalhes Empresa'
         }
-        return render(request, 'orion/pages/detalhes_cliente.html', contexto)
+        return render(request, 'orion/pages/detalhes_empresa.html', contexto)
 
 @login_required
-def deletar_cliente(request):
+def deletar_empresa(request):
     if request.method =='POST':
         id = request.POST['id']
-        cliente = get_object_or_404(Empresa, pk=id)
-        nome = cliente.nome
-        if(cliente.endereco):
-            endereco = Endereco.objects.filter(pk=cliente.endereco.id).first()
+        empresa = get_object_or_404(Empresa, pk=id)
+        nome = empresa.nome
+        if(empresa.endereco):
+            endereco = Endereco.objects.filter(pk=empresa.endereco.id).first()
             endereco.delete()
-        cliente.delete()
-        messages.success(request, f"Cliente {nome} deletado com sucesso")
-    return redirect('orion:clientes')
+        empresa.delete()
+        messages.success(request, f"Empresa {nome} deletado com sucesso")
+    return redirect('orion:empresas')
 
 @login_required
 def assinatura_popup(request):

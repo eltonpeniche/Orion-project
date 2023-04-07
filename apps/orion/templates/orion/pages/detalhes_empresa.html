@@ -13,7 +13,7 @@
 <div class="container col-sm-10">
     <br>
 
-    <form action="" id="form-cliente" method="post">
+    <form action="" id="form-empresa" method="post">
         {% csrf_token %}
 
         {% include 'globals/partials/_form.html' with form=form %}
@@ -46,10 +46,10 @@
         {% endif %}
     
     <div class="d-flex justify-content-center m-2">
-        <button type="submit" class="btn btn-primary m-2" form="form-cliente" name="btn-salvar-cliente"> Salvar </button>
+        <button type="submit" class="btn btn-primary m-2" form="form-empresa" name="btn-salvar-empresa"> Salvar </button>
         
         {% if id %}
-            <form action="{% url 'orion:deletar_cliente'%}" method="post">{% csrf_token %}
+            <form action="{% url 'orion:deletar_empresa'%}" method="post">{% csrf_token %}
                 <input type="hidden" name='id' value="{{ id }}" > </input>
                 <button type="submit" class="btn btn-danger m-2"> Apagar </button>
             </form>

@@ -21,16 +21,16 @@
     <tbody>
 
 
-            {% for cliente in clientes %}
+            {% for empresa in empresas %}
             
                 <tr>
-                    <td>{{ cliente.nome}} </td>
-                    <td>{{ cliente.cnpj}} </td>
-                    <td>{{ cliente.telefone}} </td>
-                    <td>{{ cliente.email }}</td>
-                    <td>{{ cliente.endereco.uf }}</td>
-                    <td>{{ cliente.observacao }} </td>
-                    <td align="center"><a href="{% url 'orion:detalhar_cliente' cliente.id %}" title="Editar"><i
+                    <td>{{ empresa.nome}} </td>
+                    <td>{{ empresa.cnpj}} </td>
+                    <td>{{ empresa.telefone}} </td>
+                    <td>{{ empresa.email }}</td>
+                    <td>{{ empresa.endereco.uf }}</td>
+                    <td>{{ empresa.observacao }} </td>
+                    <td align="center"><a href="{% url 'orion:detalhar_empresa' empresa.id %}" title="Editar"><i
                         class="fa-solid fa-pen-to-square"></i></a></td>
                 </tr>
                 
