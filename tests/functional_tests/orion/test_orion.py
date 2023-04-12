@@ -11,7 +11,6 @@ class OrionFunctionalTest(OrionBaseFunctionalTest):
     def test_the_test(self):
         print(self.live_server_url)
         self.browser.get(self.live_server_url)
-        self.sleep(10)
         body = self.browser.find_element(By.TAG_NAME,  'body')
         self.assertIn('Entre com o seu Login e Senha', body.text)
     
@@ -26,8 +25,8 @@ class OrionFunctionalTest(OrionBaseFunctionalTest):
     def test_usuario_consegue_cadastrar_novo_cliente(self):
         self.fazer_login()
         self.cadastrar_empresa()
-        message = self.browser.find_element(By.XPATH, '//div[@class="alert alert-success"]')
-        self.assertIn("Novo Cliente cadastrado com sucesso.", message.text)
+        message = self.browser.find_element(By.TAG_NAME, 'body')
+        self.assertIn("Novo empresa cadastrada com sucesso.", message.text)
     
     @pytest.mark.functional_test
     def test_usuario_consegue_cadastrar_novo_equipamento(self):
@@ -36,5 +35,5 @@ class OrionFunctionalTest(OrionBaseFunctionalTest):
         self.cadastrar_empresa()
         self.cadastrar_equipamento()
         message = self.browser.find_element(By.XPATH, '//div[@class="alert alert-success"]')
-        self.assertIn("Novo equipamento cadastrado com sucesso", message.text)
+        self.assertIn("Equipamento Salvo com Sucesso", message.text)
         

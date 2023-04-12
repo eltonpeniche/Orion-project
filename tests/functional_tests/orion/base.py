@@ -34,9 +34,8 @@ class OrionBaseFunctionalTest(LiveServerTestCase, UsuariosMixin):
         botão_element.click()
     
     def cadastrar_empresa(self, nome = "Calebe e Gabriela Publicidade e Propaganda ME", cnpj = "82.050.804/0001-60",telefone = "1727038198", email = "auditoria@cpep.com.br", cep = "15061881", numero= "100" ):
-        self.browser.get(self.live_server_url + '/clientes/')
-        self.browser.find_element(By.LINK_TEXT, 'Novo Cliente').click()
-        
+        self.browser.get(self.live_server_url + '/empresas/')
+        self.browser.find_element(By.LINK_TEXT, 'Nova Empresa').click()
         self.browser.find_element(By.ID, 'id_nome').send_keys(nome)
         self.browser.find_element(By.ID, 'id_cnpj').send_keys(cnpj)
         self.browser.find_element(By.ID, 'id_telefone').send_keys(telefone)
@@ -52,7 +51,7 @@ class OrionBaseFunctionalTest(LiveServerTestCase, UsuariosMixin):
         self.browser.find_element(By.ID, 'btn_salvar_endereco').click()
         self.browser.execute_script("window.scrollBy(0, 500)")
         self.sleep(1)
-        self.browser.find_element(By.NAME, 'btn-salvar-cliente').click()
+        self.browser.find_element(By.NAME, 'btn-salvar-empresa').click()
         self.sleep(1)
     
     def cadastrar_equipamento(self, empresa = "Calebe e Gabriela Publicidade e Propaganda ME", numero_serie = "84217", equipamento="Somatom Spirit", tipo_equipamento="CT"):

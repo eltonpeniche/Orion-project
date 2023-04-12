@@ -46,32 +46,32 @@ class OrionViewsTest(TestCase):
 
      def test_orion_equipamentos_view_function_is_correct(self):
           view = resolve(reverse('orion:equipamentos'))  
-          self.assertIs(view.func, views.equipamentos)
+          self.assertIs(view.func.view_class, views.EquipamentoList)
 
      def test_orion_detalhar_equipamento_view_function_is_correct(self):
           view = resolve(reverse('orion:detalhar_equipamento', kwargs = { 'id':1 }))  
-          self.assertIs(view.func, views.detalhar_equipamento)
+          self.assertIs(view.func.view_class, views.EquipamentoDetail)
 
      def test_orion_cadastrar_equipamentos_view_function_is_correct(self):
           view = resolve(reverse('orion:cadastrar_equipamentos'))  
-          self.assertIs(view.func, views.cadastrar_equipamentos)
+          self.assertIs(view.func.view_class, views.EquipamentoDetail)
 
 
      def test_orion_deletar_equipamento_view_function_is_correct(self):
           view = resolve(reverse('orion:deletar_equipamento', kwargs = { 'id':1 }))  
-          self.assertIs(view.func, views.deletar_equipamento)
+          self.assertIs(view.func.view_class, views.EquipamentoDelete)
 
-     def test_orion_clientes_view_function_is_correct(self):
-          view = resolve(reverse('orion:clientes'))  
-          self.assertIs(view.func, views.clientes)
+     def test_orion_empresas_view_function_is_correct(self):
+          view = resolve(reverse('orion:empresas'))  
+          self.assertIs(view.func, views.empresas)
           
-     def test_orion_detalhar_cliente_view_function_is_correct(self):
-          view = resolve(reverse('orion:detalhar_cliente', kwargs = { 'id':1 }))  
-          self.assertIs(view.func, views.detalhar_cliente)
+     def test_orion_detalhar_empresas_view_function_is_correct(self):
+          view = resolve(reverse('orion:detalhar_empresa', kwargs = { 'id':1 }))  
+          self.assertIs(view.func, views.detalhar_empresa)
 
-     def test_orion_deletar_cliente_view_function_is_correct(self):
-          view = resolve(reverse('orion:deletar_cliente'))  
-          self.assertIs(view.func, views.deletar_cliente)
+     def test_orion_deletar_empresas_view_function_is_correct(self):
+          view = resolve(reverse('orion:deletar_empresa'))  
+          self.assertIs(view.func, views.deletar_empresa)
 
      def test_orion_lista_home_view_return_status_code_200_ok(self):
           response = self.client.get(reverse('orion:lista_chamados'))
