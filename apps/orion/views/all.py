@@ -16,10 +16,9 @@ from notifications.signals import notify
 
 from apps.orion import utils
 from apps.orion.forms import (CargaHorariaForm, DespesaForm, EmpresaForm,
-                              EnderecoForm, EquipamentosForm, OrdemServicoForm,
-                              SignatureForm, form_model_factory)
-from apps.orion.models import (CargaHoraria, Chamado, Despesa, Empresa,
-                               Endereco, Equipamento, SignatureModel)
+                              EnderecoForm, OrdemServicoForm, SignatureForm,
+                              form_model_factory)
+from apps.orion.models import CargaHoraria, Chamado, Despesa, Empresa, Endereco
 from apps.orion.notifications import (get_notificacoes_nao_lidas,
                                       get_numero_notificacoes_nao_lidas)
 from apps.usuarios.models import Usuario

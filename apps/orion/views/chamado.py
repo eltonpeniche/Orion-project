@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from apps.orion import utils
@@ -5,6 +7,7 @@ from apps.orion.models import Chamado
 from apps.usuarios.models import Usuario
 
 
+@method_decorator(login_required(login_url='usuarios:login' ,redirect_field_name='next'), name='dispatch' )
 class ChamadoList(ListView):
     model = Chamado
     context_object_name = "chamados"
@@ -23,7 +26,7 @@ class ChamadoList(ListView):
         ctx['titulo'] = f'Chamados abertos'
         return ctx
     
-
+@method_decorator(login_required(login_url='usuarios:login' ,redirect_field_name='next'), name='dispatch' )
 class ChamadoHomeList(ChamadoList):
 
     def get_queryset(self, *args, **kwargs):
@@ -37,7 +40,7 @@ class ChamadoHomeList(ChamadoList):
         ctx['home'] = f'Olá, {self.request.user.username.title()}'
         return ctx
     
-
+@method_decorator(login_required(login_url='usuarios:login' ,redirect_field_name='next'), name='dispatch' )
 class ChamadosFechadosList(ChamadoList):
 
     def get_queryset(self, *args, **kwargs):

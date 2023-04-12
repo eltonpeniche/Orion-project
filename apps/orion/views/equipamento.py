@@ -69,6 +69,8 @@ class EquipamentoDetail(View):
 @method_decorator(login_required(login_url='usuarios:login' ,redirect_field_name='next'), name='dispatch' )
 class EquipamentoDelete(EquipamentoDetail):
     def post(self, request, id=None):
+        #post(self, *args, **kwargs): self.request.POST.get('id')
         equipamento = self.get_equipamento(id)
         equipamento.delete()
+        messages.success(self.request, "Equipamento deletado com sucesso")
         return redirect('orion:equipamentos')
