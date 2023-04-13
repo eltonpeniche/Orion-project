@@ -1,4 +1,4 @@
-from apps.orion.models import Empresa, Endereco, Equipamento
+from apps.orion.models import Chamado, Empresa, Endereco, Equipamento
 
 
 class OrionMixin:
@@ -21,8 +21,10 @@ class OrionMixin:
             lista_empresas.append(empresa)
         return lista_empresas
     
-    def make_equipamento(self, empresa_id = None, numero_serie = "17593", equipamento="Magnetom Concerto", tipo_equipamento  = "MR", descricao  = "uma descrição qualquer" ):
-        return Equipamento.objects.create(empresa_id=empresa_id, numero_serie=numero_serie, equipamento=equipamento, tipo_equipamento=tipo_equipamento, descricao=descricao)
+    def make_equipamento(self, empresa = None, numero_serie = "17593", equipamento="Magnetom Concerto", tipo_equipamento  = "MR", descricao  = "uma descrição qualquer" ):
+        if empresa is None:
+            empresa = self.make_empresa()
+        return Equipamento.objects.create(empresa=empresa, numero_serie=numero_serie, equipamento=equipamento, tipo_equipamento=tipo_equipamento, descricao=descricao)
     
     def make_equipamento_in_batch(self):
         equipamentos = [{ "empresa_id":1, "numero_serie":"17593", "equipamento":"Magnetom Concerto", "tipo_equipamento":"MR","descricao":"None" }, { "empresa_id":2, "numero_serie":"CT411187HM8","equipamento":"GE Brivo", "tipo_equipamento":"CT", "descricao":"None" }, { "empresa_id":2, "numero_serie":"B0522101","equipamento":"Toschiba Asteion", "tipo_equipamento":"CT", "descricao":"Equipamento em Porto Franco-MA" }, { "empresa_id":3, "numero_serie":"84217", "equipamento":"Somatom Spirit", "tipo_equipamento":"CT", "descricao":"None" }, {"empresa_id":4, "numero_serie":"441541", "equipamento":"wqd", "tipo_equipamento":"dad", "descricao":"None" } ]
@@ -32,3 +34,13 @@ class OrionMixin:
             equipamento = self.make_equipamento(empresa_id=dados['empresa_id'] , numero_serie=dados['numero_serie'], equipamento=dados['equipamento'], tipo_equipamento=dados['tipo_equipamento'],descricao=dados['descricao'] )
             lista_equipamentos.append(equipamento)
         return lista_equipamentos
+    
+
+    def make_chamado(self, empresa=None, equipamento=None, descricao_chamado= "Chamado de Teste", status='P', tipo_chamado='C', status_chamado='A', numero_chamado='000000001111'):
+        if empresa is None:
+            empresa = self.make_empresa()
+        if equipamento is None:
+            equipamento = self.make_equipamento()
+        Chamado.objects.create( descricao_chamado = descricao_chamado,
+                   status = status, tipo_chamado=tipo_chamado ,status_chamado = status_chamado, numero_chamado = numero_chamado, empresa = empresa, equipamento = equipamento
+        )
