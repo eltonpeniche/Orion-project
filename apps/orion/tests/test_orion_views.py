@@ -54,6 +54,10 @@ class OrionViewsTest(TestCase, OrionMixin):
           view = resolve(reverse('orion:novo_chamado'))  
           self.assertIs(view.func, views.novo_chamado)
 
+     def test_orion_novo_chamado_view_function_is_correct(self):
+
+          response = self.client.get(reverse('orion:novo_chamado'))
+          self.assertEqual(404, response.status_code)
 
      def test_orion_editar_chamado_view_function_is_correct(self):
           view = resolve(reverse('orion:editar_chamado', kwargs = { 'id':1 }))  
