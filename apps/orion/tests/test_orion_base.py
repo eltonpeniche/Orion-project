@@ -1,7 +1,15 @@
 from apps.orion.models import Chamado, Empresa, Endereco, Equipamento
+from apps.usuarios.models import User, Usuario
 
 
 class OrionMixin:
+    def make_usuario(self, user=None, tipo='T'):
+        if user is None:
+            user = User.objects.create_user(username='testuser2', password='testpass')
+        
+        return Usuario.objects.create(user=user, tipo=tipo)
+    
+    
     def make_endereco(self, cep=66093-908, rua = "Avenida Almirante Barroso", bairro = "Marco", uf = 'PA', cidade = "Belém", numero="1454" ):
         return Endereco.objects.create(cep=-cep, rua = rua, bairro = bairro, uf = uf, cidade = cidade, numero=numero)
     
@@ -36,11 +44,24 @@ class OrionMixin:
         return lista_equipamentos
     
 
-    def make_chamado(self, empresa=None, equipamento=None, descricao_chamado= "Chamado de Teste", status='P', tipo_chamado='C', status_chamado='A', numero_chamado='000000001111'):
+    def make_chamado(self, empresa=None, equipamento=None,aberto_por = None, descricao_chamado= "Chamado de Teste", status='P', tipo_chamado='C', status_chamado = 'A' , numero_chamado='000000001111', contato = 'contato'):
         if empresa is None:
             empresa = self.make_empresa()
         if equipamento is None:
             equipamento = self.make_equipamento()
-        Chamado.objects.create( descricao_chamado = descricao_chamado,
-                   status = status, tipo_chamado=tipo_chamado ,status_chamado = status_chamado, numero_chamado = numero_chamado, empresa = empresa, equipamento = equipamento
+        if aberto_por is None:
+            aberto_por = self.make_usuario()
+        return Chamado.objects.create( descricao_chamado = descricao_chamado,
+                   status = status, tipo_chamado=tipo_chamado, numero_chamado = numero_chamado, empresa = empresa, equipamento = equipamento, contato = contato, aberto_por = aberto_por, status_chamado = status_chamado
+        )
+    
+    def make_chamado_default(self, empresa=None, equipamento=None,aberto_por = None, descricao_chamado= "Chamado de Teste", numero_chamado='000000001111', contato = 'contato'):
+        if empresa is None:
+            empresa = self.make_empresa()
+        if equipamento is None:
+            equipamento = self.make_equipamento()
+        if aberto_por is None:
+            aberto_por = self.make_usuario()
+        return Chamado.objects.create( descricao_chamado = descricao_chamado,
+                   numero_chamado = numero_chamado, empresa = empresa, equipamento = equipamento, contato = contato, aberto_por = aberto_por
         )

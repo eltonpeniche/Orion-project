@@ -1,5 +1,6 @@
 async-timeout==4.0.2
 convertapi==1.6.0
+coverage==7.2.3
 django-appconf==1.0.5
 django-debug-toolbar==3.8.1
 django-jsignature==0.11
@@ -9,6 +10,7 @@ django-tempus-dominus==5.1.2.17
 django-widget-tweaks==1.4.12
 faker==17.6.0
 openpyxl==3.1.2
+parameterized==0.9.0
 pip-chill==1.0.1
 pysocks==1.7.1
 pytest-django==4.5.2
