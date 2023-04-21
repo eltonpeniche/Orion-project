@@ -32,7 +32,7 @@
             </div>
 
             <div class=" d-flex justify-content-end m-2">
-                <a href="{% url 'orion:cadastrar_clientes' %}">  
+                <a href="{% url 'orion:cadastrar_empresa' %}">  
                         <button type="submit" class="btn btn-primary"> Novo Cliente</button>
                 </a>
                 
@@ -41,7 +41,7 @@
 
             <div class="table-sortable table-responsive">
 
-                {% include 'orion/partials/_lista_clientes.html' %}
+                {% include 'orion/partials/_lista_empresas.html' %}
                 {% include 'orion/partials/_paginacao.html' with form=clientes %}
 
             </div>

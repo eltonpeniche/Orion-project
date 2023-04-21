@@ -35,7 +35,7 @@ def busca_chamados(request):
         return redirect(request.META.get('HTTP_REFERER'))
     
     
-    ordens_servico = Chamado.objects.select_related('empresa', 'equipamento').filter( 
+    chamados = Chamado.objects.select_related('empresa', 'equipamento').filter( 
                         Q(numero_chamado__icontains = termo_pesquisado) |
                         Q(empresa__nome__icontains = termo_pesquisado) |
                         Q(equipamento__equipamento__icontains = termo_pesquisado)|
@@ -44,23 +44,23 @@ def busca_chamados(request):
                         status_chamado='A'
                         ).order_by('-id')
     
-    clientes = Empresa.objects.filter( 
+    empresas = Empresa.objects.filter( 
                     Q(nome__icontains = termo_pesquisado) |
                     Q(cnpj__icontains = termo_pesquisado) |
                     Q(telefone__icontains = termo_pesquisado)|
                     Q(email__icontains = termo_pesquisado)
                     ).order_by('-id')
     
-    ordens_servico_page =  utils.paginacao(request, ordens_servico)
+    chamados_page =  utils.paginacao(request, chamados)
 
-    clientes_page = utils.paginacao(request, clientes) 
+    empresas_page = utils.paginacao(request, empresas) 
 
     contexto = {
         'termo_pesquisado': termo_pesquisado,
-        'ordens_servico': ordens_servico_page,
+        'chamados': chamados_page,
         'titulo': f'Pesquisa por "{termo_pesquisado}" em chamados...',
         'titulo_clientes' : f'Pesquisa por "{termo_pesquisado}" em clientes...',
-        'clientes': clientes_page
+        'empresas': empresas_page
     }
     return render(request, 'orion/pages/busca.html', contexto)
 
