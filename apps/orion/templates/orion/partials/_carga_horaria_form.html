@@ -1,0 +1,22 @@
+<tr>
+    <td>{{ form_ch.data }}</td>
+    <td>{{ form_ch.hora_inicio }}</td>
+    <td>{{ form_ch.hora_termino }}</td>
+    <td>
+        <input type="hidden" name="id_chamado" value="{{id_chamado}}">
+    </td>
+    <td colspan="2">
+        {{ form_ch.status }} 
+    </td>
+    <td>
+        <button class="btn btn-danger" 
+            hx-post="{% url 'orion:nova_carga_horaria' %}" 
+            hx-include="closest tr"
+            hx-trigger='click'
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+        >
+            Salvar
+        </button>
+    </td>
+<tr>

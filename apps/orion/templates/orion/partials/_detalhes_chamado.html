@@ -1,6 +1,7 @@
 {% load widget_tweaks %}
 {% load static %}
 {% load jsignature_filters %}
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
@@ -179,91 +180,21 @@
                 </div>
 
                 <!-- carga horaria -->
-                {% include 'orion/partials/_carga_horaria_modal.html' %}
                 {% include 'orion/partials/_carga_horaria_error_modal.html' %}
                 
                 <!-- Button trigger carga-horaria modal -->
                 <div class ="d-grid gap-2 d-flex justify-content-end mb-2" > 
-                    <button id="add-more" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generic-modal">
+                    <button class="btn btn-primary" class="btn btn-success" 
+                        hx-get="{% url 'orion:nova_carga_horaria' %}?id_chamado={{id}}" 
+                        hx-trigger='click'
+                        hx-target="#tabela-carga_horaria-corpo"
+                        hx-swap="beforeend" >
                         Adicionar Horas
                     </button>
                 </div>
                 
                 {% include 'orion/partials/_tabela_carga_horaria.html' %}
 
-                <div class="row ">
-                    
-                    <div id="ch-form-list" class="hidden">
-                        {{ form_ch.management_form }} 
-                        
-                        {% for form in form_ch %}
-                            <div class="repetir">
-                                {{ form }}
-                            </div>
-                        {% endfor %}
-                    </div> 
-                    
-                    <div id="empty-form" class="hidden" > 
-
-                        
-                        <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ form_ch.empty_form.data.id_for_label}}">
-                                    {{form_ch.empty_form.data.label}}</label>
-                            </div>
-                            <div class="col-8">
-                                {{form_ch.empty_form.data|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ form_ch.empty_form.hora_inicio.id_for_label}}">
-                                    {{form_ch.empty_form.hora_inicio.label}}</label>
-                            </div>
-                            <div class="col-8">
-                                {{form_ch.empty_form.hora_inicio|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ form_ch.empty_form.hora_termino.id_for_label}}">
-                                    {{form_ch.empty_form.hora_termino.label}}</label>
-                            </div>
-                            <div class="col-8">
-                                {{form_ch.empty_form.hora_termino|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3 mb-3 row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ form_ch.empty_form.status.id_for_label}}">
-                                    {{form_ch.empty_form.status.label}}</label>
-                            </div>
-                            <div class="col-8">
-                                {{form_ch.empty_form.status|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3 mb-3 row hidden">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ form_ch.empty_form.tecnico.id_for_label}}">
-                                    {{form_ch.empty_form.tecnico.label}}</label>
-                            </div>
-                            <div class="col-8">
-                                {{form_ch.empty_form.tecnico|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
                 <!-- end carga horaria -->
                 <!-- despesa -->
 
@@ -288,57 +219,6 @@
                         
                         {% endfor %}
                     </div> 
-                    
-                    <div id="empty-form-despesa" class="hidden" > 
-
-                        <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ formDespesa.empty_form.tipo.id_for_label}}">
-                                    {{formDespesa.empty_form.tipo.label}}</label>
-                            </div>
-                            <div class="col-6">
-                                {{formDespesa.empty_form.tipo|add_class:'form-control form-select'}}
-                                
-                            </div>
-                        </div>
-                        
-                        <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ formDespesa.empty_form.data.id_for_label}}">
-                                    {{formDespesa.empty_form.data.label}}</label>
-                            </div>
-                            <div class="col-6">
-                                {{formDespesa.empty_form.data}}
-        
-                            </div>
-                        </div>
-
-
-                        <div class="form-group mt-3 mb-3 d-flex row ">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ formDespesa.empty_form.valor.id_for_label}}">
-                                    {{formDespesa.empty_form.valor.label}}</label>
-                            </div>
-                            <div class="col-4">
-                                {{formDespesa.empty_form.valor|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3 mb-3 row hidden">
-                            <div class="col-4 label-class text-end">
-                                <label class="col-form-label" for="{{ formDespesa.empty_form.tecnico.id_for_label}}">
-                                    {{formDespesa.empty_form.tecnico.label}}</label>
-                            </div>
-                            <div class="col-8">
-                                {{formDespesa.empty_form.tecnico|add_class:'form-control'}}
-        
-                            </div>
-                        </div>
-
-
-
-                    </div>
                     
                 </div>
 

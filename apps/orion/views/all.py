@@ -1,6 +1,6 @@
 
 import os
-from datetime import datetime
+from datetime import datetime, time
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -65,70 +65,83 @@ def busca_chamados(request):
     return render(request, 'orion/pages/busca.html', contexto)
 
 
-@login_required(login_url="usuarios:login", redirect_field_name="next")
-def novo_chamado_view(request, id):
-    
-    #buscando dados salvos sessão 
-    OrdemServico_form_data = request.session.get('OrdemServico_form_data', None)
-    
-    #usando dados de formulario salvos na sessão quando disponiveis
-    ordemServicoForm = OrdemServicoForm(OrdemServico_form_data)
-    #carga horaria form
-    formCargaHoraria = form_model_factory(OrdemServico_form_data, Chamado, CargaHoraria, CargaHorariaForm )
-    
-    #despesa form
-    formDespesa = form_model_factory(OrdemServico_form_data, Chamado, Despesa, DespesaForm)
+def nova_carga_horaria(request):
+    if request.method == 'GET':
+        id = request.GET.get('id_chamado')
+        print('id= ',id)
+        formCargaHoraria = CargaHorariaForm()
 
-    contexto = {
-        'ordemForm': ordemServicoForm,
-        'form_ch': formCargaHoraria, 
-        'formDespesa': formDespesa
-    }
+        contexto = {
+            'form_ch': formCargaHoraria,
+            'id_chamado' : id
+        }
         
-    return render(request, 'orion/pages/novo_chamado.html', contexto)
+        return render(request, 'orion/partials/_carga_horaria_form.html', contexto)
     
+    else: 
+        id_chamado = request.POST.get('id_chamado')
+        
+        if id_chamado != None:
+            chamado = get_object_or_404(Chamado, pk = id_chamado)
+            form = CargaHorariaForm(request.POST)    
+            request.user.id
+            if form.is_valid():
+                ch = form.save(commit=False)
+                ch.ordem_servico = chamado
+                ch.tecnico = request.user
+                ch.horas_de_trabalho = utils.calcular_horas_trabaho(ch.hora_inicio, ch.hora_termino)
+                ch.save()
+                
+                print('valido')
+                template_name = 'orion/partials/_carga_horaria_obj.html'
+
+                return render(request,template_name, {'ch': ch} )
+                    
+
+            else: 
+                print(" não valido \n\n")
+                return render(request, 'orion/partials/_carga_horaria_form.html', {'form_ch': form})
+
+        else:
+            return HttpResponse('<tr><td colspan="8">Deve Salvar o chamado primeiro</td></tr>')
+  
+
+
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def novo_chamado(request):
-    if not request.POST:
-        raise Http404()
+    if request.method == 'GET':
 
-    #salvando a requicao post na sessão 
-    request.session['OrdemServico_form_data'] = request.POST
-    
-    usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
+        ordemServicoForm = OrdemServicoForm()
 
-    ordemForm = OrdemServicoForm(request.POST)
-    
-    
-    if ordemForm.is_valid():
-        ordem_servico = ordemForm.save(commit=False)
-        ordem_servico.aberto_por = usuario_logado
-        
-        #verificando se numero de chamado gerado já existe.
-        if Chamado.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
-            messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
-            request.session['OrdemServico_form_data'] = None
-            return redirect(reverse('orion:lista_chamados'))
-
-        ordem_servico.save()
-        
-        formCargaHoraria = form_model_factory(request.POST, Chamado, CargaHoraria, CargaHorariaForm, ordem_servico )
-
-        formDespesa = form_model_factory(request.POST, Chamado, Despesa, DespesaForm, ordem_servico)
-        
-        if formCargaHoraria.is_valid() and formDespesa.is_valid():
-        
-            formCargaHoraria.save()
-            formDespesa.save()
+        contexto = {
+            'ordemForm': ordemServicoForm,
+            'id_chamado': None
+        }
             
-            messages.success(request, f'chamado {ordem_servico.numero_chamado} criado com sucesso.')
-            request.session['OrdemServico_form_data'] = None
-            return redirect("orion:lista_chamados")
+        return render(request, 'orion/pages/novo_chamado.html', contexto)
+    
+    else:
         
-        ordem_servico.delete()
-       
-    return redirect("orion:novo_chamado_view", 0)    
+        usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
+
+        print('\n\nNOVO CHAMADO ', request.POST)
+        ordemForm = OrdemServicoForm(request.POST)
+        
+        
+        if ordemForm.is_valid():
+            ordem_servico = ordemForm.save(commit=False)
+            ordem_servico.aberto_por = usuario_logado
+            
+            #verificando se numero de chamado gerado já existe.
+            if Chamado.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
+                messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
+                request.session['OrdemServico_form_data'] = None
+                return redirect(reverse('orion:lista_chamados'))
+
+            ordem_servico.save()
+        
+        return HttpResponse("Error")    
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def editar_chamado(request, id):
@@ -140,14 +153,13 @@ def editar_chamado(request, id):
             ordem_servico = get_object_or_404(Chamado, pk=id)
             ordemServicoForm = OrdemServicoForm(instance=ordem_servico) 
 
-            formCargaHoraria = form_model_factory(None, Chamado, CargaHoraria, CargaHorariaForm, ordem_servico, queryset=CargaHoraria.objects.order_by('data') )
+            cargaHoraria = CargaHoraria.objects.filter(ordem_servico_id = id)
 
-            formDespesa = form_model_factory(None, Chamado, Despesa, DespesaForm, ordem_servico, None)
 
             contexto = {
                 'ordemForm': ordemServicoForm,
-                'form_ch' : formCargaHoraria,
-                'formDespesa': formDespesa,
+                'cargaHoraria' : cargaHoraria,
+                #'despesa': despesa,
                 'id' : id,
             }
         
@@ -369,52 +381,40 @@ def relatorio_ponto(request):
 
 
 def list_teste(request):
-
-    if request.method == 'GET':
-        form = SignatureForm()
-        contexto = {
-            'form' : form,
-        }
-        return render(request, 'orion/pages/teste_list.html', contexto)
-    else: 
-        form = SignatureForm(request.POST or None)
-        if form.is_valid():
-            form.save()
-            signature = form.cleaned_data.get('signature')
-            if signature:
-                # as an image
-                signature_picture = draw_signature(signature)
-                # Converta a imagem RGBA em uma imagem RGB
-                #signature_picture = signature_picture.convert('RGB')
-                signature_picture.save('media/imagem.png', 'PNG')
-                return redirect('orion:teste')
+    ...
             
     
 
 
 def teste(request):
-    usuario = get_object_or_404(Usuario, user_id = request.user.id)
     if request.method == 'GET':
-        #formCargaHoraria = CargaHorariaForm(initial ={'tecnico': usuario })
-        
-        form_carga_horaria_factory = inlineformset_factory(Chamado, CargaHoraria, form=CargaHorariaForm, extra=1)
-        formCargaHoraria = form_carga_horaria_factory()
-            
-        
+       
+        ordemServicoForm = OrdemServicoForm()
+        formCargaHoraria = CargaHorariaForm()
+
         contexto = {
-          'form': formCargaHoraria
+            'form': ordemServicoForm,
+            'form_ch': formCargaHoraria
         }
+        
         return render(request, 'orion/pages/teste.html', contexto)
     
     else: 
-        #formCargaHoraria = CargaHorariaForm(request.POST )
-        
-        form_carga_horaria_factory = inlineformset_factory(Chamado, CargaHoraria, form=CargaHorariaForm)
-        formCargaHoraria = form_carga_horaria_factory()
-            
-        print(formCargaHoraria)
-        if formCargaHoraria.is_valid():
-            formCargaHoraria.save()
+        print(request.POST)
+        form = CargaHorariaForm(request.POST)    
+        if form.is_valid():
+            form.save()
+            print('valido')
+            form = CargaHorariaForm()
+            template_name = 'orion/pages/teste_list.html'
+
+            return render(request,template_name, {'form_ch': form} )
+                
+
+        else: 
+            print('Inválido')
+
+  
         return redirect('orion:teste')
         
 

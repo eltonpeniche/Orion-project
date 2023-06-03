@@ -167,11 +167,15 @@ class CargaHorariaForm(forms.ModelForm):
     def __init__(self, *args,**kwargs):
         super(CargaHorariaForm, self).__init__(*args, **kwargs)
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
-        self.fields['status'].widget.attrs['class'] = 'form-control form-select datetimefield'
+        self.fields['data'].widget.attrs.update({'class':'form-control'})
+        
+        self.fields['hora_inicio'].widget.attrs.update({'class':'form-control'})
+        self.fields['hora_termino'].widget.attrs.update({'class':'form-control'})
+        self.fields['status'].widget.attrs.update({'class':'form-control form-select'})
 
     class Meta:
         model = CargaHoraria
-        fields = ['data', 'hora_inicio', 'hora_termino', 'status', 'tecnico']
+        fields = ['data', 'hora_inicio', 'hora_termino', 'status']
         labels = {'tecnico': ''}
         widgets = {
             'data': forms.DateTimeInput(format='%Y-%m-%d', attrs={'type': 'date','class': 'form-control datetimefield' }),
@@ -180,7 +184,7 @@ class CargaHorariaForm(forms.ModelForm):
 
         }
 
-    def clean(self):
+        """     def clean(self):
         cleaned_data = super().clean()
         
         data = cleaned_data.get('data')
@@ -195,7 +199,7 @@ class CargaHorariaForm(forms.ModelForm):
             #print("1 - ", ch.id , self.instance.pk)
             if ch.data == data :
                 if horarios_se_sobrepoe(hora_inicio, hora_termino, ch.hora_inicio, ch.hora_termino) and (ch.tecnico.id == tecnico.id) and (ch.id != self.instance.pk):
-                    raise forms.ValidationError({'hora_inicio':f" O horário {hora_inicio.strftime('%H:%M')} - {hora_termino.strftime('%H:%M')} do dia {data.strftime('%d/%m/%Y')} já foi preenchido anteriomente.."})
+                    raise forms.ValidationError({'hora_inicio':f" O horário {hora_inicio.strftime('%H:%M')} - {hora_termino.strftime('%H:%M')} do dia {data.strftime('%d/%m/%Y')} já foi preenchido anteriomente.."}) """
 
 
 def form_model_factory(requestPOST, parent_model, model, form, instance=None, queryset=None ):

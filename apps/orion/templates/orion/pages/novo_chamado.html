@@ -4,23 +4,32 @@
 {% block content %}
 
 
-<form id="form-chamado" action= "{% url 'orion:novo_chamado' %}" method="post">
-
-    {% include 'orion/partials/_detalhes_chamado.html' %}
+{% comment %} <form id="form-chamado" action= "{% url 'orion:novo_chamado' %}" method="post">
 </form>
-
+ {% endcomment %}
+ <div id='form-geral-chamado'>
+    {% include 'orion/partials/_detalhes_chamado.html' %}
+ 
 
     <div class="d-grid gap-2 d-flex justify-content-center p-3 ms-3">
       
-        <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
-
+        <button type="submit" class="btn btn-primary"         
+            hx-post="{% url 'orion:novo_chamado' %}" 
+            hx-trigger='click'
+            hx-include="#form-geral-chamado"
+        > Salvar </button>
+    
         <button type="button" class="btn btn-warning b_cancelar_chamado_modal"
         data-bs-toggle="modal"
         data-bs-target="#cancelar_chamado_modal">
             Cancelar 
         </button>
-
+    
     </div>
+
+</div>
+
+
     
     <form id="form-cancelar-chamado-modal"  action="{% url 'orion:lista_chamados' %}" method="get">
         {% include 'orion/partials/_confirmacao_modal.html' with id_modal="cancelar_chamado_modal" acao="Cancelar criação do" %}

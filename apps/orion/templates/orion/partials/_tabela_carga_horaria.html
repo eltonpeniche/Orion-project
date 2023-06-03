@@ -3,13 +3,13 @@
 
     <table  class="table table-bordered table-striped">
         <colgroup>
-            <col class="col-sm-2">
-            <col class="col-sm-2">
-            <col class="col-sm-2">
-            <col class="col-sm-2">
-            <col class="col-sm-2">
-            <col class="col-sm-1">
-            <col class="col-sm-1">
+            <col class="col-1">
+            <col class="col-1">
+            <col class="col-1">
+            <col class="col-1">
+            <col class="col-1">
+            <col class="col-2">
+            <col class="col-1">
         </colgroup>
         <thead>
             <tr>
@@ -23,49 +23,39 @@
             </tr>
         </thead>
         <tbody id = "tabela-carga_horaria-corpo">
-
+            {% if cargaHoraria %}
+                {% for ch in cargaHoraria  %}
+                <tr>
+                    <td>{{ ch.data|date:"d/m/Y"}}</td>
+                    <td>{{ ch.hora_inicio}}</td>
+                    <td>{{ ch.hora_termino}}</td>
+                    <td>{{ ch.horas_de_trabalho}}</td>
+                    <td>{{ ch.tecnico}}</td>
+                    <td>{{ ch.get_status_display}}</td>
+                    
+                    
+                    
+                    <td align="center">
+                        <a  href="#"
+                        hx-post="{% url 'orion:teste' %}" 
+                        hx-include="closest tr"
+                        hx-trigger='click'
+                        hx-target="closest tr"
+                        hx-swap="outerHTML"
+                        >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                    <td colspan="8">sem registros</td>
+                {% endif %}
 
         </tbody>
     </table>
 </div>
 
-<script>
-
-    $(document).ready(function() {
-
-        const tabelaCargaHoraria = document.getElementById("tabela-carga_horaria-corpo")
-        const numCargaHoraria = document.getElementsByClassName("repetir")
-        
-        for (var i = 0; i < numCargaHoraria.length; i++){
-            
-            //variaveis que compoe a lista de horarios trabalhados
-            const varData = formatarData(document.getElementById("id_carga_horaria-"+i+"-data").value);
-            const varHoraInicio = document.getElementById("id_carga_horaria-"+i+"-hora_inicio").value;
-            const varHoraTermino = document.getElementById("id_carga_horaria-"+i+"-hora_termino").value;
-            const varHorasDeTrabalho = subtrairHorarios(varHoraInicio, varHoraTermino) 
-            const varStatus = $('#id_carga_horaria-'+i+'-status :selected').text();
-            const varTecnico = $('#id_carga_horaria-'+i+'-tecnico :selected').text();
-            
-            let botaoRemover = '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+'> X </button>'
-            if(varTecnico != "{{request.user}}"){
-                botaoRemover = '<button id="deletar-elemento-lista-'+i+'" type="button" class="del-el-lista btn btn-danger" value='+i+' disabled> X </button>'
-                
-            }
-            var valores = [varData, varHoraInicio, varHoraTermino, formatarHora(varHorasDeTrabalho), varTecnico, varStatus, botaoRemover];
-            
-            var novaLinha = document.createElement("tr");
-            novaLinha.setAttribute("id", i );
-            for (var j = 0; j < 7; j++) {
-                var novaCelula = document.createElement("td");
-                if(j==6){ novaCelula.setAttribute("align", "center"); }
-                novaCelula.innerHTML = valores[j];
-                novaLinha.appendChild(novaCelula);
-            }
-            
-            tabelaCargaHoraria.append(novaLinha); 
-        
-    } 
-})
 
          
 </script>

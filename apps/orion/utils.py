@@ -19,6 +19,12 @@ def paginacao(request, object_list):
     return paginator.get_page(page_number)
 
 
+def calcular_horas_trabaho(h1, h2):
+    # Converter as strings em objetos datetime
+    h1 = datetime.combine(date.today(), h1)
+    h2 = datetime.combine(date.today(), h2)
+
+    return h2-h1
 
 #verifica se dois horarios de inicio e fim se sobrepoe
 def horarios_se_sobrepoe(h1_inicio, h1_fim, h2_inicio, h2_fim):

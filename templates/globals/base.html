@@ -1,7 +1,7 @@
 {% load static %}
 {% include 'globals/partials/_head.html' %}
 
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' >
 
     <div class="container">
 

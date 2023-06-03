@@ -11,10 +11,12 @@ urlpatterns = [
      path('chamados/busca/', views.busca_chamados, name='busca_chamados'),
      path('chamados/fechados/', views.ChamadosFechadosList.as_view(), name='chamados_fechados'),
      path('chamado/fechar/<int:id>/', views.fechar_chamado, name='fechar_chamado'),
-     path('chamados/<int:id>/', views.novo_chamado_view, name='novo_chamado_view'),
      path('chamado/novo/', views.novo_chamado, name='novo_chamado'),
      path('chamado/editar/<int:id>/', views.editar_chamado, name='editar_chamado'),
      path('chamado/deletar/<int:id>/', views.deletar_chamado, name='deletar_chamado'),
+
+
+     path('nova_carga_horaria', views.nova_carga_horaria, name = 'nova_carga_horaria'),
      
      path('equipamentos/', views.EquipamentoList.as_view(), name='equipamentos'),
      path('equipamentos/<int:id>/', views.EquipamentoDetail.as_view(),name='detalhar_equipamento'),

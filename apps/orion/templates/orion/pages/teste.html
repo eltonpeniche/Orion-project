@@ -170,20 +170,63 @@
 
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+
+
+
     </head>
 
-    <body>    
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' >    
         <h1>Hello World</h1>
+        <div id='form'>
+
+            {{ form.as_p }}
+            
+            <div >
+                <table>
+                    <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>inicio</th>
+                    <th>termino</th>
+                    <th>status</th>
+                    <th>tecnico</th>
+                    <th>ação</th>
+                </tr>
+            </thead>
+            <tbody id='tabela' hx-target="closest tr" hx-swap="outerHTML">
+                <tr >
+                        <td>{{ form_ch.data }}</td>
+                        <td>{{ form_ch.hora_inicio }}</td>
+                        <td>{{ form_ch.hora_termino }}</td>
+                        <td>{{ form_ch.status }}</td>
+                        <td>{{ form_ch.tecnico }}</td>
+                        <td>
+                            <button class="btn btn-danger" 
+                            hx-post="{% url 'orion:teste' %}" 
+                            hx-include="closest tr"
+                            hx-trigger='click'
+                            hx-target="#tabela"
+                            hx-swap="beforeend"
+                            >
+                            Save
+                        </button>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            
+        </div>
         
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form.management_form }}
-            {{ form }}
-            {{ form.empty_form }}
-
-            <button type="submit">salvar</button>
-        </form>
-
+        <button type="submit"
+            hx-post="{% url 'orion:teste' %}" 
+            hx-trigger='click'
+            hx-include="#form"
+            >salvar</button>
+        
+        </div>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

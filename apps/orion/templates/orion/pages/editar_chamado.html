@@ -4,28 +4,27 @@
 {% block content %}
 {% include 'globals/partials/_alertas.html' %}
 
-<form id="form-chamado" action= "{% url 'orion:editar_chamado' id %}" method="post">
+{% comment %} <form id="form-chamado" action= "{% url 'orion:editar_chamado' id %}" method="post">
+</form> {% endcomment %}
+
+<div id='form-geral-chamado'>
 
     {% include 'orion/partials/_detalhes_chamado.html' %}
 
-</form>
-
-
-
     <div class="d-grid gap-2 d-flex justify-content-center p-3 ms-3">
         
-        <button type="submit" class="btn btn-primary" form="form-chamado"> Salvar </button>
+        <button type="submit" class="btn btn-primary"> Salvar </button>
         
         <button type="button" class="btn btn-secondary b_fechar_chamado_modal"
             data-bs-toggle="modal" data-bs-target="#fechar-modal">
             Fechar 
         </button>
-
+    
         <button type="button" class="btn btn-danger b_apagar_chamado_modal"
             data-bs-toggle="modal" data-bs-target="#apagar-modal">
             Apagar 
         </button>
-
+    
         <button type="button" class="btn btn-warning b_cancelar_chamado_modal"
         data-bs-toggle="modal" data-bs-target="#cancelar-modal">
             Cancelar 
@@ -40,8 +39,11 @@
         <form id="form-cancelar-chamado-modal"  action="{% url 'orion:lista_chamados' %}" method="get">
             {% include 'orion/partials/_confirmacao_modal.html' with id_modal="cancelar-modal" acao="Cancelar Edição do" %}
         </form>
-
+    
     </div>
+</div>
+
+
 
 
     
