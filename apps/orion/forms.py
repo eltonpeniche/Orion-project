@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django import forms
 from django.forms.models import inlineformset_factory
+from django.urls import reverse
 from validate_docbr import CNPJ
 
 from apps.orion.models import (CargaHoraria, Chamado, Despesa, Empresa,
@@ -169,7 +170,7 @@ class CargaHorariaForm(forms.ModelForm):
         self.fields['data'].initial = datetime.now().strftime("%Y-%m-%d")
         self.fields['data'].widget.attrs.update({'class':'form-control'})
         
-        self.fields['hora_inicio'].widget.attrs.update({'class':'form-control'})
+        self.fields['hora_inicio'].widget.attrs.update({'class':'form-control','hx-post': reverse('orion:nova_carga_horaria'), 'hx-trigger':'blur' })
         self.fields['hora_termino'].widget.attrs.update({'class':'form-control'})
         self.fields['status'].widget.attrs.update({'class':'form-control form-select'})
 

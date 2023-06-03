@@ -1,4 +1,4 @@
-<tr>
+<tr class="table-success">
     <td>{{ ch.data|date:"d/m/Y"}}</td>
     <td>{{ ch.hora_inicio}}</td>
     <td>{{ ch.hora_termino}}</td>
@@ -10,7 +10,7 @@
     
     <td align="center">
         <a  href="#"
-        hx-post="{% url 'orion:teste' %}" 
+        hx-get="{% url 'orion:editar_carga_horaria' ch.id %}" 
         hx-include="closest tr"
         hx-trigger='click'
         hx-target="closest tr"

@@ -16,7 +16,9 @@ urlpatterns = [
      path('chamado/deletar/<int:id>/', views.deletar_chamado, name='deletar_chamado'),
 
 
+     path('carga_horaria/editar/<int:id>/', views.editar_carga_horaria, name = 'editar_carga_horaria'),
      path('nova_carga_horaria', views.nova_carga_horaria, name = 'nova_carga_horaria'),
+     
      
      path('equipamentos/', views.EquipamentoList.as_view(), name='equipamentos'),
      path('equipamentos/<int:id>/', views.EquipamentoDetail.as_view(),name='detalhar_equipamento'),

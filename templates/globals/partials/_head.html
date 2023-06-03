@@ -38,12 +38,44 @@
 
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
-
-
+    <meta name="htmx-config" content='{"includeIndicatorStyles": false}'>
 
     <title>Orion - Sistema de Atendimento ao Cliente </title>
     <style>
-        :root {
+{% comment %}         /* HTMX
+        #indicator{
+            justify-content: center;
+            color:var(--color-primary);
+            position: relative;
+            margin: 0 50%; 
+            z-index: 5;
+          }
+    
+          .htmx-indicator{
+            opacity:0;
+            transition: opacity 500ms ease-in;
+          }
+          .htmx-request .htmx-indicator{
+              opacity:1
+          }
+         HTMX */ {% endcomment %}
+        
+        .my-indicator{
+            display:none;
+        }
+        .htmx-request .my-indicator{
+            display:inline;
+        }
+        .htmx-request.my-indicator{
+            display:inline;
+        }
+
+        tr.htmx-swapping td {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+        
+         :root {
             --color-primary: #269fe6;
             --color-primary-hover: #2086c2;
             --color-primary-dark: #13141f;

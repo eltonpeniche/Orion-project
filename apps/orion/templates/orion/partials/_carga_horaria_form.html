@@ -8,15 +8,34 @@
     <td colspan="2">
         {{ form_ch.status }} 
     </td>
-    <td>
-        <button class="btn btn-danger" 
-            hx-post="{% url 'orion:nova_carga_horaria' %}" 
+    <td align="center">
+        <div class="d-grid gap-2 d-flex justify-content-center">
+
+            <button class="btn btn-success" 
+            hx-post= {% if link %} "{{ link }}" {% else %} "{% url 'orion:nova_carga_horaria' %}" {% endif %}
             hx-include="closest tr"
             hx-trigger='click'
             hx-target="closest tr"
-            hx-swap="outerHTML"
+            hx-swap="outerHTML">
+            <i class="fa-regular fa-floppy-disk"></i>
+            <span class="my-indicator">
+                <i class=" fa-solid fa-spinner fa-spin"></i>
+            </span>
+        </button> 
+        
+        <button class="btn btn-warning" 
+        hx-confirm="Are you sure?"
+        hx-delete={% if link %} "{{ link }}" {% else %} "{% url 'orion:nova_carga_horaria' %}" {% endif %}
+        hx-target="closest tr" 
+        hx-swap="outerHTML swap:1s"
         >
-            Salvar
+        
+            <i class="fa-solid fa-xmark"></i>
+            <span class="my-indicator">
+                <i class=" fa-solid fa-spinner fa-spin"></i>
+            </span>
         </button>
+    </div>
     </td>
 <tr>
+

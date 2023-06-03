@@ -1,6 +1,7 @@
 
 import os
 from datetime import datetime, time
+from time import sleep
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -65,6 +66,39 @@ def busca_chamados(request):
     return render(request, 'orion/pages/busca.html', contexto)
 
 
+def editar_carga_horaria(request, id):
+    if request.method == 'GET':
+        ch_obj = get_object_or_404(CargaHoraria, pk = id)
+        form_ch = CargaHorariaForm(instance = ch_obj)
+        contexto = {
+            'form_ch': form_ch,
+            'link': reverse('orion:editar_carga_horaria', kwargs={'id': id}),
+        } 
+        return render(request, 'orion/partials/_carga_horaria_form.html', contexto)
+    
+    if request.method == 'DELETE':
+        ch_obj = get_object_or_404(CargaHoraria, pk = id)
+        ch_obj.delete()
+        return HttpResponse('')
+    
+    else: 
+        print('\n\naté aqui tá indo\n\n')
+        cargaHoraria = get_object_or_404(CargaHoraria, pk=id)
+        form = CargaHorariaForm(request.POST, instance = cargaHoraria)    
+        if form.is_valid():
+            ch = form.save(commit=False)
+            ch.horas_de_trabalho = utils.calcular_horas_trabaho(ch.hora_inicio, ch.hora_termino)
+            ch.save()
+            print('valido')
+            template_name = 'orion/partials/_carga_horaria_obj.html'
+            return render(request, template_name, {'ch': ch} )
+                
+
+        else: 
+            print(" não valido \n\n")
+            return render(request, 'orion/partials/_carga_horaria_form.html', {'form_ch': form})
+
+
 def nova_carga_horaria(request):
     if request.method == 'GET':
         id = request.GET.get('id_chamado')
@@ -77,6 +111,9 @@ def nova_carga_horaria(request):
         }
         
         return render(request, 'orion/partials/_carga_horaria_form.html', contexto)
+    
+    if request.method == 'DELETE':
+        return HttpResponse('')
     
     else: 
         id_chamado = request.POST.get('id_chamado')
@@ -94,7 +131,6 @@ def nova_carga_horaria(request):
                 
                 print('valido')
                 template_name = 'orion/partials/_carga_horaria_obj.html'
-
                 return render(request,template_name, {'ch': ch} )
                     
 
