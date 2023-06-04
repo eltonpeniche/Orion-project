@@ -2,6 +2,8 @@
 {% load static %}
 {% load jsignature_filters %}
 
+{% include 'globals/partials/_alertas.html' %}
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active nav2" id="dados-tab" data-bs-toggle="tab"
@@ -22,7 +24,7 @@
 
 
 
-<div class="tab-content" id="myTabContent">
+<div class="tab-content" >
 
     <div class="tab-pane fade show active" id="dados-tab-pane" role="tabpanel" aria-labelledby="dados-tab"
         tabindex="0">
@@ -184,26 +186,29 @@
                 
                 <!-- Button trigger carga-horaria modal -->
                 <div class ="d-grid gap-2 d-flex justify-content-end mb-2" > 
+                    
                     <button class="btn btn-primary" class="btn btn-success" 
-                        hx-get="{% url 'orion:nova_carga_horaria' %}?id_chamado={{id}}" 
+                        hx-get="{% url 'orion:nova_carga_horaria' %}?id={{id}}" 
                         hx-trigger='click'
                         hx-target="#tabela-carga_horaria-corpo"
-                        hx-swap="beforeend" >
+                        hx-swap="beforeend" {% if not id %} disabled {% endif %}> 
                         Adicionar Horas
                     </button>
                 </div>
-                
+
                 {% include 'orion/partials/_tabela_carga_horaria.html' %}
 
                 <!-- end carga horaria -->
                 <!-- despesa -->
-
+                
                 <!-- Button trigger despesa modal -->
                 <div class ="d-grid gap-2 d-flex justify-content-end mb-2 mt-3" > 
                     <button id="add-despesas" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generic-d-modal">
                         Adicionar Despesas
                     </button>
                 </div>
+                
+
                 {% include 'orion/partials/_tabela_despesas.html' %}
 
                 <div class="row ">
@@ -296,6 +301,59 @@
     
 
 </div>
+<div class="d-grid gap-2 d-flex justify-content-center p-3 ms-3">
+          
+    {% if id %}
+    <button class="btn btn-primary me-2"          
+    hx-post="{% url 'orion:editar_chamado' id %}" 
+    hx-trigger='click'
+    hx-include="#form-geral-chamado"
+    hx-target="this"
+    hx-swap='outerHTML'
+    > Salvar <span class="my-indicator">
+        <i class=" fa-solid fa-spinner fa-spin"></i>
+    </span> </button>
+    
+    {% else %}
+    <button class="btn btn-primary me-2"          
+        hx-post="{% url 'orion:novo_chamado' %}" 
+        hx-trigger='click'
+        hx-include="#form-geral-chamado"
+        hx-target="#detalhes-chamado"
+        > Salvar </button>
+    {% endif %}
+        
+    {% if id %}
+    <button type="button" class="btn btn-secondary b_fechar_chamado_modal"
+    data-bs-toggle="modal" data-bs-target="#fechar-modal">
+    Fechar 
+    </button>
+    
+    <form id="form-fechar-chamado-modal"  action="{% url 'orion:fechar_chamado' id %}" method="post"> {% csrf_token %}
+        {% include 'orion/partials/_confirmacao_modal.html' with id_modal="fechar-modal" acao="Fechar " %}
+    </form>
+
+    <button type="button" class="btn btn-danger b_apagar_chamado_modal"
+        data-bs-toggle="modal" data-bs-target="#apagar-modal">
+        Apagar 
+    </button>
+    
+    <form id="form-apagar-chamado-modal"  action="{% url 'orion:deletar_chamado' id %}" method="post"> {% csrf_token %}
+        {% include 'orion/partials/_confirmacao_modal.html' with id_modal="apagar-modal" acao="Apagar " %}
+    </form>
+
+    {% endif %}
+    <button type="button" class="btn btn-warning b_cancelar_chamado_modal"
+    data-bs-toggle="modal" data-bs-target="#sair-modal">
+        Sair 
+    </button>
+
+    <form id="form-sair-chamado-modal"  action="{% url 'orion:lista_chamados' %}" method="get">
+        {% include 'orion/partials/_confirmacao_modal.html' with id_modal="sair-modal" acao="Sair do " info_extra="Informações não salvas serão perdidas." %}
+    </form>
+
+</div>
+
 
 <!-- Adicionando JQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>    
@@ -384,4 +442,5 @@
     // adiciona um ouvinte de eventos para o clique no botão de assinar
     document.getElementById("open-popup").addEventListener("click", openPopup);
 
-    </script>
+</script>
+

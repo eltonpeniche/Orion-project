@@ -3,7 +3,7 @@
     <td>{{ form_ch.hora_inicio }}</td>
     <td>{{ form_ch.hora_termino }}</td>
     <td>
-        <input type="hidden" name="id_chamado" value="{{id_chamado}}">
+        <input type="hidden" name="id" value="{{id}}">
     </td>
     <td colspan="2">
         {{ form_ch.status }} 
@@ -24,7 +24,7 @@
         </button> 
         
         <button class="btn btn-warning" 
-        hx-confirm="Are you sure?"
+        hx-confirm="Você tem certeza?"
         hx-delete={% if link %} "{{ link }}" {% else %} "{% url 'orion:nova_carga_horaria' %}" {% endif %}
         hx-target="closest tr" 
         hx-swap="outerHTML swap:1s"

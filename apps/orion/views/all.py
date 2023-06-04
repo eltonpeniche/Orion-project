@@ -81,45 +81,28 @@ def editar_carga_horaria(request, id):
         ch_obj.delete()
         return HttpResponse('')
     
-    else: 
-        print('\n\naté aqui tá indo\n\n')
+    if request.method == 'POST':
+
         cargaHoraria = get_object_or_404(CargaHoraria, pk=id)
         form = CargaHorariaForm(request.POST, instance = cargaHoraria)    
         if form.is_valid():
             ch = form.save(commit=False)
             ch.horas_de_trabalho = utils.calcular_horas_trabaho(ch.hora_inicio, ch.hora_termino)
             ch.save()
-            print('valido')
             template_name = 'orion/partials/_carga_horaria_obj.html'
             return render(request, template_name, {'ch': ch} )
                 
 
         else: 
-            print(" não valido \n\n")
             return render(request, 'orion/partials/_carga_horaria_form.html', {'form_ch': form})
 
 
 def nova_carga_horaria(request):
-    if request.method == 'GET':
-        id = request.GET.get('id_chamado')
-        print('id= ',id)
-        formCargaHoraria = CargaHorariaForm()
-
-        contexto = {
-            'form_ch': formCargaHoraria,
-            'id_chamado' : id
-        }
+    if request.method == 'POST': 
+        id = request.POST.get('id')
         
-        return render(request, 'orion/partials/_carga_horaria_form.html', contexto)
-    
-    if request.method == 'DELETE':
-        return HttpResponse('')
-    
-    else: 
-        id_chamado = request.POST.get('id_chamado')
-        
-        if id_chamado != None:
-            chamado = get_object_or_404(Chamado, pk = id_chamado)
+        if id != None:
+            chamado = get_object_or_404(Chamado, pk = id)
             form = CargaHorariaForm(request.POST)    
             request.user.id
             if form.is_valid():
@@ -129,63 +112,127 @@ def nova_carga_horaria(request):
                 ch.horas_de_trabalho = utils.calcular_horas_trabaho(ch.hora_inicio, ch.hora_termino)
                 ch.save()
                 
-                print('valido')
                 template_name = 'orion/partials/_carga_horaria_obj.html'
                 return render(request,template_name, {'ch': ch} )
                     
 
             else: 
-                print(" não valido \n\n")
                 return render(request, 'orion/partials/_carga_horaria_form.html', {'form_ch': form})
 
         else:
             return HttpResponse('<tr><td colspan="8">Deve Salvar o chamado primeiro</td></tr>')
+    
+    
+    if request.method == 'DELETE':
+        return HttpResponse('')
+    
+    else:
+        id = request.GET.get('id')
+        formCargaHoraria = CargaHorariaForm()
+
+        contexto = {
+            'form_ch': formCargaHoraria,
+            'id' : id
+        }
+        
+        return render(request, 'orion/partials/_carga_horaria_form.html', contexto)
   
 
 
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def novo_chamado(request):
-    if request.method == 'GET':
-
-        ordemServicoForm = OrdemServicoForm()
-
-        contexto = {
-            'ordemForm': ordemServicoForm,
-            'id_chamado': None
-        }
-            
-        return render(request, 'orion/pages/novo_chamado.html', contexto)
-    
-    else:
-        
+    if request.method == 'POST':
+        template_name = 'orion/partials/_detalhes_chamado.html'
         usuario_logado = get_object_or_404(Usuario, user_id=request.user.id)
 
-        print('\n\nNOVO CHAMADO ', request.POST)
         ordemForm = OrdemServicoForm(request.POST)
-        
-        
+        ordem_servico = None
+
         if ordemForm.is_valid():
             ordem_servico = ordemForm.save(commit=False)
             ordem_servico.aberto_por = usuario_logado
             
             #verificando se numero de chamado gerado já existe.
             if Chamado.objects.filter(numero_chamado=ordem_servico.numero_chamado).exists():
-                messages.error(request, f'chamado {ordem_servico.numero_chamado} já foi cadastrado.' )
-                request.session['OrdemServico_form_data'] = None
-                return redirect(reverse('orion:lista_chamados'))
+                
+                chamado = Chamado.objects.filter(numero_chamado = ordem_servico.numero_chamado).first()
 
+                ordemForm = OrdemServicoForm(request.POST, instance = chamado)
+                ordemForm.save()
+
+                #-----------------------------------
+                if request.user != chamado.aberto_por.user:
+                    hoje = datetime.now().strftime("%d/%m/%Y")
+                    notify.send(request.user, recipient=chamado.aberto_por.user, 
+                            verb=f"O chamado que você abriu {chamado.numero_chamado}, foi editado por {request.user.username} em {hoje}" ,
+                            target = chamado)
+                #-----------------------------------
+
+                cargaHoraria = CargaHoraria.objects.filter(ordem_servico_id = chamado.id)
+                
+                messages.success(request, f'chamado {ordem_servico.numero_chamado} editado com sucesso.' )
+                print('chamado', chamado)
+                contexto =  {   'ordemForm': ordemForm, 
+                                'id' : chamado.id,  
+                                'cargaHoraria' : cargaHoraria}
+
+                return render(request, template_name, contexto )
+                
             ordem_servico.save()
+            
+        else:
+            messages.error(request, "Informações não válidas")
+            contexto = { 'ordemForm': ordemForm, 'id' : None }
+            return render(request, template_name, contexto )
+
+        messages.success(request, "Chamado salvo com sucesso")
+        contexto =  {   'ordemForm': ordemForm, 
+                        'id' : ordem_servico.id, 
+                    }
+        return render(request, template_name, contexto)    
+    
+    else:
+        ordemServicoForm = OrdemServicoForm()
+        contexto = {
+            'ordemForm': ordemServicoForm,
+            'id': None
+        }
+            
+        return render(request, 'orion/pages/editar_chamado.html', contexto)
+    
         
-        return HttpResponse("Error")    
 
 @login_required(login_url="usuarios:login", redirect_field_name="next")
 def editar_chamado(request, id):
-    usuario = get_object_or_404(Usuario, user_id = request.user.id)
-    if request.method == 'GET':
+    if request.method == 'POST':
+        print('\n\npost editar')
+        ordem_servico = get_object_or_404(Chamado, pk=id)
+        ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico)
     
+        if ordemForm.is_valid():
+            chamado = ordemForm.save()
+            
+            #-----------------------------------
+            if request.user != chamado.aberto_por.user:
+               hoje = datetime.now().strftime("%d/%m/%Y")
+               notify.send(request.user, recipient=chamado.aberto_por.user, 
+                           verb=f"O chamado que você abriu {chamado.numero_chamado}, foi editado por {request.user.username} em {hoje}" ,
+                           target = chamado)
+            #-----------------------------------
+            #messages.success(request, "Chamado editado com sucesso")
+            link = reverse('orion:editar_chamado', kwargs={'id': id} )
+            return HttpResponse(f"<button type='submit' class='btn btn-success me-2' hx-post= {link} hx-trigger='click' hx-include='#form-geral-chamado' hx-target='this'  hx-swap='outerHTML' > Salvar <span class='my-indicator'><i class=' fa-solid fa-spinner fa-spin'></i></span> </button>")
+        
+        else:
+            messages.error(request, 'Informações nâo válidas')
+            return render(request, 'orion/partials/_detalhes_chamado.html', contexto ) 
+        
+
+    
+    else:
+        print('\n\get editar')
         if id != 0:
-            print("editar_chamado")
             ordem_servico = get_object_or_404(Chamado, pk=id)
             ordemServicoForm = OrdemServicoForm(instance=ordem_servico) 
 
@@ -200,37 +247,7 @@ def editar_chamado(request, id):
             }
         
         return render(request, 'orion/pages/editar_chamado.html', contexto)
-    else:
-        request.session['OrdemServico_form_data'] = request.POST
-        ordem_servico = get_object_or_404(Chamado, pk=id)
-        ordemForm = OrdemServicoForm(request.POST, instance=ordem_servico)
-    
-        formCargaHoraria = form_model_factory(request.POST, Chamado, CargaHoraria, CargaHorariaForm, ordem_servico)
-        formDespesa = form_model_factory(request.POST, Chamado, Despesa, DespesaForm, ordem_servico)
-        
-        if ordemForm.is_valid() and formCargaHoraria.is_valid() and formDespesa.is_valid():
-            chamado = ordemForm.save()
-            formCargaHoraria.save()
-            formDespesa.save()
-            
-            #-----------------------------------
-            if request.user != chamado.aberto_por.user:
-               hoje = datetime.now().strftime("%d/%m/%Y")
-               notify.send(request.user, recipient=chamado.aberto_por.user, 
-                           verb=f"O chamado que você abriu {chamado.numero_chamado}, foi editado por {request.user.username} em {hoje}" ,
-                           target = chamado)
-            #-----------------------------------
-            request.session['OrdemServico_form_data'] = None
-            messages.success(request, "Chamado editado com sucesso")
-            return redirect('orion:lista_chamados')
 
-        messages.error(request, 'Informações nâo válidas')
-        return render(request, 'orion/pages/editar_chamado.html', 
-        {   'ordemForm': ordemForm,
-            'form_ch' : formCargaHoraria,
-            'formDespesa': formDespesa,
-            'id' : id,
-        })
 
 @login_required
 def deletar_chamado(request, id):
@@ -416,39 +433,30 @@ def relatorio_ponto(request):
 
 
 
+
+        
 def list_teste(request):
-    ...
-            
-    
+    if request.method == 'GET':
+        print('fez get')
+
+        nome = 'name do get'
+        email = 'emaildo get '
+        contexto = {
+            'nome':nome,
+            'email':email
+        }
+        return render(request, 'orion/pages/teste_list.html', contexto)
 
 
 def teste(request):
     if request.method == 'GET':
-       
-        ordemServicoForm = OrdemServicoForm()
-        formCargaHoraria = CargaHorariaForm()
-
-        contexto = {
-            'form': ordemServicoForm,
-            'form_ch': formCargaHoraria
-        }
-        
-        return render(request, 'orion/pages/teste.html', contexto)
+        return render(request, 'orion/pages/teste.html')
     
     else: 
-        print(request.POST)
-        form = CargaHorariaForm(request.POST)    
-        if form.is_valid():
-            form.save()
-            print('valido')
-            form = CargaHorariaForm()
-            template_name = 'orion/pages/teste_list.html'
-
-            return render(request,template_name, {'form_ch': form} )
-                
-
-        else: 
-            print('Inválido')
+        nome = request.POST.get('name')    
+        email = request.POST.get('email')    
+        
+        print(nome, email)
 
   
         return redirect('orion:teste')
